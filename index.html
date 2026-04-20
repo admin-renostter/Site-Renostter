@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Serviços, Instalação e Manutenção de Ar Condicionado - Renostter</title>
+    <meta name="description"
+        content="Especialistas em instalação, manutenção preventiva, conserto e higienização de ar-condicionado em São Paulo. Garantia de 6 meses, técnicos certificados e PMOC." />
+    <meta property="og:title" content="Serviços, Instalação e Manutenção de Ar Condicionado - Renostter" />
+    <meta property="og:description"
+        content="Serviços em ar condicionado com laudo técnico e garantia. Atendemos residencial e empresarial em São Paulo e região." />
+    <meta property="og:image" content="assets/logo.png" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://renostter.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="chatbot.css" />
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+    <style>
+        /* Estilos do modal de Termos de Uso */
+        :root {
+            --primary-popup: #ff8c00; 
+            --bg-modal: #1e1e2f;
+            --text-light: rgba(255, 255, 255, 0.85);
+        }
+        .btn-open {
+            background: var(--primary-popup);
+            border: none;
+            color: #fff;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .btn-open:hover {
+            background: #e07c00;
+            transform: scale(1.02);
+        }
+        .termos-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        .termos-modal-box {
+            background: var(--bg-modal);
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .termos-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .termos-modal-title {
+            color: var(--primary-popup);
+            text-transform: uppercase;
+            font-weight: 800;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .termos-btn-close {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .termos-btn-close:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+        .termos-modal-content {
+            padding: 30px;
+            overflow-y: auto;
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .termos-modal-content h3 {
+            color: var(--primary-popup);
+            margin-top: 1.2em;
+            margin-bottom: 0.5em;
+            font-size: 1.2rem;
+        }
+        .termos-modal-content h3:first-of-type {
+            margin-top: 0;
+        }
+        .termos-modal-content p {
+            margin: 0.8em 0;
+        }
+        .termos-modal-content ul {
+            margin: 0.5em 0 1em 1.5em;
+        }
+        .termos-modal-content li {
+            margin: 0.3em 0;
+        }
+        .termos-modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .termos-modal-content::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        .termos-modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary-popup);
+            border-radius: 10px;
+        }
+        .termos-modal-content a {
+            color: var(--primary-popup);
+            text-decoration: underline;
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Renostter Climatização",
+      "image": "https://renostter.com/assets/logo.png",
+      "telephone": "+5511952730593",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "São Paulo",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": ["São Paulo", "Guarulhos", "ABC Paulista"],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "218"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Manutenção e Instalação de Ar Condicionado",
+      "provider": {
+        "@type": "LocalBusiness",
+        "name": "Renostter Climatização"
+      },
+      "areaServed": ["São Paulo", "Guarulhos", "ABC Paulista"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Serviços de Climatização",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Instalação de Ar Condicionado"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Manutenção de Ar Condicionado"
+            }
+          }
+        ]
+      }
+    }
+    </script>
+</head>
+
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-inner">
+            <a href="#home" class="nav-logo">
+                <video autoplay loop muted playsinline class="logo-img">
+                    <source src="assets/logo-dinamico.webm" type="video/webm">
+                    <img src="assets/logo.png" alt="Renostter Climatização">
+                </video>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#numeros">Resultados</a></li>
+                <li><a href="#portfolio">Portfólio</a></li>
+                <li><a href="#diferenciais">Diferenciais</a></li>
+                <li><a href="#agendar">Agendar Visita</a></li>
+                <li><a href="#contato" class="btn-nav">Orçamento Grátis</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Abrir Menu de Navegação">
+                <span></span><span></span><span></span>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="home">
+        <!-- Vídeo de fundo -->
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="assets/hero-background.mp4" type="video/mp4">
+            <img src="assets/residencial/residencia-alto-da-lapa.jpg" alt="Fundo da seção hero">
+        </video>
+
+        <!-- Overlay escuro para contraste -->
+        <div class="hero-overlay"></div>
+
+        <div class="container hero-content">
+            <div class="hero-badge">⭐ Garantia de 6 Meses | Atendimento Rápido</div>
+            <h1 class="hero-title">
+                Especialistas em Instalação e Manutenção de
+                <span class="gradient-text">Ar Condicionado em SP</span>
+            </h1>
+            <p class="hero-subtitle">
+                Instalação, conserto, higienização e Contrato de Manutenção (PMOC).<br />
+                Atendimento técnico certificado com peças originais e diagnóstico preciso.
+            </p>
+            <div class="hero-ctas">
+                <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20um%20orçamento." class="btn-primary"
+                    target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Fale com um Especialista - Orçamento em 15 min
+                </a>
+                <a href="#servicos" class="btn-secondary">Nossos Serviços</a>
+            </div>
+            <div class="hero-trust">
+                <div class="trust-item"><span class="trust-num">4.500+</span><span
+                        class="trust-label">Instalações</span></div>
+                <div class="trust-divider"></div>
+                <div class="trust-item"><span class="trust-num">5 Anos</span><span
+                        class="trust-label">Experiência</span></div>
+                <div class="trust-divider"></div>
+                <div class="trust-item"><span class="trust-num">100%</span><span class="trust-label">Com Laudo
+                        Técnico</span></div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <div class="scroll-dot"></div>
+        </div>
+    </section>
+
+    <!-- ========== MARCAS PARCEIRAS ========== -->
+    <section class="marcas-parceiras section-pad" id="marcas"
+        style="padding: 60px 0; background: var(--bg-color); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <h2 class="section-title"
+                style="text-align: center; margin-bottom: 40px; font-size: 1.4rem; color: var(--light-gray); font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">
+                Marcas que trabalhamos</h2>
+            <div class="marcas-carrossel">
+                <div class="marcas-track">
+                    <!-- Conjunto 1 -->
+                    <div class="marca-item"><img src="assets/marcas/lg.png" alt="LG" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/samsung.png" alt="Samsung" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/midea.png" alt="Midea" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/daikin.png" alt="Daikin" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/gree.png" alt="Gree" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/elgin.png" alt="Elgin" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/springer.png" alt="Springer" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/consul.png" alt="Consul" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/tcl.png" alt="TCL" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/philco.png" alt="Philco" loading="lazy"></div>
+                    <!-- Conjunto 2 (Infinito) -->
+                    <div class="marca-item"><img src="assets/marcas/lg.png" alt="LG" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/samsung.png" alt="Samsung" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/midea.png" alt="Midea" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/daikin.png" alt="Daikin" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/gree.png" alt="Gree" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/elgin.png" alt="Elgin" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/springer.png" alt="Springer" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/consul.png" alt="Consul" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/tcl.png" alt="TCL" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/philco.png" alt="Philco" loading="lazy"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========== NÚMEROS ========== -->
+    <section class="numeros section-pad" id="numeros">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Nossos Resultados</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Números que
+                            comprovam<br />nossa excelência</span></span></h2>
+            </div>
+            <div class="numeros-grid">
+                <div class="numero-card" data-target="9000">
+                    <div class="numero-icon">🏢</div>
+                    <div class="numero-valor"><span class="counter" data-target="9000">0</span>+</div>
+                    <div class="numero-label">Máquinas Instaladas desde 2018</div>
+                </div>
+                <div class="numero-card" data-target="500">
+                    <div class="numero-icon">💼</div>
+                    <div class="numero-valor"><span class="counter" data-target="500">0</span>+</div>
+                    <div class="numero-label">Vendas em 3 meses (<span id="vendas-year"></span>)</div>
+                </div>
+                <div class="numero-card" data-target="300">
+                    <div class="numero-icon">🧹</div>
+                    <div class="numero-valor"><span class="counter" data-target="300">0</span>+</div>
+                    <div class="numero-label">Higienizações em março</div>
+                </div>
+                <div class="numero-card" id="exp-card" data-target="0">
+                    <div class="numero-icon">⭐</div>
+                    <div class="numero-valor"><span class="counter" id="exp-counter" data-target="0">0</span>+</div>
+                    <div class="numero-label">Anos de Experiência</div>
+                </div>
+            </div>
+            <script>
+                // Logic to dynamically compute the current year and years of experience since 2018
+                (function () {
+                    const currentYear = new Date().getFullYear();
+                    const expYears = currentYear - 2018;
+
+                    document.getElementById('vendas-year').textContent = currentYear;
+
+                    const expCard = document.getElementById('exp-card');
+                    const expCounter = document.getElementById('exp-counter');
+                    if (expCard) expCard.setAttribute('data-target', expYears);
+                    if (expCounter) expCounter.setAttribute('data-target', expYears);
+                })();
+            </script>
+        </div>
+    </section>
+
+    <!-- ========== SERVIÇOS ========== -->
+    <section class="servicos section-pad" id="servicos">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">O que fazemos</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Serviços
+                            Completos em<br />Climatização</span></span></h2>
+                <p class="section-desc">Atendemos residências, clínicas, escritórios e grandes empresas com a mesma
+                    excelência.</p>
+            </div>
+            <div class="servicos-grid">
+                <div class="servico-card">
+                    <div class="servico-icon">📐</div>
+                    <h3>Projeto e Consultoria</h3>
+                    <p>Dimensionamento personalizado considerando tamanho, uso, número de pessoas e eficiência
+                        energética do ambiente.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">🔧</div>
+                    <h3>Instalação de Equipamentos</h3>
+                    <p>Split, multi-split, cassete, piso-teto, VRF e sistemas centrais. Instalação completa com
+                        tubulação e elétrica.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">🔍</div>
+                    <h3>Manutenção Preventiva</h3>
+                    <p>Inspeções periódicas para evitar falhas, prolongar a vida útil e reduzir consumo de energia do
+                        equipamento.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">⚙️</div>
+                    <h3>Manutenção Corretiva</h3>
+                    <p>Diagnóstico preciso e reparo de vazamentos, falhas elétricas ou mecânicas. Reposição de peças com
+                        garantia.</p>
+                </div>
+                <div class="servico-card highlight-card">
+                    <div class="servico-badge">Mais Solicitado</div>
+                    <div class="servico-icon">✨</div>
+                    <h3>Limpeza e Higienização</h3>
+                    <p>Remoção de poeira, fungos e bactérias de filtros, evaporadoras e condensadoras. Essencial para a
+                        saúde do ambiente.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">💨</div>
+                    <h3>Recarga de Gás Refrigerante</h3>
+                    <p>Reposição precisa do fluido refrigerante em caso de vazamento ou perda de eficiência do sistema.
+                    </p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">📋</div>
+                    <h3>Laudo Tecnico</h3>
+                    <p>Plano de Manutenção, Operação e Controle. Obrigatório por lei (Portaria 3.523/MS) para ambientes
+                        coletivos.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">🌀</div>
+                    <h3>Limpeza de Dutos</h3>
+                    <p>Controle de umidade, pureza e distribuição do ar em sistemas centrais empresariais.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">🔄</div>
+                    <h3>Remoção e Reinstalação</h3>
+                    <p>Desmontagem e reinstalação de equipamentos para mudanças ou reformas com total segurança.</p>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">📅</div>
+                    <h3>Contratos de Manutenção</h3>
+                    <p>Planos mensais ou anuais com visitas regulares, prioridade no atendimento e condições especiais.
+                    </p>
+                </div>
+                </div>
+            </div>
+
+            <!-- Destaque: Pintura de Equipamento -->
+            <div class="banner-pintura" id="bannerPintura">
+                <div class="banner-pintura-content">
+                    <span class="pintura-badge">Exclusivo</span>
+                    <h3>Pintura de Equipamento</h3>
+                    <p>Transforme seu ar‑condicionado em um item de decoração. Tinta automotiva de alta durabilidade, aplicação profissional e personalização total – combine com seu projeto!</p>
+                    <ul class="pintura-features">
+                        <li>🎨 Cores exclusivas (mais de 50 opções)</li>
+                        <li>🛡️ Proteção UV e anticorrosão</li>
+                        <li>✨ Acabamento automotivo premium</li>
+                        <li>🧼 Fácil limpeza e resistência a fungos</li>
+                    </ul>
+                    <button class="btn-pintura-cta" onclick="openPinturaModal()">Personalizar agora</button>
+                </div>
+                <!-- Banner Image Graphic - represented gracefully in CSS -->
+                <div class="banner-pintura-image">
+                    <div class="pintura-mockup"></div>
+                </div>
+            </div>
+
+            <p class="section-desc pintura-extra-desc">
+                Na Renostter, não cuidamos apenas da temperatura – cuidamos da estética do seu ambiente. A pintura de equipamentos é feita com tintas automotivas de altíssima resistência, garantindo que seu ar‑condicionado combine com a decoração ou se destaque como um elemento criativo. Personalizamos também dutos, grelhas e até controles remotos.
+            </p>
+            <div class="servicos-cta">
+                <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20informações%20sobre%20os%20serviços."
+                    class="btn-primary" target="_blank" rel="noopener">
+                    Quero um Orçamento Gratuito
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio section-pad" id="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">NOSSO TRABALHO</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Instalações
+                            Realizadas</span></span></h2>
+                <p class="section-desc">Acompanhe nossas instalações em tempo real — diretamente do nosso Instagram.
+                    Feed atualizado automaticamente sem publicação manual.</p>
+            </div>
+
+            <!-- FEATURED VIDEO (YOUTUBE) -->
+            <div class="portfolio-featured-video" id="featuredVideoContainer">
+                <div class="video-wrapper">
+                    <iframe 
+                        id="featuredVideoPlayer" 
+                        src="https://www.youtube.com/embed/99aP656ShAM?si=nqfXGeqLAFFIZ-WW" 
+                        title="Obra em Tempo Real" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen
+                        style="width: 100%; height: 100%; border-radius: 12px;">
+                    </iframe>
+
+                </div>
+                <div class="featured-actions">
+                    <a href="https://wa.me/5511952730593" class="btn-card-cta">Quero um Orçamento</a>
+                </div>
+            </div>
+
+
+            <!-- ✅ ELFSIGHT INSTAGRAM FEED -->
+            <div class="instagram-feed-container" style="margin-top: 48px; min-height: 400px; position: relative; z-index: 10;">
+                <!-- Elfsight Instagram Feed | Renostter -->
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-36fd6cf3-2014-44b7-a188-1675e30fd920" data-elfsight-app-lazy></div>
+            </div>
+
+            <!-- 🎬 GALERIA DE VÍDEOS TÉCNICOS (RANDÔMICA) -->
+            <div class="video-gallery-section" id="video-gallery" style="margin-top: 80px;">
+                <div class="section-header">
+                    <p class="section-tag">EXCELÊNCIA EM VÍDEO</p>
+                    <h2 class="section-title">Nossa Rotina Técnica</h2>
+                    <p class="section-desc">Bastidores reais das nossas instalações e manutenções. Ordem atualizada a cada visita.</p>
+                </div>
+                
+                <div id="technical-video-container" class="video-gallery-grid">
+                    <!-- Gerado dinamicamente via JS -->
+                </div>
+            </div>
+
+
+            <div class="portfolio-footer" style="margin-top: 48px;">
+                <a href="#agendar" class="btn-primary">Solicite um Orçamento Personalizado</a>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- ========== DIFERENCIAIS ========== -->
+    <section class="diferenciais section-pad" id="diferenciais">
+        <div class="container">
+            <div class="diferenciais-inner">
+                <div class="diferenciais-text">
+                    <p class="section-tag">Por que nos escolher</p>
+                    <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Mais do que
+                                um serviço —<br />uma parceria de confiança</span></span></h2>
+                    <p class="diferenciais-desc">Trabalhamos em grandes e pequenas empresas, escritórios, clínicas,
+                        casas e comércios. Cada projeto recebe atenção técnica personalizada.</p>
+                    <ul class="diferenciais-list">
+                        <li>
+                            <div class="dif-icon">✅</div>
+                            <div>
+                                <strong>Laudo Técnico Oficial</strong>
+                                <span>Emitimos laudo e comprovantes para todos os clientes.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dif-icon">✅</div>
+                            <div>
+                                <strong>Garantia conforme a Lei</strong>
+                                <span>90 dias em serviços (CDC), até 12 meses em peças e equipamentos.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dif-icon">✅</div>
+                            <div>
+                                <strong>CONTRATO DE MANUTENÇÃO - PMOC obrigatório para empresas</strong>
+                                <span>Portaria 3.523/MS e ABNT NBR 16.401. Evite multas e autuações.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dif-icon">✅</div>
+                            <div>
+                                <strong>Equipe especializada em vendas</strong>
+                                <span>Melhor custo-benefício do mercado. Vendemos todas as marcas.</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dif-icon">✅</div>
+                            <div>
+                                <strong>Atendimento residencial e empresarial</strong>
+                                <span>Da instalação simples ao sistema VRF para grandes edifícios.</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="https://wa.me/5511952730593?text=Olá!%20Vi%20o%20site%20e%20gostaria%20de%20saber%20mais."
+                        class="btn-primary" target="_blank" rel="noopener">
+                        Falar com um Especialista
+                    </a>
+                </div>
+                <div class="diferenciais-visual">
+                    <div class="visual-card main-card">
+                        <div class="visual-icon">🏆</div>
+                        <strong>+4.500</strong>
+                        <span>instalações com sucesso</span>
+                    </div>
+                    <div class="visual-card accent-card">
+                        <div class="visual-icon">📋</div>
+                        <strong>CONTRATO DE MANUTENÇÃO - PMOC</strong>
+                        <span>Cumprimento legal garantido</span>
+                    </div>
+                    <div class="visual-card accent-card-2">
+                        <div class="visual-icon">🛡️</div>
+                        <strong>Garantia</strong>
+                        <span>Conforme CDC e normas ABNT</span>
+                    </div>
+                    <div class="visual-card accent-card-3">
+                        <div class="visual-icon">⚡</div>
+                        <strong>Resposta Rápida</strong>
+                        <span>Atendimento ágil via WhatsApp</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTATO ========== -->
+    <section class="contato section-pad" id="contato">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Fale Conosco</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Pronto para um
+                            ambiente<br />mais confortável?</span></span></h2>
+                <p class="section-desc">Ficaríamos felizes em resolver seus problemas com climatização. Entre em contato
+                    agora!</p>
+            </div>
+            <div class="contato-grid">
+                <div class="contato-card whatsapp-card">
+                    <div class="contato-icon">📱</div>
+                    <h3>WhatsApp</h3>
+
+                    <p>Resposta rápida durante o horário de atendimento</p>
+                    <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20solicitar%20um%20orçamento."
+                        class="btn-whatsapp" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                        </svg>
+                        Chamar no WhatsApp
+                    </a>
+                </div>
+                <div class="contato-card horario-card">
+                    <div class="contato-icon">🕐</div>
+                    <h3>Horário de Atendimento</h3>
+                    <div class="horario-list">
+                        <div class="horario-item">
+                            <span>Segunda a Sexta</span>
+                            <span class="horario-time">09:00 – 18:00</span>
+                        </div>
+                        <div class="horario-item">
+                            <span>Sábado</span>
+                            <span class="horario-time">09:00 – 13:00</span>
+                        </div>
+                        <div class="horario-item">
+                            <span>Domingo</span>
+                            <span class="horario-time closed">Fechado</span>
+                        </div>
+                    </div>
+                    <div class="status-badge open" id="statusBadge">🟢 Aberto agora</div>
+                </div>
+                <div class="contato-card redes-card">
+                    <div class="contato-icon">🌐</div>
+                    <h3>Nossas Redes</h3>
+                    <a href="https://instagram.com/renostter" class="rede-link" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                        @renostter
+                    </a>
+                    <a href="https://www.facebook.com/Renostter" class="rede-link" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" />
+                        </svg>
+                        Renostter Climatização
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== AGENDAMENTO ========== -->
+    <section class="agendar section-pad" id="agendar">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">📅 Agendar Visita</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Agende uma
+                            Visita Técnica<br /><span class="gradient-text">Direto no Nosso
+                                Calendário</span></span></span></h2>
+                <p class="section-desc">Escolha o serviço, selecione a data e horário desejados. O agendamento vai
+                    direto para o nosso Google Calendar e você recebe a confirmação.</p>
+            </div>
+            <div class="agendar-container">
+                <!-- Steps -->
+                <div class="steps-bar">
+                    <div class="step active" id="step-dot-1"><span>1</span>
+                        <p>Serviço</p>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step-dot-2"><span>2</span>
+                        <p>Data & Hora</p>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step-dot-3"><span>3</span>
+                        <p>Seus Dados</p>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" id="step-dot-4"><span>4</span>
+                        <p>Confirmar</p>
+                    </div>
+                </div>
+
+                <!-- Step 1: Serviço -->
+                <div class="form-step active" id="form-step-1">
+                    <h3 class="step-title">Qual serviço você precisa?</h3>
+                    <div class="servico-select-grid">
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Instalação de Ar-Condicionado"
+                                data-duration="3" />
+                            <div class="servico-opt-card"><span
+                                    class="soc-icon">🔧</span><span>Instalação</span><small>~3 horas</small></div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Manutenção Preventiva" data-duration="2" />
+                            <div class="servico-opt-card"><span class="soc-icon">🔍</span><span>Manutenção
+                                    Preventiva</span><small>~2 horas</small></div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Manutenção Corretiva" data-duration="2" />
+                            <div class="servico-opt-card"><span class="soc-icon">⚙️</span><span>Manutenção
+                                    Corretiva</span><small>~2 horas</small></div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Limpeza e Higienização" data-duration="2" />
+                            <div class="servico-opt-card"><span
+                                    class="soc-icon">✨</span><span>Higienização</span><small>~2 horas</small></div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Recarga de Gás Refrigerante" data-duration="1" />
+                            <div class="servico-opt-card"><span class="soc-icon">💨</span><span>Recarga de
+                                    Gás</span><small>~1 hora</small></div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Consultoria e Projeto de Climatização"
+                                data-duration="2" />
+                            <div class="servico-opt-card"><span
+                                    class="soc-icon">📐</span><span>Consultoria/Projeto</span><small>~2 horas</small>
+                            </div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="PMOC – Plano de Manutenção" data-duration="3" />
+                            <div class="servico-opt-card"><span class="soc-icon">📋</span><span>Contrato de Manutenção -
+                                    PMOC</span><small>~3
+                                    horas</small></div>
+                        </label>
+                        <label class="servico-option">
+                            <input type="radio" name="servico" value="Outro Serviço" data-duration="2" />
+                            <div class="servico-opt-card"><span class="soc-icon">💬</span><span>Outro</span><small>A
+                                    definir</small></div>
+                        </label>
+                    </div>
+                    <div class="step-nav">
+                        <button class="btn-next" id="next1" onclick="goStep(2)" disabled>Próximo →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Data e Hora -->
+                <div class="form-step" id="form-step-2">
+                    <h3 class="step-title">Quando prefere receber a visita?</h3>
+                    <div class="datetime-grid">
+                        <div class="field-group">
+                            <label for="data">📅 Data preferida</label>
+                            <input type="date" id="data" name="data" class="field-input" />
+                        </div>
+                        <div class="field-group">
+                            <label for="hora">🕐 Horário</label>
+                            <select id="hora" name="hora" class="field-input">
+                                <option value="">Selecione o horário</option>
+                                <option value="09:00">09:00 – Manhã cedo</option>
+                                <option value="10:00">10:00 – Manhã</option>
+                                <option value="11:00">11:00 – Manhã</option>
+                                <option value="13:00">13:00 – Tarde cedo</option>
+                                <option value="14:00">14:00 – Tarde</option>
+                                <option value="15:00">15:00 – Tarde</option>
+                                <option value="16:00">16:00 – Fim de tarde</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="endereco">📍 Endereço da visita</label>
+                            <input type="text" id="endereco" name="endereco" class="field-input"
+                                placeholder="Rua, número, bairro – São Paulo/SP" />
+                        </div>
+                        <div class="field-group">
+                            <label for="tipo_local">🏠 Tipo de ambiente</label>
+                            <select id="tipo_local" name="tipo_local" class="field-input">
+                                <option value="">Selecione</option>
+                                <option value="Residencial">Residencial</option>
+                                <option value="Comercial / Escritório">Comercial / Escritório</option>
+                                <option value="Clínica / Consultório">Clínica / Consultório</option>
+                                <option value="Indústria / Galpão">Indústria / Galpão</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="step-nav">
+                        <button class="btn-back" onclick="goStep(1)">← Voltar</button>
+                        <button class="btn-next" id="next2" onclick="goStep(3)" disabled>Próximo →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Dados do Cliente -->
+                <div class="form-step" id="form-step-3">
+                    <h3 class="step-title">Seus dados de contato</h3>
+                    <div class="dados-grid">
+                        <div class="field-group">
+                            <label for="nome">👤 Nome completo</label>
+                            <input type="text" id="nome" name="nome" class="field-input" placeholder="Seu nome" />
+                        </div>
+                        <div class="field-group">
+                            <label for="telefone">📱 WhatsApp / Telefone</label>
+                            <input type="tel" id="telefone" name="telefone" class="field-input"
+                                placeholder="(11) 9 9999-9999" />
+                        </div>
+                        <div class="field-group full">
+                            <label for="observacoes">💬 Observações (opcional)</label>
+                            <textarea id="observacoes" name="observacoes" class="field-input" rows="3"
+                                placeholder="Descreva o problema, marca do equipamento, número de aparelhos, etc."></textarea>
+                        </div>
+                    </div>
+                    <div class="step-nav">
+                        <button class="btn-back" onclick="goStep(2)">← Voltar</button>
+                        <button class="btn-next" id="next3" onclick="goStep(4)" disabled>Revisar →</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmação -->
+                <div class="form-step" id="form-step-4">
+                    <h3 class="step-title">Confirme seu agendamento</h3>
+                    <div class="resumo-card" id="resumoCard"></div>
+                    <div class="confirm-actions">
+                        <button class="btn-back" onclick="goStep(3)">← Editar</button>
+                        <button class="btn-calendar" id="btnCalendar" onclick="confirmarAgendamento()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            Confirmar no Google Calendar
+                        </button>
+                        <button class="btn-whatsapp-confirm" onclick="confirmarWhatsApp()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                            </svg>
+                            Confirmar via WhatsApp
+                        </button>
+                    </div>
+                    <p class="confirm-note">🔒 Seus dados são usados apenas para o agendamento. Não compartilhamos com
+                        terceiros.</p>
+                </div>
+
+                <!-- Sucesso -->
+                <div class="form-step" id="form-step-success">
+                    <div class="success-content">
+                        <div class="success-icon">✅</div>
+                        <h3>Agendamento enviado!</h3>
+                        <p>Uma janela do Google Calendar foi aberta para você confirmar o evento. Nossa equipe também
+                            receberá a solicitação e entrará em contato para confirmar.</p>
+                        <a href="https://wa.me/5511952730593" class="btn-whatsapp" target="_blank">💬 Tirar dúvidas pelo
+                            WhatsApp</a>
+                        <button class="btn-back" onclick="resetForm()" aria-label="Voltar para o início do agendamento">↩️ Novo Agendamento</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-brand">
+                <img src="assets/logo.png" alt="Renostter" class="footer-logo-img" />
+                <p>Tecnologia em Climatização.<br />Conforto com responsabilidade técnica.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Serviços</h4>
+                <ul>
+                    <li><a href="#servicos">Instalação</a></li>
+                    <li><a href="#servicos">Manutenção Preventiva</a></li>
+                    <li><a href="#servicos">Higienização</a></li>
+                    <li><a href="#servicos">Contrato de Manutenção - PMOC</a></li>
+                    <li><a href="#servicos">Contratos</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contato</h4>
+                <ul>
+                    <li><a href="https://wa.me/5511952730593" target="_blank">WhatsApp</a></li>
+                    <li><a href="https://instagram.com/renostter" target="_blank">Instagram</a></li>
+                    <li><a href="https://www.facebook.com/Renostter" target="_blank">Facebook</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Renostter Climatização. Todos os direitos reservados. CNPJ: 31.535.191/0001-10</p>
+            <div style="margin-top: 15px;">
+                <button id="openTermosModal" class="btn-open" aria-label="Abrir Termos de Uso">📜 Termos de Uso</button>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- ========== PINTURA MODAL (SIMULADOR) ========== -->
+    <div class="pintura-modal-overlay" id="pinturaModal" onclick="closePinturaModal()">
+        <div class="pintura-modal-content" onclick="event.stopPropagation()">
+            <button class="pm-close" onclick="closePinturaModal()" aria-label="Fechar">✕</button>
+            <div class="pm-layout">
+                <!-- Área de Visualização 3D/SVG simulada -->
+                <div class="pm-visualizer">
+                    <div class="pm-stage">
+                        <svg viewBox="0 0 800 300" class="ac-svg" id="acSvgUnit">
+                            <defs>
+                                <filter id="ac-shadow">
+                                    <feDropShadow dx="0" dy="15" stdDeviation="20" flood-opacity="0.3" />
+                                </filter>
+                                <radialGradient id="highlight" cx="50%" cy="10%" r="90%">
+                                    <stop offset="0%" stop-color="#fff" stop-opacity="0.2"/>
+                                    <stop offset="100%" stop-color="#000" stop-opacity="0.2"/>
+                                </radialGradient>
+                            </defs>
+                            <!-- Chassi Principal que receberá a cor dinamicamente via JS -->
+                            <path class="ac-body" id="acBodyPath" d="M100,50 Q100,20 130,20 L670,20 Q700,20 700,50 L700,250 Q700,280 670,280 L130,280 Q100,280 100,250 Z" fill="var(--ac-color, #E5E7EB)" filter="url(#ac-shadow)"></path>
+                            <!-- Grille/Detalhes Invariáveis -->
+                            <rect x="130" y="80" width="540" height="20" rx="10" fill="#333" opacity="0.8"></rect>
+                            <rect x="130" y="120" width="540" height="15" rx="5" fill="#333" opacity="0.8"></rect>
+                            <rect x="130" y="150" width="540" height="15" rx="5" fill="#333" opacity="0.8"></rect>
+                            <rect x="130" y="180" width="540" height="15" rx="5" fill="#333" opacity="0.8"></rect>
+                            <circle cx="650" cy="50" r="10" fill="lime" opacity="0.9"></circle>
+                            <text x="610" y="55" font-family="sans-serif" font-size="16" fill="#fff" opacity="0.6">22°C</text>
+                            <path d="M100,50 Q100,20 130,20 L670,20 Q700,20 700,50 L700,250 Q700,280 670,280 L130,280 Q100,280 100,250 Z" fill="url(#highlight)" style="pointer-events: none;"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Controles -->
+                <div class="pm-controls">
+                    <h3>Simulador de Cores</h3>
+                    <p>Toque em uma cor para personalizar sua unidade.</p>
+
+                    <div class="pm-swatches" id="pmSwatches">
+                        <!-- Swatches rendered via JS or prepopulated here -->
+                        <button class="swatch active" style="--sw-color: #E5E7EB" onclick="applAcColor('#E5E7EB', this)" aria-label="Cor Cinza Claro"></button>
+                        <button class="swatch" style="--sw-color: #FF5A5F" onclick="applAcColor('#FF5A5F', this)" aria-label="Cor Coral"></button>
+                        <button class="swatch" style="--sw-color: #2D3748" onclick="applAcColor('#2D3748', this)" aria-label="Cor Grafite"></button>
+                        <button class="swatch" style="--sw-color: #F6E05E" onclick="applAcColor('#F6E05E', this)" aria-label="Cor Amarelo"></button>
+                        <button class="swatch" style="--sw-color: #48BB78" onclick="applAcColor('#48BB78', this)" aria-label="Cor Verde Palmeira"></button>
+                        <button class="swatch" style="--sw-color: #4299E1" onclick="applAcColor('#4299E1', this)" aria-label="Cor Azul Céu"></button>
+
+                    </div>
+
+                    <div class="pm-promo hidden" id="pmPromoBox">
+                        <div class="pm-promo-inner">
+                            <span>🎁 Cupom Liberado!</span>
+                            <strong>CORES15</strong>
+                            <p>15% OFF na pintura do seu 1º equipamento.</p>
+                        </div>
+                    </div>
+
+                    <button class="pm-cta-btn" onclick="solicitarOrcamentoPintura()">
+                        Solicitar orçamento personalizado
+                    </button>
+                    <p class="pm-hint">Inicia uma solicitação pelo Atendimento.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/5511952730593?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
+        class="floating-whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+    </a>
+
+    <script src="script.js"></script>
+    <script src="js/portfolio.js"></script>
+    <script src="calendar.js"></script>
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    <script src="chatbot.js"></script>
+
+    <!-- ========== CHAT WIDGET ========== -->
+
+    <!-- Popup de boas-vindas -->
+    <div class="chat-welcome-popup" id="chatWelcomePopup" onclick="toggleChat()">
+        <div class="cwp-avatar"><img src="assets/lucas-ai.jpg" alt="Lucas AI Avatar" loading="lazy"></div>
+
+        <div class="cwp-text">
+            <strong>Lucas — Renostter IA</strong>
+            <p>Olá! Posso te ajudar a agendar uma visita técnica? 😊</p>
+        </div>
+        <button class="cwp-close"
+            onclick="event.stopPropagation(); this.closest('.chat-welcome-popup').classList.remove('visible')">✕</button>
+    </div>
+
+    <!-- Botão flutuante -->
+    <button class="chat-toggle-btn" id="chatToggleBtn" onclick="toggleChat()" aria-label="Abrir chat com Lucas">
+        <div class="chat-toggle-icon open-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+        <div class="chat-toggle-icon close-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </div>
+    </button>
+
+    <!-- Widget do Chat -->
+    <div class="chat-widget" id="chatWidget">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-bot-avatar"><img src="assets/lucas-ai.jpg" alt="Lucas"></div>
+                <div>
+                    <strong>Lucas</strong>
+                    <span class="chat-status">
+                        <span class="status-dot"></span>
+                        Online
+                    </span>
+                </div>
+            </div>
+            <div class="chat-header-actions">
+                <a href="https://wa.me/5511952730593" target="_blank" class="chat-wa-link" title="WhatsApp">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                </a>
+                <button class="chat-close-btn" onclick="closeChat()" aria-label="Fechar chat">✕</button>
+            </div>
+        </div>
+
+        <!-- Corpo do Chat -->
+        <div class="chat-body" id="chatBody">
+            <!-- Mensagens injetadas via JS -->
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Digite sua mensagem..." autocomplete="off"
+                maxlength="300" />
+            <button class="chat-send-btn" onclick="sendChatMessage()" aria-label="Enviar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Footer do chat -->
+        <div class="chat-footer">
+            <span>Powered by</span>
+            <strong>Renostter IA</strong>
+            <span>·</span>
+            <a href="https://calendly.com/renostter/visita-tecnica" target="_blank"
+                onclick="abrirCalendly(); return false;">📅
+                Agendar</a>
+        </div>
+    </div>
+
+
+    <!-- ========== TERMOS DE USO MODAL ========== -->
+    <div id="termosModalOverlay" class="termos-modal-overlay">
+        <div class="termos-modal-box">
+            <div class="termos-modal-header">
+                <h2 class="termos-modal-title">Termos de Serviço</h2>
+                <button id="closeTermosModal" class="termos-btn-close">&times;</button>
+            </div>
+            <div class="termos-modal-content">
+                <h3>1. Aceitação dos Termos</h3>
+                <p>Ao acessar ou utilizar o site da <strong>Renostter Climatização</strong> (doravante "Renostter"), você concorda integralmente com estes Termos de Uso e com nossa Política de Privacidade. Se não concordar, não utilize nossos serviços ou plataforma.</p>
+
+                <h3>2. Objeto do Site</h3>
+                <p>A Renostter oferece informações sobre serviços de climatização (instalação, manutenção preventiva/corretiva, limpeza, recarga de gás, pintura de equipamentos, etc.), orçamentos, agendamentos e conteúdo técnico relacionado. O site pode conter links para canais de atendimento (WhatsApp, telefone) e formulários de contato.</p>
+
+                <h3>3. Cadastro e Responsabilidades do Usuário</h3>
+                <p>Para solicitar orçamentos ou serviços, você poderá fornecer dados pessoais (nome, e-mail, telefone, endereço). Você se compromete a informar dados verdadeiros e atualizados. A Renostter não se responsabiliza por informações incorretas fornecidas pelo usuário que impeçam a execução dos serviços.</p>
+
+                <h3>4. Serviços e Orçamentos</h3>
+                <p>Os orçamentos solicitados via site são estimativas iniciais. O valor final pode ser ajustado após visita técnica ou análise detalhada. A aceitação do serviço gera um contrato específico (por chamado ou ordem de serviço), que prevalecerá sobre estes termos gerais.</p>
+
+                <h3>5. Pagamento e Cobranças</h3>
+                <p>Os pagamentos seguem as condições acordadas no orçamento aprovado. Poderemos emitir cobranças via boleto bancário, Pix ou cartão de crédito (por meio de gateways parceiros). O não pagamento nas datas acordadas poderá acarretar multa, juros e suspensão dos serviços futuros.</p>
+
+                <h3>6. Propriedade Intelectual</h3>
+                <p>Todo o conteúdo do site (textos, logotipos, imagens, vídeos, layout) é de propriedade exclusiva da Renostter ou licenciado para seu uso. É proibida a reprodução, distribuição ou modificação sem autorização prévia por escrito.</p>
+
+                <h3>7. Limitação de Responsabilidade</h3>
+                <p>A Renostter não se responsabiliza por danos indiretos ou perda de lucros decorrentes de uso indevido do site, de falhas técnicas fora de seu controle (como problemas de internet) ou de ações de terceiros (hackers, malwares). Nos serviços executados, a responsabilidade limita-se ao valor pago pelo serviço específico, conforme Código de Defesa do Consumidor.</p>
+
+                <h3>8. Privacidade e Proteção de Dados (LGPD)</h3>
+                <p>Coletamos e tratamos dados pessoais apenas para as finalidades descritas em nossa <strong>Política de Privacidade</strong>. Você tem direito de acessar, corrigir ou solicitar a exclusão de seus dados. Para isso, entre em contato pelo e-mail <a href="mailto:privacidade@renostter.com.br">privacidade@renostter.com.br</a>.</p>
+
+                <h3>9. Modificações nos Termos</h3>
+                <p>A Renostter pode alterar estes Termos de Uso a qualquer momento. A versão atualizada será publicada no site com a data de revisão. O uso continuado após alterações implica aceitação dos novos termos.</p>
+
+                <h3>10. Legislação e Foro</h3>
+                <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de São Paulo/SP para dirimir quaisquer controvérsias, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+
+                <p style="margin-top: 2em; font-size: 0.85rem; text-align: center;">📅 Última atualização: 15 de abril de 2026</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const termosOverlay = document.getElementById('termosModalOverlay');
+        const openTermosBtn = document.getElementById('openTermosModal');
+        const closeTermosBtn = document.getElementById('closeTermosModal');
+
+        if (openTermosBtn) {
+            openTermosBtn.addEventListener('click', () => {
+                termosOverlay.style.display = 'flex';
+            });
+        }
+        
+        if (closeTermosBtn) {
+            closeTermosBtn.addEventListener('click', () => {
+                termosOverlay.style.display = 'none';
+            });
+        }
+
+        // Fecha se clicar fora da caixa
+        window.addEventListener('click', (event) => {
+            if (event.target === termosOverlay) termosOverlay.style.display = 'none';
+        });
+    </script>
+    <!-- LOGICA DE RANDOMIZAÇÃO DE VÍDEOS (YOUTUBE SHORTS) -->
+    <script>
+        (function() {
+            const videos = [
+                { id: '99aP656ShAM?si=nqfXGeqLAFFIZ-WW', title: 'Obras em Tempo Real' },
+                { id: '2-A3Gwn6YJg?si=G-9tV3lzAYRX-gLz', title: 'Processo Detalhado' },
+                { id: 'Emgg1jkWolE?si=hDDzigq758VoDJ2_', title: 'Rotina de Excelência' }
+            ];
+
+
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            const shuffledVideos = shuffle([...videos]);
+            const container = document.getElementById('technical-video-container');
+
+            if (container) {
+                let html = '';
+                shuffledVideos.forEach(video => {
+                    html += `
+                        <div class="video-card youtube-card">
+                            <div class="video-wrapper youtube-wrapper">
+                                <iframe 
+                                    src="https://www.youtube.com/embed/${video.id}" 
+                                    title="${video.title}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                            <div class="video-info">
+                                <h3>${video.title}</h3>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        })();
+    </script>
+
+</body>
+
+
+</html>

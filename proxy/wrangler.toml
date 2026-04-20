@@ -1,0 +1,13 @@
+name = "renostter-gemini-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Workers gratuito: 100.000 req/dia
+# Não precisa de cartão de crédito
+
+[vars]
+# Variáveis públicas (não sensíveis)
+RATE_LIMIT_RPM = "20"
+
+# ⚠️  A chave Gemini NÃO fica aqui — é configurada como Secret:
+#     wrangler secret put GEMINI_API_KEY
