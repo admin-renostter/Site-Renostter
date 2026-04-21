@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -476,15 +476,14 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="featuredVideoPlayer" 
-						referrerpolicy="strict-origin-when-cross-origin"
-                        src="https://www.youtube.com/watch?v=99aP656ShAM" 
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        src="https://www.youtube.com/embed/99aP656ShAM" 
                         title="Obra em Tempo Real" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                         allowfullscreen
                         style="width: 100%; height: 100%; border-radius: 12px;">
-                    </iframe>		
-
+                    </iframe>
                 </div>
                 <div class="featured-actions">
                     <a href="https://wa.me/5511952730593" class="btn-card-cta">Quero um Orçamento</a>
@@ -1127,38 +1126,97 @@
             if (event.target === termosOverlay) termosOverlay.style.display = 'none';
         });
     </script>
-    <!-- LOGICA DE RANDOMIZAÇÃO DE VÍDEOS (YOUTUBE SHORTS) -->
-<script>
-    (function() {
-        const videos = [
-            { id: '99aP656ShAM', title: 'Obras em Tempo Real' },
-            { id: '2-A3Gwn6YJg', title: 'Processo Detalhado' },
-            { id: 'Emgg1jkWolE', title: 'Rotina de Excelência' }
-        ];
-        ...
-        let html = '';
-        shuffledVideos.forEach(video => {
-            html += `
-                <div class="video-card youtube-card">
-                    <div class="video-wrapper youtube-wrapper">
-                        <iframe 
-							referrerpolicy="strict-origin-when-cross-origin"
-                            src="https://www.youtube.com/embed/${video.id}" 
-                            title="${video.title}" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen
-                            loading="lazy">
-                        </iframe>
-                    </div>
-                    <div class="video-info">
-                        <h3>${video.title}</h3>
-                    </div>
-                </div>
-            `;
+    <!-- LOGICA DE INTEGRAÇÃO COM YOUTUBE DATA API -->
+    <!-- Spinner de carregamento -->
+    <div id="video-loading-spinner" class="spinner hidden"></div>
+    <script>
+    // CONFIGURAÇÕES
+    const API_KEY = 'AIzaSyCypB7m6IvSExERRhLaT0WDZFbCKH0Z9Wg';
+    const CHANNEL_ID = 'UC7v6Y9tQzJZBzK4v8rU6Z8A'; // ID do canal @renostter (obtenha via YouTube API se necessário)
+    const MAX_RESULTS = 9;
+
+    // Função de embaralhamento (Fisher‑Yates)
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Controle do spinner
+    function toggleSpinner(show) {
+        const spinner = document.getElementById('video-loading-spinner');
+        if (spinner) spinner.classList.toggle('hidden', !show);
+    }
+
+    // Busca vídeos recentes do canal via YouTube Data API v3
+    async function fetchChannelVideos() {
+        const endpoint = 'https://www.googleapis.com/youtube/v3/search';
+        const params = new URLSearchParams({
+            key: API_KEY,
+            channelId: CHANNEL_ID,
+            part: 'snippet',
+            order: 'date',
+            maxResults: MAX_RESULTS,
+            type: 'video'
         });
+        const response = await fetch(`${endpoint}?${params}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (!data.items || data.items.length === 0) throw new Error('Nenhum vídeo encontrado');
+        return data.items.map(item => ({ id: item.id.videoId, title: item.snippet.title }));
+    }
+
+    // Renderiza os cards de vídeo
+    function renderVideos(videos) {
+        const container = document.getElementById('technical-video-container');
+        if (!container) return;
+        const shuffled = shuffle(videos);
+        const html = shuffled.map(v => `
+            <div class="video-card youtube-card carousel-item">
+                <div class="video-wrapper youtube-wrapper">
+                    <iframe 
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        src="https://www.youtube.com/embed/${v.id}?rel=0" 
+                        title="${v.title}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        loading="lazy"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="video-info">
+                    <h3>${v.title}</h3>
+                    <a href="https://youtube.com/shorts/${v.id}" target="_blank" class="watch-on-yt">
+                        <span>Ver no YouTube</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>`).join('');
         container.innerHTML = html;
-    })();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        toggleSpinner(true);
+        try {
+            const videos = await fetchChannelVideos();
+            renderVideos(videos);
+        } catch (err) {
+            console.error('Erro ao carregar vídeos:', err);
+            const container = document.getElementById('technical-video-container');
+                                <h3>${video.title}</h3>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        })();
     </script>
 
 </body>
