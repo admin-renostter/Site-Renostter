@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -476,13 +476,14 @@
                 <div class="video-wrapper">
                     <iframe 
                         id="featuredVideoPlayer" 
-                        src="https://www.youtube.com/embed/99aP656ShAM?si=nqfXGeqLAFFIZ-WW" 
+						referrerpolicy="strict-origin-when-cross-origin"
+                        src="https://www.youtube.com/watch?v=99aP656ShAM" 
                         title="Obra em Tempo Real" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                         allowfullscreen
                         style="width: 100%; height: 100%; border-radius: 12px;">
-                    </iframe>
+                    </iframe>		
 
                 </div>
                 <div class="featured-actions">
@@ -1127,50 +1128,37 @@
         });
     </script>
     <!-- LOGICA DE RANDOMIZAÇÃO DE VÍDEOS (YOUTUBE SHORTS) -->
-    <script>
-        (function() {
-            const videos = [
-                { id: '99aP656ShAM?si=nqfXGeqLAFFIZ-WW', title: 'Obras em Tempo Real' },
-                { id: '2-A3Gwn6YJg?si=G-9tV3lzAYRX-gLz', title: 'Processo Detalhado' },
-                { id: 'Emgg1jkWolE?si=hDDzigq758VoDJ2_', title: 'Rotina de Excelência' }
-            ];
-
-
-            function shuffle(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
-            }
-
-            const shuffledVideos = shuffle([...videos]);
-            const container = document.getElementById('technical-video-container');
-
-            if (container) {
-                let html = '';
-                shuffledVideos.forEach(video => {
-                    html += `
-                        <div class="video-card youtube-card">
-                            <div class="video-wrapper youtube-wrapper">
-                                <iframe 
-                                    src="https://www.youtube.com/embed/${video.id}" 
-                                    title="${video.title}" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                    allowfullscreen
-                                    loading="lazy">
-                                </iframe>
-                            </div>
-                            <div class="video-info">
-                                <h3>${video.title}</h3>
-                            </div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            }
-        })();
+<script>
+    (function() {
+        const videos = [
+            { id: '99aP656ShAM', title: 'Obras em Tempo Real' },
+            { id: '2-A3Gwn6YJg', title: 'Processo Detalhado' },
+            { id: 'Emgg1jkWolE', title: 'Rotina de Excelência' }
+        ];
+        ...
+        let html = '';
+        shuffledVideos.forEach(video => {
+            html += `
+                <div class="video-card youtube-card">
+                    <div class="video-wrapper youtube-wrapper">
+                        <iframe 
+							referrerpolicy="strict-origin-when-cross-origin"
+                            src="https://www.youtube.com/embed/${video.id}" 
+                            title="${video.title}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    <div class="video-info">
+                        <h3>${video.title}</h3>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    })();
     </script>
 
 </body>
