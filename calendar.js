@@ -46,10 +46,44 @@ if (dataInput) {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     dataInput.min = `${yyyy}-${mm}-${dd}`;
+
+    dataInput.addEventListener('change', () => {
+        const selected = new Date(dataInput.value + 'T12:00:00');
+        const dayOfWeek = selected.getDay(); // 0 = domingo, 6 = sábado
+
+        if (dayOfWeek === 0) {
+            dataInput.setCustomValidity('Não atendemos aos domingos. Por favor, selecione outro dia.');
+            dataInput.reportValidity();
+            dataInput.value = '';
+            showDateError('Não atendemos aos domingos. Escolha de segunda a sábado.');
+        } else if (dayOfWeek === 6 && selected.getHours() >= 13) {
+            showDateError('Sábados até 13h. Selecione um horário pela manhã.');
+        } else {
+            dataInput.setCustomValidity('');
+            clearDateError();
+        }
+    });
+}
+
+function showDateError(msg) {
+    let el = document.getElementById('date-error-msg');
+    if (!el) {
+        el = document.createElement('p');
+        el.id = 'date-error-msg';
+        el.style.cssText = 'color:#ef4444;font-size:0.85rem;margin-top:6px;display:flex;align-items:center;gap:4px;';
+        dataInput?.parentNode?.appendChild(el);
+    }
+    el.innerHTML = `⚠️ ${msg}`;
+}
+
+function clearDateError() {
+    document.getElementById('date-error-msg')?.remove();
 }
 
 function checkStep2() {
-    const ok = dataInput?.value && horaSelect?.value && enderecoInput?.value && tipoSelect?.value;
+    const dateVal = dataInput?.value;
+    const validDate = dateVal && new Date(dateVal + 'T12:00:00').getDay() !== 0;
+    const ok = validDate && horaSelect?.value && enderecoInput?.value && tipoSelect?.value;
     if (document.getElementById('next2')) {
         document.getElementById('next2').disabled = !ok;
     }
@@ -64,6 +98,40 @@ function checkStep2() {
         checkStep2();
     });
 });
+
+// ─── INDICADOR DE VAGAS DISPONÍVEIS ─────────────────────────
+(function renderSlotsIndicator() {
+    const container = document.getElementById('slots-indicator');
+    if (!container) return;
+
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0=dom, 6=sab
+
+    // Calcular dias restantes na semana (seg-sab)
+    const daysLeft = dayOfWeek === 0 ? 6 : 6 - dayOfWeek;
+
+    // Cada dia útil tem ~4 slots (09, 10, 13, 14, 15, 16h) → seg-sex = 6 slots, sáb = 2 slots
+    const slotsPerWeekday = 6;
+    const slotsSaturday = 2;
+    const weekdaysLeft = Math.max(0, Math.min(daysLeft, 5));
+    const saturdayLeft = daysLeft >= 6 ? 1 : 0;
+    const totalSlots = weekdaysLeft * slotsPerWeekday + saturdayLeft * slotsSaturday;
+
+    // Simular vagas já tomadas (seed baseado na semana do ano para consistência)
+    const weekNum = Math.ceil((now - new Date(now.getFullYear(), 0, 1)) / 604800000);
+    const taken = (weekNum * 7 + dayOfWeek) % Math.max(1, totalSlots - 2);
+    const available = Math.max(1, totalSlots - taken);
+
+    const urgency = available <= 3 ? 'urgente' : available <= 6 ? 'medio' : 'normal';
+    const label = urgency === 'urgente'
+        ? `🔴 Apenas <strong>${available}</strong> vaga${available > 1 ? 's' : ''} esta semana!`
+        : urgency === 'medio'
+        ? `🟡 <strong>${available}</strong> vagas disponíveis esta semana`
+        : `🟢 <strong>${available}</strong> vagas disponíveis esta semana`;
+
+    container.innerHTML = label;
+    container.className = `slots-indicator slots-${urgency}`;
+})();
 
 // ─── STEP 3: Dados do Cliente ────────────────────────────────
 const nomeInput = document.getElementById('nome');

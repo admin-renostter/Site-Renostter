@@ -13,8 +13,14 @@
     <meta property="og:image" content="assets/logo.png" />
     <meta property="og:type" content="website" />
     <link rel="canonical" href="https://renostter.com" />
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#00AEEF" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="video" href="assets/hero-background.mp4" type="video/mp4">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
@@ -23,10 +29,11 @@
     <style>
         /* Estilos do modal de Termos de Uso */
         :root {
-            --primary-popup: #ff8c00; 
+            --primary-popup: #ff8c00;
             --bg-modal: #1e1e2f;
             --text-light: rgba(255, 255, 255, 0.85);
         }
+
         .btn-open {
             background: var(--primary-popup);
             border: none;
@@ -37,12 +44,14 @@
             cursor: pointer;
             font-size: 0.9rem;
             transition: 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
+
         .btn-open:hover {
             background: #e07c00;
             transform: scale(1.02);
         }
+
         .termos-modal-overlay {
             display: none;
             position: fixed;
@@ -50,12 +59,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.85);
+            background-color: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 10000;
         }
+
         .termos-modal-box {
             background: var(--bg-modal);
             width: 90%;
@@ -64,16 +74,18 @@
             border-radius: 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .termos-modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .termos-modal-title {
             color: var(--primary-popup);
             text-transform: uppercase;
@@ -81,6 +93,7 @@
             margin: 0;
             font-size: 1.5rem;
         }
+
         .termos-btn-close {
             background: none;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -95,10 +108,12 @@
             align-items: center;
             justify-content: center;
         }
+
         .termos-btn-close:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
+
         .termos-modal-content {
             padding: 30px;
             overflow-y: auto;
@@ -106,35 +121,44 @@
             line-height: 1.6;
             font-size: 0.95rem;
         }
+
         .termos-modal-content h3 {
             color: var(--primary-popup);
             margin-top: 1.2em;
             margin-bottom: 0.5em;
             font-size: 1.2rem;
         }
+
         .termos-modal-content h3:first-of-type {
             margin-top: 0;
         }
+
         .termos-modal-content p {
             margin: 0.8em 0;
         }
+
         .termos-modal-content ul {
             margin: 0.5em 0 1em 1.5em;
         }
+
         .termos-modal-content li {
             margin: 0.3em 0;
         }
+
         .termos-modal-content::-webkit-scrollbar {
             width: 6px;
         }
+
         .termos-modal-content::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
+
         .termos-modal-content::-webkit-scrollbar-thumb {
             background: var(--primary-popup);
             border-radius: 10px;
         }
+
         .termos-modal-content a {
             color: var(--primary-popup);
             text-decoration: underline;
@@ -204,15 +228,16 @@
             <a href="#home" class="nav-logo">
                 <video autoplay loop muted playsinline class="logo-img">
                     <source src="assets/logo-dinamico.webm" type="video/webm">
-                    <img src="assets/logo.png" alt="Renostter Climatização">
                 </video>
+                <img src="assets/logo.png" alt="Renostter Climatização" class="logo-img-static" />
             </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#servicos">Serviços</a></li>
-                <li><a href="#numeros">Resultados</a></li>
+                <li><a href="#calculadora">Calculadora</a></li>
                 <li><a href="#portfolio">Portfólio</a></li>
-                <li><a href="#diferenciais">Diferenciais</a></li>
-                <li><a href="#agendar">Agendar Visita</a></li>
+                <li><a href="#reviews">Avaliações</a></li>
+                <li><a href="#mapa">Cobertura</a></li>
+                <li><a href="#agendar">Agendar</a></li>
                 <li><a href="#contato" class="btn-nav">Orçamento Grátis</a></li>
             </ul>
             <button class="hamburger" id="hamburger" aria-label="Abrir Menu de Navegação">
@@ -225,7 +250,8 @@
     <!-- ========== HERO ========== -->
     <section class="hero" id="home">
         <!-- Vídeo de fundo -->
-        <video class="hero-video" autoplay muted loop playsinline>
+        <video class="hero-video" autoplay muted loop playsinline
+            poster="assets/residencial/residencia-alto-da-lapa.jpg">
             <source src="assets/hero-background.mp4" type="video/mp4">
             <img src="assets/residencial/residencia-alto-da-lapa.jpg" alt="Fundo da seção hero">
         </video>
@@ -287,7 +313,8 @@
                     <div class="marca-item"><img src="assets/marcas/gree.png" alt="Gree" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/elgin.png" alt="Elgin" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/springer.png" alt="Springer" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy">
+                    </div>
                     <div class="marca-item"><img src="assets/marcas/consul.png" alt="Consul" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/tcl.png" alt="TCL" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/philco.png" alt="Philco" loading="lazy"></div>
@@ -299,7 +326,8 @@
                     <div class="marca-item"><img src="assets/marcas/gree.png" alt="Gree" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/elgin.png" alt="Elgin" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/springer.png" alt="Springer" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy"></div>
+                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy">
+                    </div>
                     <div class="marca-item"><img src="assets/marcas/consul.png" alt="Consul" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/tcl.png" alt="TCL" loading="lazy"></div>
                     <div class="marca-item"><img src="assets/marcas/philco.png" alt="Philco" loading="lazy"></div>
@@ -426,88 +454,60 @@
                     <p>Planos mensais ou anuais com visitas regulares, prioridade no atendimento e condições especiais.
                     </p>
                 </div>
-                </div>
             </div>
+        </div>
 
-            <!-- Destaque: Pintura de Equipamento -->
-            <div class="banner-pintura" id="bannerPintura">
-                <div class="banner-pintura-content">
-                    <span class="pintura-badge">Exclusivo</span>
-                    <h3>Pintura de Equipamento</h3>
-                    <p>Transforme seu ar‑condicionado em um item de decoração. Tinta automotiva de alta durabilidade, aplicação profissional e personalização total – combine com seu projeto!</p>
-                    <ul class="pintura-features">
-                        <li>🎨 Cores exclusivas (mais de 50 opções)</li>
-                        <li>🛡️ Proteção UV e anticorrosão</li>
-                        <li>✨ Acabamento automotivo premium</li>
-                        <li>🧼 Fácil limpeza e resistência a fungos</li>
-                    </ul>
-                    <button class="btn-pintura-cta" onclick="openPinturaModal()">Personalizar agora</button>
-                </div>
-                <!-- Banner Image Graphic - represented gracefully in CSS -->
-                <div class="banner-pintura-image">
-                    <div class="pintura-mockup"></div>
-                </div>
+        <!-- Destaque: Pintura de Equipamento -->
+        <div class="banner-pintura" id="bannerPintura">
+            <div class="banner-pintura-content">
+                <span class="pintura-badge">Exclusivo</span>
+                <h3>Pintura de Equipamento</h3>
+                <p>Transforme seu ar‑condicionado em um item de decoração. Tinta automotiva de alta durabilidade,
+                    aplicação profissional e personalização total – combine com seu projeto!</p>
+                <ul class="pintura-features">
+                    <li>🎨 Cores exclusivas (mais de 50 opções)</li>
+                    <li>🛡️ Proteção UV e anticorrosão</li>
+                    <li>✨ Acabamento automotivo premium</li>
+                    <li>🧼 Fácil limpeza e resistência a fungos</li>
+                </ul>
+                <button class="btn-pintura-cta" onclick="openPinturaModal()">Personalizar agora</button>
             </div>
+            <!-- Banner Image Graphic - represented gracefully in CSS -->
+            <div class="banner-pintura-image">
+                <div class="pintura-mockup"></div>
+            </div>
+        </div>
 
-            <p class="section-desc pintura-extra-desc">
-                Na Renostter, não cuidamos apenas da temperatura – cuidamos da estética do seu ambiente. A pintura de equipamentos é feita com tintas automotivas de altíssima resistência, garantindo que seu ar‑condicionado combine com a decoração ou se destaque como um elemento criativo. Personalizamos também dutos, grelhas e até controles remotos.
-            </p>
-            <div class="servicos-cta">
-                <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20informações%20sobre%20os%20serviços."
-                    class="btn-primary" target="_blank" rel="noopener">
-                    Quero um Orçamento Gratuito
-                </a>
-            </div>
+        <p class="section-desc pintura-extra-desc">
+            Na Renostter, não cuidamos apenas da temperatura – cuidamos da estética do seu ambiente. A pintura de
+            equipamentos é feita com tintas automotivas de altíssima resistência, garantindo que seu ar‑condicionado
+            combine com a decoração ou se destaque como um elemento criativo. Personalizamos também dutos, grelhas e até
+            controles remotos.
+        </p>
+        <div class="servicos-cta">
+            <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20informações%20sobre%20os%20serviços."
+                class="btn-primary" target="_blank" rel="noopener">
+                Quero um Orçamento Gratuito
+            </a>
+        </div>
         </div>
     </section>
 
+
     <section class="portfolio section-pad" id="portfolio">
         <div class="container">
-            <div class="section-header">
-                <p class="section-tag">NOSSO TRABALHO</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Instalações
-                            Realizadas</span></span></h2>
-                <p class="section-desc">Acompanhe nossas instalações em tempo real — diretamente do nosso Instagram.
-                    Feed atualizado automaticamente sem publicação manual.</p>
-            </div>
 
-            <!-- FEATURED VIDEO (YOUTUBE) -->
-            <div class="portfolio-featured-video" id="featuredVideoContainer">
-                <div class="video-wrapper">
-                    <iframe 
-                        id="featuredVideoPlayer" 
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        src="https://www.youtube.com/embed/99aP656ShAM" 
-                        title="Obra em Tempo Real" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen
-                        style="width: 100%; height: 100%; border-radius: 12px;">
-                    </iframe>
-                </div>
-                <div class="featured-actions">
-                    <a href="https://wa.me/5511952730593" class="btn-card-cta">Quero um Orçamento</a>
-                </div>
-            </div>
-
-
-            <!-- ✅ ELFSIGHT INSTAGRAM FEED -->
-            <div class="instagram-feed-container" style="margin-top: 48px; min-height: 400px; position: relative; z-index: 10;">
-                <!-- Elfsight Instagram Feed | Renostter -->
-                <script src="https://elfsightcdn.com/platform.js" async></script>
-                <div class="elfsight-app-36fd6cf3-2014-44b7-a188-1675e30fd920" data-elfsight-app-lazy></div>
-            </div>
-
-            <!-- 🎬 GALERIA DE VÍDEOS TÉCNICOS (RANDÔMICA) -->
+            <!-- 🎬 CARROSSEL DE VÍDEOS 3 COLUNAS -->
             <div class="video-gallery-section" id="video-gallery" style="margin-top: 80px;">
                 <div class="section-header">
-                    <p class="section-tag">EXCELÊNCIA EM VÍDEO</p>
-                    <h2 class="section-title">Nossa Rotina Técnica</h2>
-                    <p class="section-desc">Bastidores reais das nossas instalações e manutenções. Ordem atualizada a cada visita.</p>
+                    <p class="section-tag">NOSSOS VÍDEOS</p>
+                    <h2 class="section-title">Canal Renostter</h2>
+                    <p class="section-desc">Os vídeos mais recentes do nosso canal. Conteúdo atualizado automaticamente
+                        a cada visita.</p>
                 </div>
-                
-                <div id="technical-video-container" class="video-gallery-grid">
-                    <!-- Gerado dinamicamente via JS -->
+                <div id="yc3-spinner" class="yc3-spinner hidden"></div>
+                <div id="youtube-carousel-3cols" tabindex="0" aria-label="Carrossel de vídeos do canal Renostter">
+                    <!-- Carrossel 3 colunas gerado por js/portfolio.js -->
                 </div>
             </div>
 
@@ -598,6 +598,243 @@
         </div>
     </section>
 
+    <!-- ========== AVALIAÇÕES / REVIEWS ========== -->
+    <section class="reviews section-pad" id="reviews">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">O que dizem nossos clientes</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">+218
+                            avaliações<br /><span class="gradient-text">4,9 ★ no Google</span></span></span></h2>
+            </div>
+            <div class="reviews-header-bar">
+                <div class="google-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="google-badge-text">
+                        <strong>Google Meu Negócio</strong>
+                        <span>218 avaliações verificadas</span>
+                    </div>
+                </div>
+                <div class="reviews-stars-avg">
+                    4,9
+                    <div class="stars-row">★★★★★</div>
+                </div>
+            </div>
+            <div class="reviews-grid" id="reviews-grid-container">
+                <div class="review-card fade-up">
+                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="review-top">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#00AEEF,#0088CC)">MC</div>
+                        <div class="review-info"><strong>Mariana C.</strong><span>Vila Madalena, SP · há 2
+                                semanas</span></div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">Atendimento impecável do início ao fim. O técnico chegou no horário, explicou
+                        tudo antes de começar e o ar ficou gelando muito melhor depois da higienização. Recebi o laudo
+                        técnico no mesmo dia. Super recomendo!</p>
+                </div>
+                <div class="review-card fade-up">
+                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="review-top">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#FF6B00,#E55A00)">RF</div>
+                        <div class="review-info"><strong>Ricardo F.</strong><span>Clínica Médica Excellence · há 1
+                                mês</span></div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">Contratamos para o PMOC da nossa clínica. Toda a documentação exigida pela
+                        ANVISA foi entregue corretamente e dentro do prazo. O preço foi muito justo. Renovamos o
+                        contrato anual sem pensar duas vezes.</p>
+                </div>
+                <div class="review-card fade-up">
+                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="review-top">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9)">LS</div>
+                        <div class="review-info"><strong>Luciana S.</strong><span>Lapa, SP · há 3 semanas</span></div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">Instalei dois splits e a equipe foi muito profissional. Fizeram a passagem de
+                        tubulação com cuidado, sem estragar nada. O ar ficou perfeito e o preço foi mais barato que
+                        outro orçamento que peguei. Nota 10!</p>
+                </div>
+                <div class="review-card fade-up">
+                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="review-top">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">AP</div>
+                        <div class="review-info"><strong>André P.</strong><span>Empresa Industrial · há 2 meses</span>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">Nosso sistema VRF precisava de manutenção urgente e a Renostter atendeu no
+                        mesmo dia. Técnicos altamente capacitados, resolveram um vazamento que outra empresa não
+                        conseguiu identificar. Agora são nossos parceiros fixos.</p>
+                </div>
+                <div class="review-card fade-up">
+                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="review-top">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706)">CM</div>
+                        <div class="review-info"><strong>Cláudia M.</strong><span>Perdizes, SP · há 1 semana</span>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">Serviço de pintura do ar-condicionado — incrível! Pintaram no azul petróleo
+                        que combinou perfeitamente com a decoração do meu escritório. Qualidade automotiva mesmo. Todo
+                        mundo que entra pergunta onde fiz!</p>
+                </div>
+                <div class="review-card fade-up">
+                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
+                        <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335" />
+                    </svg>
+                    <div class="review-top">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#EF4444,#DC2626)">JT</div>
+                        <div class="review-info"><strong>João T.</strong><span>Santana, SP · há 1 mês</span></div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">Meu aparelho parou de funcionar numa sexta à noite. Mandei mensagem pelo
+                        WhatsApp e respondem super rápido. Técnico veio no sábado de manhã, diagnosticou o problema e
+                        resolveu na hora. Excelente suporte!</p>
+                </div>
+            </div>
+            <div class="reviews-cta">
+                <a href="https://g.page/r/CW0qmJKGFkgNEBI/review" data-review-write-url class="btn-primary"
+                    target="_blank" rel="noopener noreferrer" aria-label="Deixar avaliação no Google">
+                    ⭐ Avalie-nos no Google
+                </a>
+                <a href="https://wa.me/5511952730593?text=Olá!%20Quero%20contratar%20um%20serviço%20da%20Renostter."
+                    class="btn-secondary-outline" target="_blank" rel="noopener">Faça parte dos nossos clientes
+                    satisfeitos</a>
+                <p>Avaliações verificadas via Google Meu Negócio · renostter.com</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MAPA DE ATENDIMENTO ========== -->
+    <section class="mapa-atendimento section-pad" id="mapa">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-tag">Área de Cobertura</p>
+                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Atendemos
+                            toda<br /><span class="gradient-text">São Paulo e Região</span></span></span></h2>
+                <p class="section-desc">Técnicos em toda a Grande SP. Verifique se sua região está na nossa área de
+                    cobertura.</p>
+            </div>
+            <div class="mapa-inner">
+                <div id="mapa-leaflet"></div>
+                <div class="mapa-info">
+                    <h3>Onde você está?<br />Provavelmente atendemos! 📍</h3>
+                    <button id="btn-geolocalizacao" class="btn-geolocalizacao" onclick="usarGeolocalizacao()"
+                        type="button">
+                        📍 Usar minha localização
+                    </button>
+                    <p style="color:rgba(255,255,255,0.55); font-size:0.95rem; line-height:1.7;">Cobrimos São Paulo
+                        capital e toda a Grande SP, com técnicos deslocados diariamente para garantir agilidade no
+                        atendimento.</p>
+
+                    <div class="mapa-cep-check">
+                        <label for="cep-input">Verificar sua região por CEP</label>
+                        <div class="cep-input-row">
+                            <input type="text" class="cep-input" id="cep-input" placeholder="00000-000" maxlength="9"
+                                inputmode="numeric" aria-label="CEP para verificar cobertura" />
+                            <button class="cep-btn" onclick="verificarCep()" type="button">Verificar</button>
+                        </div>
+                        <div class="cep-result" id="cep-result" aria-live="polite"></div>
+                    </div>
+                    <a id="mapa-cta-orcamento" href="#agendar" class="btn-primary"
+                        style="display:none; margin-top:16px; width:100%; text-align:center; justify-content:center;">
+                        ✅ Solicitar Orçamento Agora
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ========== CONTATO ========== -->
     <section class="contato section-pad" id="contato">
         <div class="container">
@@ -676,6 +913,10 @@
                     direto para o nosso Google Calendar e você recebe a confirmação.</p>
             </div>
             <div class="agendar-container">
+                <!-- Indicador de vagas -->
+                <div style="text-align:center; margin-bottom:8px;">
+                    <span id="slots-indicator" class="slots-indicator slots-normal">🟢 Verificando vagas...</span>
+                </div>
                 <!-- Steps -->
                 <div class="steps-bar">
                     <div class="step active" id="step-dot-1"><span>1</span>
@@ -855,7 +1096,8 @@
                             receberá a solicitação e entrará em contato para confirmar.</p>
                         <a href="https://wa.me/5511952730593" class="btn-whatsapp" target="_blank">💬 Tirar dúvidas pelo
                             WhatsApp</a>
-                        <button class="btn-back" onclick="resetForm()" aria-label="Voltar para o início do agendamento">↩️ Novo Agendamento</button>
+                        <button class="btn-back" onclick="resetForm()"
+                            aria-label="Voltar para o início do agendamento">↩️ Novo Agendamento</button>
 
                     </div>
                 </div>
@@ -912,20 +1154,25 @@
                                     <feDropShadow dx="0" dy="15" stdDeviation="20" flood-opacity="0.3" />
                                 </filter>
                                 <radialGradient id="highlight" cx="50%" cy="10%" r="90%">
-                                    <stop offset="0%" stop-color="#fff" stop-opacity="0.2"/>
-                                    <stop offset="100%" stop-color="#000" stop-opacity="0.2"/>
+                                    <stop offset="0%" stop-color="#fff" stop-opacity="0.2" />
+                                    <stop offset="100%" stop-color="#000" stop-opacity="0.2" />
                                 </radialGradient>
                             </defs>
                             <!-- Chassi Principal que receberá a cor dinamicamente via JS -->
-                            <path class="ac-body" id="acBodyPath" d="M100,50 Q100,20 130,20 L670,20 Q700,20 700,50 L700,250 Q700,280 670,280 L130,280 Q100,280 100,250 Z" fill="var(--ac-color, #E5E7EB)" filter="url(#ac-shadow)"></path>
+                            <path class="ac-body" id="acBodyPath"
+                                d="M100,50 Q100,20 130,20 L670,20 Q700,20 700,50 L700,250 Q700,280 670,280 L130,280 Q100,280 100,250 Z"
+                                fill="var(--ac-color, #E5E7EB)" filter="url(#ac-shadow)"></path>
                             <!-- Grille/Detalhes Invariáveis -->
                             <rect x="130" y="80" width="540" height="20" rx="10" fill="#333" opacity="0.8"></rect>
                             <rect x="130" y="120" width="540" height="15" rx="5" fill="#333" opacity="0.8"></rect>
                             <rect x="130" y="150" width="540" height="15" rx="5" fill="#333" opacity="0.8"></rect>
                             <rect x="130" y="180" width="540" height="15" rx="5" fill="#333" opacity="0.8"></rect>
                             <circle cx="650" cy="50" r="10" fill="lime" opacity="0.9"></circle>
-                            <text x="610" y="55" font-family="sans-serif" font-size="16" fill="#fff" opacity="0.6">22°C</text>
-                            <path d="M100,50 Q100,20 130,20 L670,20 Q700,20 700,50 L700,250 Q700,280 670,280 L130,280 Q100,280 100,250 Z" fill="url(#highlight)" style="pointer-events: none;"></path>
+                            <text x="610" y="55" font-family="sans-serif" font-size="16" fill="#fff"
+                                opacity="0.6">22°C</text>
+                            <path
+                                d="M100,50 Q100,20 130,20 L670,20 Q700,20 700,50 L700,250 Q700,280 670,280 L130,280 Q100,280 100,250 Z"
+                                fill="url(#highlight)" style="pointer-events: none;"></path>
                         </svg>
                     </div>
                 </div>
@@ -937,12 +1184,18 @@
 
                     <div class="pm-swatches" id="pmSwatches">
                         <!-- Swatches rendered via JS or prepopulated here -->
-                        <button class="swatch active" style="--sw-color: #E5E7EB" onclick="applAcColor('#E5E7EB', this)" aria-label="Cor Cinza Claro"></button>
-                        <button class="swatch" style="--sw-color: #FF5A5F" onclick="applAcColor('#FF5A5F', this)" aria-label="Cor Coral"></button>
-                        <button class="swatch" style="--sw-color: #2D3748" onclick="applAcColor('#2D3748', this)" aria-label="Cor Grafite"></button>
-                        <button class="swatch" style="--sw-color: #F6E05E" onclick="applAcColor('#F6E05E', this)" aria-label="Cor Amarelo"></button>
-                        <button class="swatch" style="--sw-color: #48BB78" onclick="applAcColor('#48BB78', this)" aria-label="Cor Verde Palmeira"></button>
-                        <button class="swatch" style="--sw-color: #4299E1" onclick="applAcColor('#4299E1', this)" aria-label="Cor Azul Céu"></button>
+                        <button class="swatch active" style="--sw-color: #E5E7EB" onclick="applAcColor('#E5E7EB', this)"
+                            aria-label="Cor Cinza Claro"></button>
+                        <button class="swatch" style="--sw-color: #FF5A5F" onclick="applAcColor('#FF5A5F', this)"
+                            aria-label="Cor Coral"></button>
+                        <button class="swatch" style="--sw-color: #2D3748" onclick="applAcColor('#2D3748', this)"
+                            aria-label="Cor Grafite"></button>
+                        <button class="swatch" style="--sw-color: #F6E05E" onclick="applAcColor('#F6E05E', this)"
+                            aria-label="Cor Amarelo"></button>
+                        <button class="swatch" style="--sw-color: #48BB78" onclick="applAcColor('#48BB78', this)"
+                            aria-label="Cor Verde Palmeira"></button>
+                        <button class="swatch" style="--sw-color: #4299E1" onclick="applAcColor('#4299E1', this)"
+                            aria-label="Cor Azul Céu"></button>
 
                     </div>
 
@@ -963,6 +1216,19 @@
         </div>
     </div>
 
+    <!-- PWA Install Banner -->
+    <div class="pwa-install-banner" id="pwa-install-banner">
+        <img src="assets/logo.png" alt="Renostter" class="pwa-install-icon" />
+        <div class="pwa-install-text">
+            <strong>Instalar Renostter no celular</strong>
+            <span>Acesse rapidamente, mesmo sem internet</span>
+        </div>
+        <div class="pwa-install-actions">
+            <button class="pwa-btn-install" onclick="installPwa()">Instalar</button>
+            <button class="pwa-btn-dismiss" onclick="dismissPwa()">Agora não</button>
+        </div>
+    </div>
+
     <!-- Floating WhatsApp -->
     <a href="https://wa.me/5511952730593?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento."
         class="floating-whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -977,6 +1243,269 @@
     <script src="calendar.js"></script>
     <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
     <script src="chatbot.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        /* ─── SERVICE WORKER ─── */
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => { });
+            });
+        }
+
+        /* ─── CALCULADORA DE CUSTO ─── */
+        let calcQtyVal = 1;
+        function calcQty(delta) {
+            calcQtyVal = Math.max(1, Math.min(20, calcQtyVal + delta));
+            document.getElementById('calc-qty-val').textContent = calcQtyVal;
+            calcUpdate();
+        }
+        function calcUpdate() {
+            const sel = document.getElementById('calc-servico');
+            const opt = sel.options[sel.selectedIndex];
+            const btuMult = parseFloat(document.getElementById('calc-btu').value) || 1;
+            const priceEl = document.getElementById('calc-price');
+            const noteEl = document.getElementById('calc-price-note');
+            const ctaEl = document.getElementById('calc-cta');
+
+            if (!opt.value) {
+                priceEl.textContent = 'Selecione um serviço';
+                noteEl.textContent = 'Diagnóstico gratuito · Orçamento sem compromisso';
+                if (ctaEl) ctaEl.style.display = 'none';
+                return;
+            }
+
+            const min = Math.round(parseInt(opt.dataset.min) * btuMult * calcQtyVal);
+            const max = Math.round(parseInt(opt.dataset.max) * btuMult * calcQtyVal);
+            priceEl.textContent = `R$ ${min.toLocaleString('pt-BR')} – R$ ${max.toLocaleString('pt-BR')}`;
+            noteEl.textContent = `Estimativa para ${calcQtyVal} aparelho${calcQtyVal > 1 ? 's' : ''}. Valores podem variar conforme avaliação técnica.`;
+            if (ctaEl) ctaEl.style.display = 'inline-flex';
+        }
+
+        /* ─── ANTES/DEPOIS SLIDER ─── */
+        document.querySelectorAll('.ba-slider-wrap').forEach(wrap => {
+            let dragging = false;
+
+            function setPos(clientX) {
+                const rect = wrap.getBoundingClientRect();
+                const pct = Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100));
+                const before = wrap.querySelector('.ba-img-before');
+                const divider = wrap.querySelector('.ba-divider');
+                const handle = wrap.querySelector('.ba-handle');
+                if (before) before.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+                if (divider) divider.style.left = `${pct}%`;
+                if (handle) handle.style.left = `${pct}%`;
+            }
+
+            wrap.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
+            window.addEventListener('mousemove', e => { if (dragging) setPos(e.clientX); });
+            window.addEventListener('mouseup', () => { dragging = false; });
+
+            wrap.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, { passive: true });
+            window.addEventListener('touchmove', e => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
+            window.addEventListener('touchend', () => { dragging = false; });
+        });
+
+        /* ─── MAPA LEAFLET + GEOLOCALIZAÇÃO ─── */
+        (function initMapa() {
+            const mapEl = document.getElementById('mapa-leaflet');
+            if (!mapEl || typeof L === 'undefined') return;
+
+            const map = L.map('mapa-leaflet', {
+                center: [-23.5505, -46.6333],
+                zoom: 10,
+                zoomControl: true,
+                scrollWheelZoom: false,
+            });
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap · © CartoDB',
+                subdomains: 'abcd',
+                maxZoom: 19,
+            }).addTo(map);
+
+            const AREAS = [
+                { nome: 'São Paulo Capital', lat: -23.5505, lng: -46.6333, r: 22000, color: '#00AEEF' },
+                { nome: 'Guarulhos', lat: -23.4637, lng: -46.5333, r: 8000, color: '#00AEEF' },
+                { nome: 'ABC Paulista', lat: -23.6667, lng: -46.5333, r: 10000, color: '#FF6B00' },
+                { nome: 'Osasco / Barueri', lat: -23.5328, lng: -46.7919, r: 9000, color: '#00AEEF' },
+                { nome: 'Mauá / Ribeirão Pires', lat: -23.6678, lng: -46.4614, r: 6000, color: '#FF6B00' },
+            ];
+
+            AREAS.forEach(a => {
+                L.circle([a.lat, a.lng], {
+                    color: a.color, fillColor: a.color,
+                    fillOpacity: 0.18, weight: 2, radius: a.r,
+                }).addTo(map).bindPopup(`<strong>${a.nome}</strong><br>✅ Área de Atendimento Renostter`);
+            });
+
+            L.marker([-23.5505, -46.6333], {
+                icon: L.divIcon({
+                    className: '',
+                    html: `<div style="background:#FF6B00;color:#fff;font-weight:700;font-size:11px;padding:6px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.4);">📍 Renostter</div>`,
+                    iconAnchor: [40, 30],
+                })
+            }).addTo(map);
+
+            /* Haversine — distância em metros entre dois pontos */
+            function haversine(lat1, lng1, lat2, lng2) {
+                const R = 6371000;
+                const toRad = d => d * Math.PI / 180;
+                const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+                const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            }
+
+            function isInsideCoverage(lat, lng) {
+                return AREAS.some(a => haversine(lat, lng, a.lat, a.lng) <= a.r);
+            }
+
+            let checkedMarker = null;
+            let userMarker = null;
+
+            function showResult(lat, lng, label) {
+                const inside = isInsideCoverage(lat, lng);
+                const resultEl = document.getElementById('cep-result');
+                const ctaEl = document.getElementById('mapa-cta-orcamento');
+
+                if (resultEl) {
+                    if (inside) {
+                        resultEl.innerHTML = `✅ <strong>${label}</strong> está na nossa área de cobertura! <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Agendar agora →</a>`;
+                        resultEl.className = 'cep-result ok';
+                    } else {
+                        resultEl.innerHTML = `📞 <strong>${label}</strong> pode estar fora da Grande SP. <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Consulte-nos →</a>`;
+                        resultEl.className = 'cep-result fail';
+                    }
+                }
+
+                if (ctaEl) ctaEl.style.display = inside ? 'inline-flex' : 'none';
+
+                if (checkedMarker) map.removeLayer(checkedMarker);
+                checkedMarker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: '',
+                        html: `<div style="background:${inside ? '#4ade80' : '#f87171'};color:#000;font-weight:700;font-size:11px;padding:5px 9px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.4);">${inside ? '✅ Atendemos!' : '⚠️ Verificar'}</div>`,
+                        iconAnchor: [44, 14],
+                    })
+                }).addTo(map);
+
+                map.setView([lat, lng], 13, { animate: true });
+            }
+
+            /* Clique no mapa */
+            map.on('click', function (e) {
+                showResult(e.latlng.lat, e.latlng.lng, 'Este ponto');
+            });
+
+            /* Geolocalização */
+            window.usarGeolocalizacao = function () {
+                const btn = document.getElementById('btn-geolocalizacao');
+                const result = document.getElementById('cep-result');
+                if (!navigator.geolocation) {
+                    if (result) { result.textContent = 'Seu navegador não suporta geolocalização.'; result.className = 'cep-result fail'; }
+                    return;
+                }
+                if (btn) { btn.textContent = '🔄 Localizando...'; btn.disabled = true; }
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        const { latitude: lat, longitude: lng } = pos.coords;
+                        if (userMarker) map.removeLayer(userMarker);
+                        userMarker = L.circleMarker([lat, lng], {
+                            radius: 9, color: '#fff', fillColor: '#00AEEF', fillOpacity: 1, weight: 2.5,
+                        }).addTo(map).bindPopup('📍 Você está aqui').openPopup();
+                        showResult(lat, lng, 'Sua localização');
+                        if (btn) { btn.textContent = '📍 Usar minha localização'; btn.disabled = false; }
+                    },
+                    () => {
+                        if (result) { result.textContent = 'Não foi possível obter sua localização. Digite um CEP.'; result.className = 'cep-result fail'; }
+                        if (btn) { btn.textContent = '📍 Usar minha localização'; btn.disabled = false; }
+                    }
+                );
+            };
+
+            /* Expor showResult para verificarCep */
+            window._mapaShowResult = showResult;
+        })();
+
+        /* ─── VERIFICAR CEP (geocodificação real via Nominatim) ─── */
+        async function verificarCep() {
+            const cep = document.getElementById('cep-input')?.value.replace(/\D/g, '');
+            const result = document.getElementById('cep-result');
+            const btn = document.querySelector('.cep-btn');
+            if (!result) return;
+
+            if (!cep || cep.length < 8) {
+                result.textContent = 'Por favor, insira um CEP válido (8 dígitos).';
+                result.className = 'cep-result fail';
+                return;
+            }
+
+            result.innerHTML = '🔄 Buscando localização...';
+            result.className = 'cep-result';
+            if (btn) btn.disabled = true;
+
+            try {
+                const res = await fetch(
+                    `https://nominatim.openstreetmap.org/search?postalcode=${cep}&country=BR&format=json&limit=1`,
+                    { headers: { 'Accept-Language': 'pt-BR', 'User-Agent': 'RenostterSite/1.0' } }
+                );
+                const data = await res.json();
+
+                if (!data.length) throw new Error('CEP não encontrado');
+
+                const lat = parseFloat(data[0].lat);
+                const lng = parseFloat(data[0].lon);
+                const label = data[0].display_name?.split(',')[0] || `CEP ${cep.slice(0, 5)}-${cep.slice(5)}`;
+
+                if (window._mapaShowResult) window._mapaShowResult(lat, lng, label);
+
+            } catch {
+                /* Fallback por prefixo de 2 dígitos (CEPs da Grande SP: 01xxx–09xxx) */
+                const prefix = parseInt(cep.substring(0, 2));
+                const grandeSP = prefix >= 1 && prefix <= 9;
+                result.innerHTML = grandeSP
+                    ? `✅ CEP da Grande SP — atendemos! <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Agendar →</a>`
+                    : '📞 Pode estar fora da Grande SP. <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Consulte-nos →</a>';
+                result.className = grandeSP ? 'cep-result ok' : 'cep-result fail';
+                const cta = document.getElementById('mapa-cta-orcamento');
+                if (cta) cta.style.display = grandeSP ? 'inline-flex' : 'none';
+            } finally {
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        document.getElementById('cep-input')?.addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '');
+            if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5, 8);
+            this.value = v;
+        });
+        document.getElementById('cep-input')?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') verificarCep();
+        });
+
+        /* ─── PWA INSTALL BANNER ─── */
+        let deferredPwaPrompt = null;
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            setTimeout(() => {
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) banner.classList.add('visible');
+            }, 30000);
+        });
+
+        function installPwa() {
+            const banner = document.getElementById('pwa-install-banner');
+            if (banner) banner.classList.remove('visible');
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                deferredPwaPrompt.userChoice.then(() => { deferredPwaPrompt = null; });
+            }
+        }
+        function dismissPwa() {
+            document.getElementById('pwa-install-banner')?.classList.remove('visible');
+        }
+    </script>
 
     <!-- ========== CHAT WIDGET ========== -->
 
@@ -1070,36 +1599,61 @@
             </div>
             <div class="termos-modal-content">
                 <h3>1. Aceitação dos Termos</h3>
-                <p>Ao acessar ou utilizar o site da <strong>Renostter Climatização</strong> (doravante "Renostter"), você concorda integralmente com estes Termos de Uso e com nossa Política de Privacidade. Se não concordar, não utilize nossos serviços ou plataforma.</p>
+                <p>Ao acessar ou utilizar o site da <strong>Renostter Climatização</strong> (doravante "Renostter"),
+                    você concorda integralmente com estes Termos de Uso e com nossa Política de Privacidade. Se não
+                    concordar, não utilize nossos serviços ou plataforma.</p>
 
                 <h3>2. Objeto do Site</h3>
-                <p>A Renostter oferece informações sobre serviços de climatização (instalação, manutenção preventiva/corretiva, limpeza, recarga de gás, pintura de equipamentos, etc.), orçamentos, agendamentos e conteúdo técnico relacionado. O site pode conter links para canais de atendimento (WhatsApp, telefone) e formulários de contato.</p>
+                <p>A Renostter oferece informações sobre serviços de climatização (instalação, manutenção
+                    preventiva/corretiva, limpeza, recarga de gás, pintura de equipamentos, etc.), orçamentos,
+                    agendamentos e conteúdo técnico relacionado. O site pode conter links para canais de atendimento
+                    (WhatsApp, telefone) e formulários de contato.</p>
 
                 <h3>3. Cadastro e Responsabilidades do Usuário</h3>
-                <p>Para solicitar orçamentos ou serviços, você poderá fornecer dados pessoais (nome, e-mail, telefone, endereço). Você se compromete a informar dados verdadeiros e atualizados. A Renostter não se responsabiliza por informações incorretas fornecidas pelo usuário que impeçam a execução dos serviços.</p>
+                <p>Para solicitar orçamentos ou serviços, você poderá fornecer dados pessoais (nome, e-mail, telefone,
+                    endereço). Você se compromete a informar dados verdadeiros e atualizados. A Renostter não se
+                    responsabiliza por informações incorretas fornecidas pelo usuário que impeçam a execução dos
+                    serviços.</p>
 
                 <h3>4. Serviços e Orçamentos</h3>
-                <p>Os orçamentos solicitados via site são estimativas iniciais. O valor final pode ser ajustado após visita técnica ou análise detalhada. A aceitação do serviço gera um contrato específico (por chamado ou ordem de serviço), que prevalecerá sobre estes termos gerais.</p>
+                <p>Os orçamentos solicitados via site são estimativas iniciais. O valor final pode ser ajustado após
+                    visita técnica ou análise detalhada. A aceitação do serviço gera um contrato específico (por chamado
+                    ou ordem de serviço), que prevalecerá sobre estes termos gerais.</p>
 
                 <h3>5. Pagamento e Cobranças</h3>
-                <p>Os pagamentos seguem as condições acordadas no orçamento aprovado. Poderemos emitir cobranças via boleto bancário, Pix ou cartão de crédito (por meio de gateways parceiros). O não pagamento nas datas acordadas poderá acarretar multa, juros e suspensão dos serviços futuros.</p>
+                <p>Os pagamentos seguem as condições acordadas no orçamento aprovado. Poderemos emitir cobranças via
+                    boleto bancário, Pix ou cartão de crédito (por meio de gateways parceiros). O não pagamento nas
+                    datas acordadas poderá acarretar multa, juros e suspensão dos serviços futuros.</p>
 
                 <h3>6. Propriedade Intelectual</h3>
-                <p>Todo o conteúdo do site (textos, logotipos, imagens, vídeos, layout) é de propriedade exclusiva da Renostter ou licenciado para seu uso. É proibida a reprodução, distribuição ou modificação sem autorização prévia por escrito.</p>
+                <p>Todo o conteúdo do site (textos, logotipos, imagens, vídeos, layout) é de propriedade exclusiva da
+                    Renostter ou licenciado para seu uso. É proibida a reprodução, distribuição ou modificação sem
+                    autorização prévia por escrito.</p>
 
                 <h3>7. Limitação de Responsabilidade</h3>
-                <p>A Renostter não se responsabiliza por danos indiretos ou perda de lucros decorrentes de uso indevido do site, de falhas técnicas fora de seu controle (como problemas de internet) ou de ações de terceiros (hackers, malwares). Nos serviços executados, a responsabilidade limita-se ao valor pago pelo serviço específico, conforme Código de Defesa do Consumidor.</p>
+                <p>A Renostter não se responsabiliza por danos indiretos ou perda de lucros decorrentes de uso indevido
+                    do site, de falhas técnicas fora de seu controle (como problemas de internet) ou de ações de
+                    terceiros (hackers, malwares). Nos serviços executados, a responsabilidade limita-se ao valor pago
+                    pelo serviço específico, conforme Código de Defesa do Consumidor.</p>
 
                 <h3>8. Privacidade e Proteção de Dados (LGPD)</h3>
-                <p>Coletamos e tratamos dados pessoais apenas para as finalidades descritas em nossa <strong>Política de Privacidade</strong>. Você tem direito de acessar, corrigir ou solicitar a exclusão de seus dados. Para isso, entre em contato pelo e-mail <a href="mailto:privacidade@renostter.com.br">privacidade@renostter.com.br</a>.</p>
+                <p>Coletamos e tratamos dados pessoais apenas para as finalidades descritas em nossa <strong>Política de
+                        Privacidade</strong>. Você tem direito de acessar, corrigir ou solicitar a exclusão de seus
+                    dados. Para isso, entre em contato pelo e-mail <a
+                        href="mailto:privacidade@renostter.com.br">privacidade@renostter.com.br</a>.</p>
 
                 <h3>9. Modificações nos Termos</h3>
-                <p>A Renostter pode alterar estes Termos de Uso a qualquer momento. A versão atualizada será publicada no site com a data de revisão. O uso continuado após alterações implica aceitação dos novos termos.</p>
+                <p>A Renostter pode alterar estes Termos de Uso a qualquer momento. A versão atualizada será publicada
+                    no site com a data de revisão. O uso continuado após alterações implica aceitação dos novos termos.
+                </p>
 
                 <h3>10. Legislação e Foro</h3>
-                <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de São Paulo/SP para dirimir quaisquer controvérsias, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+                <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de São Paulo/SP para
+                    dirimir quaisquer controvérsias, com renúncia expressa a qualquer outro, por mais privilegiado que
+                    seja.</p>
 
-                <p style="margin-top: 2em; font-size: 0.85rem; text-align: center;">📅 Última atualização: 15 de abril de 2026</p>
+                <p style="margin-top: 2em; font-size: 0.85rem; text-align: center;">📅 Última atualização: 15 de abril
+                    de 2026</p>
             </div>
         </div>
     </div>
@@ -1114,7 +1668,7 @@
                 termosOverlay.style.display = 'flex';
             });
         }
-        
+
         if (closeTermosBtn) {
             closeTermosBtn.addEventListener('click', () => {
                 termosOverlay.style.display = 'none';
@@ -1126,98 +1680,8 @@
             if (event.target === termosOverlay) termosOverlay.style.display = 'none';
         });
     </script>
-    <!-- LOGICA DE INTEGRAÇÃO COM YOUTUBE DATA API -->
-    <!-- Spinner de carregamento -->
+    <!-- Spinner de carregamento da galeria de vídeos (controlado por js/portfolio.js) -->
     <div id="video-loading-spinner" class="spinner hidden"></div>
-    <script>
-    // CONFIGURAÇÕES
-    const API_KEY = 'AIzaSyCypB7m6IvSExERRhLaT0WDZFbCKH0Z9Wg';
-    const CHANNEL_ID = 'UC7v6Y9tQzJZBzK4v8rU6Z8A'; // ID do canal @renostter (obtenha via YouTube API se necessário)
-    const MAX_RESULTS = 9;
-
-    // Função de embaralhamento (Fisher‑Yates)
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    // Controle do spinner
-    function toggleSpinner(show) {
-        const spinner = document.getElementById('video-loading-spinner');
-        if (spinner) spinner.classList.toggle('hidden', !show);
-    }
-
-    // Busca vídeos recentes do canal via YouTube Data API v3
-    async function fetchChannelVideos() {
-        const endpoint = 'https://www.googleapis.com/youtube/v3/search';
-        const params = new URLSearchParams({
-            key: API_KEY,
-            channelId: CHANNEL_ID,
-            part: 'snippet',
-            order: 'date',
-            maxResults: MAX_RESULTS,
-            type: 'video'
-        });
-        const response = await fetch(`${endpoint}?${params}`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        if (!data.items || data.items.length === 0) throw new Error('Nenhum vídeo encontrado');
-        return data.items.map(item => ({ id: item.id.videoId, title: item.snippet.title }));
-    }
-
-    // Renderiza os cards de vídeo
-    function renderVideos(videos) {
-        const container = document.getElementById('technical-video-container');
-        if (!container) return;
-        const shuffled = shuffle(videos);
-        const html = shuffled.map(v => `
-            <div class="video-card youtube-card carousel-item">
-                <div class="video-wrapper youtube-wrapper">
-                    <iframe 
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        src="https://www.youtube.com/embed/${v.id}?rel=0" 
-                        title="${v.title}" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        loading="lazy"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="video-info">
-                    <h3>${v.title}</h3>
-                    <a href="https://youtube.com/shorts/${v.id}" target="_blank" class="watch-on-yt">
-                        <span>Ver no YouTube</span>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                            <polyline points="15 3 21 3 21 9"></polyline>
-                            <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                    </a>
-                </div>
-            </div>`).join('');
-        container.innerHTML = html;
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        toggleSpinner(true);
-        try {
-            const videos = await fetchChannelVideos();
-            renderVideos(videos);
-        } catch (err) {
-            console.error('Erro ao carregar vídeos:', err);
-            const container = document.getElementById('technical-video-container');
-                                <h3>${video.title}</h3>
-                            </div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            }
-        })();
-    </script>
 
 </body>
 
