@@ -10,7 +10,7 @@ const REVIEWS_PROXY   = 'https://renostter-gemini-proxy.adminrenostter.workers.d
 const PLACE_ID_STATIC = 'ChIJZX-bcVRjzpQRIvN6uq9QL-k';
 
 /* CID fornecido pelo usuário — tentado antes do estático */
-const PLACE_ID_CID    = '0x19b82e5f3ef7eff:0xd48168692982a6d';
+const PLACE_ID_CID    = '1s0x19b82e5f3ef7eff:0xd48168692982a6d';
 
 const REVIEW_WRITE    = 'https://g.page/r/CW0qmJKGFkgNEBI/review';
 const CACHE_KEY       = 'rn_reviews_v3';

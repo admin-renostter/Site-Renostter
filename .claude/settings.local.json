@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wrangler secret *)",
+      "Bash(wrangler versions *)",
+      "Bash(wrangler deploy *)",
+      "Bash(curl -s \"https://renostter-gemini-proxy.adminrenostter.workers.dev/places/find\" -H \"Origin: https://renostter.com\")",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s \"https://renostter-gemini-proxy.adminrenostter.workers.dev/places?place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k\" -H \"Origin: https://renostter.com\")"
+    ]
+  }
+}
