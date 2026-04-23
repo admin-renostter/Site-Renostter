@@ -6,7 +6,10 @@
       "Bash(wrangler deploy *)",
       "Bash(curl -s \"https://renostter-gemini-proxy.adminrenostter.workers.dev/places/find\" -H \"Origin: https://renostter.com\")",
       "Bash(python -m json.tool)",
-      "Bash(curl -s \"https://renostter-gemini-proxy.adminrenostter.workers.dev/places?place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k\" -H \"Origin: https://renostter.com\")"
+      "Bash(curl -s \"https://renostter-gemini-proxy.adminrenostter.workers.dev/places?place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k\" -H \"Origin: https://renostter.com\")",
+      "Bash(curl -s -w \"\\\\nHTTP_STATUS:%{http_code}\" \"https://renostter-gemini-proxy.adminrenostter.workers.dev/places/find\" -H \"Origin: https://renostter.com\")",
+      "Bash(curl -s \"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Renostter&inputtype=textquery&fields=place_id,name&key=AIzaSyB1OkdeNQE6ipgd9FjTTJesqYIn95qCNk8\")",
+      "Bash(curl -s \"https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Renostter&inputtype=textquery&fields=place_id,name,rating,user_ratings_total&key=AIzaSyB1OkdeNQE6ipgd9FjTTJesqYIn95qCNk8\")"
     ]
   }
 }
