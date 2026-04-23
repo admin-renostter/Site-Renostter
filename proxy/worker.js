@@ -18,7 +18,11 @@
 const GEMINI_MODEL = 'gemini-2.0-flash';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const YOUTUBE_SEARCH_ENDPOINT = 'https://www.googleapis.com/youtube/v3/search';
-const PLACES_DETAILS_ENDPOINT = 'https://maps.googleapis.com/maps/api/place/details/json';
+const PLACES_DETAILS_ENDPOINT  = 'https://maps.googleapis.com/maps/api/place/details/json';
+const PLACES_FIND_ENDPOINT     = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
+
+/* Texto de busca canônico para descoberta automática do Place ID */
+const RENOSTTER_QUERY = 'Renostter Rua do Pombo Correio 428 São Paulo';
 
 /* ─── CORS — permitir apenas o domínio do site ─── */
 const ALLOWED_ORIGINS = [
@@ -120,6 +124,45 @@ export default {
                 });
             } catch (err) {
                 return new Response(JSON.stringify({ error: 'Upstream YouTube error', detail: err.message }), {
+                    status: 502,
+                    headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
+                });
+            }
+        }
+
+        /* ── Descoberta automática do Place ID: GET /places/find ── */
+        if (request.method === 'GET' && url.pathname === '/places/find') {
+            if (!env.GOOGLE_PLACES_API_KEY) {
+                return new Response(JSON.stringify({ error: 'GOOGLE_PLACES_API_KEY not configured' }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
+                });
+            }
+
+            const query = url.searchParams.get('q') || RENOSTTER_QUERY;
+
+            try {
+                const params = new URLSearchParams({
+                    key: env.GOOGLE_PLACES_API_KEY,
+                    input: query,
+                    inputtype: 'textquery',
+                    fields: 'place_id,name,rating,user_ratings_total',
+                    language: 'pt-BR',
+                });
+
+                const findRes = await fetch(`${PLACES_FIND_ENDPOINT}?${params}`);
+                const data    = await findRes.json();
+
+                return new Response(JSON.stringify(data), {
+                    status: findRes.status,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'public, max-age=86400', /* 24h */
+                        ...corsHeaders(origin),
+                    },
+                });
+            } catch (err) {
+                return new Response(JSON.stringify({ error: 'Upstream Places find error', detail: err.message }), {
                     status: 502,
                     headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
                 });

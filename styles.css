@@ -3271,45 +3271,91 @@ textarea.field-input {
 
 
 /* =========================================
-   CARROSSEL 3 COLUNAS — Canal Renostter
+   CARROSSEL SWIPER — Canal Renostter
    ========================================= */
 
 /* Container externo */
 #youtube-carousel-3cols {
     outline: none;
+    position: relative;
 }
 
-/* Grid de 3 colunas */
-.yc3-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+/* ── Swiper — tema Renostter ── */
+.yc3-swiper {
+    padding-bottom: 52px !important; /* espaço para os dots */
+    overflow: hidden;
 }
 
-/* Cada slide */
+/* Botões prev / next */
+.yc3-swiper .yc3-prev,
+.yc3-swiper .yc3-next {
+    width:  44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(15, 20, 38, 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+    transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    top: 38%;
+}
+.yc3-swiper .yc3-prev::after,
+.yc3-swiper .yc3-next::after {
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+}
+.yc3-swiper .yc3-prev:hover,
+.yc3-swiper .yc3-next:hover {
+    background: var(--orange, #ff8c00);
+    border-color: transparent;
+}
+.yc3-swiper .swiper-button-disabled {
+    opacity: 0.28 !important;
+    pointer-events: none;
+}
+
+/* Dots de paginação */
+.yc3-pagination {
+    bottom: 12px !important;
+}
+.yc3-swiper .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.25);
+    opacity: 1;
+    transition: background 0.3s, width 0.3s, border-radius 0.3s;
+}
+.yc3-swiper .swiper-pagination-bullet-active {
+    background: var(--blue, #00AEEF);
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* ── Card (slide) ── */
 .yc3-slide {
-    min-width: 0;
-    background: var(--dark-2);
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.07);
+    background: var(--dark-2, #0f1a2e);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: box-shadow 0.3s, transform 0.3s;
+    height: auto;
 }
 .yc3-slide:hover {
-    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
-    transform: translateY(-3px);
+    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+    transform: translateY(-4px);
 }
 
-/* Área do thumbnail / player — formato portrait (9:16) */
+/* Área do thumbnail / player — portrait 9:16 */
 .yc3-thumb-wrap {
     position: relative;
     width: 100%;
     aspect-ratio: 9 / 16;
     cursor: pointer;
     overflow: hidden;
-    border-radius: 12px 12px 0 0;
+    border-radius: 14px 14px 0 0;
     background: #000;
 }
 .yc3-thumb-wrap .yt-lite-thumb {
@@ -3321,8 +3367,8 @@ textarea.field-input {
     transition: filter 0.3s, transform 0.45s;
 }
 .yc3-thumb-wrap:hover .yt-lite-thumb {
-    filter: brightness(0.65);
-    transform: scale(1.04);
+    filter: brightness(0.6);
+    transform: scale(1.05);
 }
 .yc3-thumb-wrap .yt-lite-play {
     position: absolute;
@@ -3335,22 +3381,22 @@ textarea.field-input {
     padding: 0;
     z-index: 2;
     pointer-events: none;
-    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.6));
     transition: transform 0.2s;
 }
 .yc3-thumb-wrap:hover .yt-lite-play {
-    transform: translate(-50%, -50%) scale(1.14);
+    transform: translate(-50%, -50%) scale(1.18);
 }
 
-/* Painel de info abaixo do vídeo */
+/* Painel de info */
 .yc3-info {
-    padding: 16px 18px;
+    padding: 16px 18px 20px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     flex: 1;
-    background: var(--dark-2);
-    border-top: 1px solid rgba(255,255,255,0.06);
+    background: var(--dark-2, #0f1a2e);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 .yc3-title {
     color: #fff;
@@ -3365,13 +3411,13 @@ textarea.field-input {
 }
 .yc3-date {
     color: var(--medium-gray, #8892a4);
-    font-size: 0.76rem;
+    font-size: 0.74rem;
 }
 .yc3-yt-link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: var(--blue);
+    color: var(--blue, #00AEEF);
     font-size: 0.78rem;
     text-decoration: none;
     margin-top: auto;
@@ -3380,13 +3426,12 @@ textarea.field-input {
 }
 .yc3-yt-link:hover { opacity: 0.7; }
 
-
 /* Spinner de carregamento */
 .yc3-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(255,255,255,0.1);
-    border-top-color: var(--blue);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--blue, #00AEEF);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin: 40px auto;
@@ -3398,17 +3443,15 @@ textarea.field-input {
 .yc3-empty {
     text-align: center;
     padding: 60px 20px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 1rem;
     line-height: 1.75;
 }
 
 /* ── Responsivo ── */
-@media (max-width: 1023px) {
-    .yc3-grid { grid-template-columns: repeat(2, 1fr); }
-}
 @media (max-width: 639px) {
-    .yc3-grid { grid-template-columns: 1fr; }
-    .yc3-info { padding: 14px 14px; }
+    .yc3-swiper .yc3-prev,
+    .yc3-swiper .yc3-next { display: none; }
+    .yc3-info  { padding: 14px; }
     .yc3-title { font-size: 0.85rem; }
 }

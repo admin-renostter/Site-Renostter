@@ -1,14 +1,25 @@
 /* ================================================
-   RENOSTTER — REVIEWS.JS  v2
-   Google Places via proxy · cache 12h · fallback estático
+   RENOSTTER — REVIEWS.JS  v3
+   Google Places via proxy · auto-descoberta de Place ID
+   cache 12h (avaliações) + 7d (place_id) · fallback estático
    ================================================ */
 
-const REVIEWS_PROXY = 'https://renostter-gemini-proxy.adminrenostter.workers.dev';
-const PLACE_ID      = 'ChIJZX-bcVRjzpQRIvN6uq9QL-k';
-const MAPS_PROFILE  = `https://www.google.com/maps/place/?q=place_id:${PLACE_ID}`;
-const REVIEW_WRITE  = 'https://g.page/r/CW0qmJKGFkgNEBI/review';  /* URL real */
-const CACHE_KEY     = 'rn_reviews_v2';
-const CACHE_TTL     = 12 * 60 * 60 * 1000; /* 12 horas */
+const REVIEWS_PROXY   = 'https://renostter-gemini-proxy.adminrenostter.workers.dev';
+
+/* Place ID canônico — fallback se a descoberta falhar */
+const PLACE_ID_STATIC = 'ChIJZX-bcVRjzpQRIvN6uq9QL-k';
+
+/* CID fornecido pelo usuário — tentado antes do estático */
+const PLACE_ID_CID    = '0x19b82e5f3ef7eff:0xd48168692982a6d';
+
+const REVIEW_WRITE    = 'https://g.page/r/CW0qmJKGFkgNEBI/review';
+const CACHE_KEY       = 'rn_reviews_v3';
+const CACHE_KEY_PID   = 'rn_place_id_v3';
+const CACHE_TTL       = 12 * 60 * 60 * 1000;  /* 12 horas — avaliações */
+const CACHE_TTL_PID   = 7  * 24 * 60 * 60 * 1000; /* 7 dias — place_id */
+
+let PLACE_ID    = PLACE_ID_STATIC;  /* será substituído após descoberta */
+let MAPS_PROFILE = `https://www.google.com/maps/place/?q=place_id:${PLACE_ID}`;
 
 /* ─── Ícone G do Google ─── */
 const GOOGLE_ICON = `<svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
@@ -132,9 +143,61 @@ function enhanceStaticCards() {
     });
 }
 
+/* ─── Descobre o Place ID correto via findplacefromtext ─── */
+async function resolveOrTestPlaceId() {
+    /* 1. Tenta cache do place_id */
+    try {
+        const raw = localStorage.getItem(CACHE_KEY_PID);
+        if (raw) {
+            const { pid, ts } = JSON.parse(raw);
+            if (Date.now() - ts < CACHE_TTL_PID && pid) {
+                PLACE_ID     = pid;
+                MAPS_PROFILE = `https://www.google.com/maps/place/?q=place_id:${pid}`;
+                return pid;
+            }
+        }
+    } catch {}
+
+    /* 2. Tenta a rota /places/find para descoberta automática */
+    try {
+        const res  = await fetch(`${REVIEWS_PROXY}/places/find`);
+        const json = await res.json();
+        const pid  = json?.candidates?.[0]?.place_id;
+        if (pid) {
+            PLACE_ID     = pid;
+            MAPS_PROFILE = `https://www.google.com/maps/place/?q=place_id:${pid}`;
+            try { localStorage.setItem(CACHE_KEY_PID, JSON.stringify({ pid, ts: Date.now() })); } catch {}
+            console.info('[Reviews] Place ID descoberto via findplacefromtext:', pid);
+            return pid;
+        }
+    } catch (err) {
+        console.warn('[Reviews] findplacefromtext falhou:', err.message);
+    }
+
+    /* 3. Testa o CID fornecido diretamente */
+    try {
+        const res  = await fetch(`${REVIEWS_PROXY}/places?place_id=${encodeURIComponent(PLACE_ID_CID)}`);
+        const json = await res.json();
+        if (json.result?.place_id) {
+            const pid = json.result.place_id;
+            PLACE_ID     = pid;
+            MAPS_PROFILE = `https://www.google.com/maps/place/?q=place_id:${pid}`;
+            try { localStorage.setItem(CACHE_KEY_PID, JSON.stringify({ pid, ts: Date.now() })); } catch {}
+            console.info('[Reviews] Place ID confirmado via CID:', pid);
+            return pid;
+        }
+    } catch (err) {
+        console.warn('[Reviews] Teste de CID falhou:', err.message);
+    }
+
+    /* 4. Usa o fallback estático */
+    console.warn('[Reviews] Usando Place ID estático de fallback:', PLACE_ID_STATIC);
+    return PLACE_ID_STATIC;
+}
+
 /* ─── Busca via proxy + cache localStorage ─── */
 async function loadReviews() {
-    /* Verifica cache */
+    /* Verifica cache de avaliações */
     try {
         const raw = localStorage.getItem(CACHE_KEY);
         if (raw) {
@@ -143,14 +206,18 @@ async function loadReviews() {
         }
     } catch { /* cache corrompido — ignora e rebusca */ }
 
-    /* Busca nova */
+    /* Resolve o Place ID melhor disponível */
+    const pid = await resolveOrTestPlaceId();
+
+    /* Busca avaliações */
     try {
-        const res  = await fetch(`${REVIEWS_PROXY}/places?place_id=${PLACE_ID}`);
+        const res  = await fetch(`${REVIEWS_PROXY}/places?place_id=${encodeURIComponent(pid)}`);
         const json = await res.json();
         if (json.result) {
             try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data: json.result, ts: Date.now() })); } catch {}
             renderReviews(json.result);
         } else {
+            console.warn('[Reviews] API retornou sem resultado:', json.status, json.error_message);
             enhanceStaticCards();
         }
     } catch (err) {
