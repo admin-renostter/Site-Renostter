@@ -236,6 +236,7 @@ window.solicitarOrcamentoPintura = function() {
     closePinturaModal();
     
     // Rola para a seção de contato ou abre o whatsapp direto com texto pré-preenchido
-    const waUrl = "https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20usar%20meu%20desconto%20CORES15%20para%20pintura%20de%20ar-condicionado.";
+    const _waNum = (typeof CONFIG !== 'undefined' && CONFIG.WHATSAPP_NUM) ? CONFIG.WHATSAPP_NUM : '5511952730593';
+    const waUrl = `https://wa.me/${_waNum}?text=Olá!%20Gostaria%20de%20usar%20meu%20desconto%20CORES15%20para%20pintura%20de%20ar-condicionado.`;
     window.open(waUrl, '_blank');
 };

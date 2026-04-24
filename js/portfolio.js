@@ -7,7 +7,7 @@
 
 /* ─── Configuração ─── */
 const PROXY_BASE_URL  = 'https://renostter-gemini-proxy.adminrenostter.workers.dev';
-const YT_FALLBACK_KEY = 'AIzaSyCypB7m6IvSExERRhLaT0WDZFbCKH0Z9Wg';
+const YT_FALLBACK_KEY = ''; /* chave removida — configure YOUTUBE_API_KEY no Worker: wrangler secret put YOUTUBE_API_KEY */
 const CHANNEL_ID      = 'UCPdh_nMh4XLdkVRH1jn7LuA';  /* canal @renostter */
 const MAX_RESULTS     = 9;   /* múltiplo de 3 recomendado */
 

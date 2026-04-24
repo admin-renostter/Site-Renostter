@@ -82,11 +82,27 @@ function clearDateError() {
 
 function checkStep2() {
     const dateVal = dataInput?.value;
-    const validDate = dateVal && new Date(dateVal + 'T12:00:00').getDay() !== 0;
-    const ok = validDate && horaSelect?.value && enderecoInput?.value && tipoSelect?.value;
-    if (document.getElementById('next2')) {
-        document.getElementById('next2').disabled = !ok;
+    if (!dateVal) {
+        const btn = document.getElementById('next2');
+        if (btn) btn.disabled = true;
+        return;
     }
+    const selected   = new Date(dateVal + 'T12:00:00');
+    const dayOfWeek  = selected.getDay();
+    const hora       = horaSelect?.value || '';
+    const horaNum    = hora ? parseInt(hora.split(':')[0], 10) : 0;
+
+    const isSunday            = dayOfWeek === 0;
+    const isSaturdayAfternoon = dayOfWeek === 6 && hora && horaNum >= 13;
+
+    if (isSaturdayAfternoon) {
+        showDateError('Sábados até 13h. Selecione um horário pela manhã.');
+    }
+
+    const validDate = !isSunday && !isSaturdayAfternoon;
+    const ok = validDate && hora && enderecoInput?.value && tipoSelect?.value;
+    const btn = document.getElementById('next2');
+    if (btn) btn.disabled = !ok;
 }
 
 [dataInput, horaSelect, enderecoInput, tipoSelect].forEach(el => {

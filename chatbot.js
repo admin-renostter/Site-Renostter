@@ -168,12 +168,13 @@ let conversationHistory = [];
 let leadData = {};
 let isOpen = false;
 let isLoading = false;
+let initInProgress = false;
 
 /* ═══════════════════════════════════════════════════════════
    🌐  GEMINI API
    ═══════════════════════════════════════════════════════════ */
 async function callGemini(userMessage) {
-    const useProxy = CONFIG.PROXY_URL && !CONFIG.PROXY_URL.includes('SEU_USUARIO');
+    const useProxy  = CONFIG.PROXY_URL && !CONFIG.PROXY_URL.includes('SEU_USUARIO');
     const useDirect = !useProxy && CONFIG.GEMINI_API_KEY;
 
     if (!useProxy && !useDirect) throw new Error('Configure PROXY_URL ou GEMINI_API_KEY em CONFIG.');
@@ -183,6 +184,9 @@ async function callGemini(userMessage) {
         : `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.GEMINI_MODEL}:generateContent?key=${CONFIG.GEMINI_API_KEY}`;
 
     conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+    /* Mantém exatamente as últimas 10 trocas (20 entradas) */
+    if (conversationHistory.length > 20) conversationHistory.splice(0, conversationHistory.length - 20);
 
     const body = {
         system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
@@ -196,21 +200,44 @@ async function callGemini(userMessage) {
         ],
     };
 
-    const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-    });
+    let lastErr;
+    for (let attempt = 0; attempt < 3; attempt++) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 15000);
+        try {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+                signal: controller.signal,
+            });
+            clearTimeout(timer);
 
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err?.error?.message || `HTTP ${res.status}`);
+            /* Retry automático em erros 5xx */
+            if (res.status >= 500 && attempt < 2) {
+                lastErr = new Error(`HTTP ${res.status}`);
+                await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+                continue;
+            }
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err?.error?.message || `HTTP ${res.status}`);
+            }
+
+            const data = await res.json();
+            const fullText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            if (!fullText) throw new Error('Resposta vazia do provedor de IA');
+            conversationHistory.push({ role: 'model', parts: [{ text: fullText }] });
+            saveHistoryToSession();
+            return fullText;
+        } catch (e) {
+            clearTimeout(timer);
+            lastErr = e.name === 'AbortError' ? new Error('Tempo limite excedido (15s)') : e;
+            if (attempt < 2) await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        }
     }
-
-    const data = await res.json();
-    const fullText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    conversationHistory.push({ role: 'model', parts: [{ text: fullText }] });
-    return fullText;
+    throw lastErr;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -237,6 +264,28 @@ function parseAIResponse(rawText) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   📤  ENVIO DE LEAD
+   ═══════════════════════════════════════════════════════════ */
+async function sendLead(data) {
+    const payload = { ...data, timestamp: new Date().toISOString(), origem: 'chatbot' };
+
+    /* Persiste localmente mesmo sem proxy */
+    try { localStorage.setItem('rn_last_lead', JSON.stringify(payload)); } catch {}
+
+    const proxyUrl = CONFIG.PROXY_URL && !CONFIG.PROXY_URL.includes('SEU_USUARIO')
+        ? CONFIG.PROXY_URL : null;
+    if (!proxyUrl) return;
+
+    try {
+        await fetch(`${proxyUrl}/lead`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+    } catch {}
+}
+
+/* ═══════════════════════════════════════════════════════════
    ⚡  EXECUTOR DE AÇÕES
    ═══════════════════════════════════════════════════════════ */
 function executeActions(actions) {
@@ -249,7 +298,7 @@ function executeActions(actions) {
                 if (act.servico)  leadData.servico  = act.servico;
                 if (act.tipo)     leadData.tipo     = act.tipo;
                 if (act.urgencia) leadData.urgencia = act.urgencia;
-                console.log('[Lucas SDR] Lead capturado:', leadData);
+                sendLead(leadData);
                 break;
 
             case 'calendly':
@@ -278,6 +327,7 @@ function executeActions(actions) {
 async function processarMensagem(texto) {
     if (isLoading) return;
     isLoading = true;
+    setInputEnabled(false);
 
     try {
         const useProxy  = CONFIG.PROXY_URL && !CONFIG.PROXY_URL.includes('SEU_USUARIO');
@@ -289,7 +339,6 @@ async function processarMensagem(texto) {
         if (keyOk) {
             showTyping();
             const raw = await callGemini(texto);
-            hideTyping();
             ({ displayText, actions } = parseAIResponse(raw));
         } else {
             await new Promise(r => setTimeout(r, 600));
@@ -302,12 +351,21 @@ async function processarMensagem(texto) {
         if (qrOptions.length > 0) appendQuickReplies(qrOptions);
 
     } catch (err) {
-        hideTyping();
-        console.error('[Lucas] Erro Gemini:', err);
-        appendBotMsg(`Ops, tive uma instabilidade! 😅 Por favor, fale diretamente via WhatsApp ou tente novamente.`);
-        appendQuickReplies(['📱 Chamar no WhatsApp', '🔄 Tentar novamente']);
+        console.error('[Lucas] Erro IA:', err);
+        /* Degrada para fallback local por palavras-chave antes de mostrar erro */
+        try {
+            const { displayText, actions } = fallbackResponse(texto);
+            if (displayText) appendBotMsg(displayText);
+            const qrOptions = executeActions(actions);
+            if (qrOptions.length > 0) appendQuickReplies(qrOptions);
+        } catch {
+            appendBotMsg(`Estou com instabilidade no momento. 😅 Pode me chamar direto no WhatsApp ou tentar novamente em instantes!`);
+            appendQuickReplies(['📱 Chamar no WhatsApp', '🔄 Tentar novamente']);
+        }
     } finally {
+        hideTyping(); /* sempre remove o indicador, mesmo em erro */
         isLoading = false;
+        setInputEnabled(true);
     }
 }
 
@@ -318,7 +376,7 @@ function fallbackResponse(texto) {
     const t = texto.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
     // Encerramento da conversa
-    if (/\b(obrigad|valeu|tchau|ate mais|encerrando|ate logo|flw|foi|agendei|agendado|ja agendei)\b/.test(t)) {
+    if (/\b(obrigad|valeu|tchau|ate mais|encerrando|ate logo|flw|foi|agendei|agendado|ja agendei|combinado|certo|beleza|perfeito|ok obrigado|entendido|feito)\b/.test(t)) {
         return {
             displayText: `De nada! 😊 Foi um prazer ajudar.\n\nQualquer dúvida sobre seu ar-condicionado, é só chamar. Bom atendimento! 🌡️`,
             actions: []
@@ -336,13 +394,13 @@ function fallbackResponse(texto) {
     const checks = [
         // ─── URGÊNCIAS ────────────────────────────────────────────
         {
-            kw: ['parou agora', 'nao liga', 'nao funciona', 'urgente', 'emergencia', 'quebrou', 'parou de funcionar', 'nao esta ligando', 'travou'],
+            kw: ['parou agora', 'nao liga', 'nao funciona', 'urgente', 'emergencia', 'quebrou', 'parou de funcionar', 'nao esta ligando', 'travou', 'com defeito', 'defeito', 'mal funcionando', 'estrago', 'estragou', 'pifou'],
             resp: `🚨 **Caso urgente — estamos aqui!**\n\nMe informe seu nome e bairro que direcionamos um técnico o mais rápido possível. Para atendimento **imediato**, chame pelo WhatsApp agora mesmo! 📱`,
             qr: ['📱 WhatsApp urgente', '📅 Agendar técnico hoje']
         },
         // ─── NÃO RESFRIA / GÁS ────────────────────────────────────
         {
-            kw: ['nao resfria', 'nao esta gelando', 'nao gela', 'pouco frio', 'fraco', 'quente', 'nao esta frio', 'esta quente', 'falta de gas', 'sem gas', 'gas acabou', 'recarga', 'recarregar gas'],
+            kw: ['nao resfria', 'nao esta gelando', 'nao gela', 'pouco frio', 'fraco', 'quente', 'nao esta frio', 'esta quente', 'falta de gas', 'sem gas', 'gas acabou', 'recarga', 'recarregar gas', 'gelo', 'congelado', 'congelando', 'formando gelo', 'gelando demais', 'cheio de gelo'],
             resp: `Se o aparelho **não está resfriando bem**, as causas mais comuns são:\n\n🔹 **Falta de gás** (vazamento no circuito)\n🔹 **Filtro entupido** — aumenta até 30% o consumo sem resfriar direito\n🔹 **Condensadora suja** — perde eficiência no verão\n\n💨 Recarga de gás a partir de **R$ 160** com diagnóstico incluso.\n\nQuer agendar uma visita técnica? Diagnóstico é grátis! 😊`,
             qr: ['📅 Agendar diagnóstico grátis', '📱 WhatsApp urgente']
         },
@@ -354,7 +412,7 @@ function fallbackResponse(texto) {
         },
         // ─── GOTEJANDO / ÁGUA ─────────────────────────────────────
         {
-            kw: ['gotejando', 'vazando agua', 'pingando', 'agua caindo', 'dreno', 'agua no chao', 'vazamento de agua', 'escorrendo'],
+            kw: ['gotejando', 'vazando agua', 'pingando', 'agua caindo', 'dreno', 'agua no chao', 'vazamento de agua', 'escorrendo', 'vazamento', 'pingo', 'molhando', 'molhado'],
             resp: `Água escorrendo do ar-condicionado é um sinal de:\n\n💧 **Dreno entupido** → a água não consegue escoar (causa mais comum)\n💧 **Inclinação incorreta** da evaporadora → água vai para o lado errado\n💧 **Gás baixo** → forma gelo que derrete e causa goteira\n\nÉ importante resolver rápido para evitar danos à parede e ao equipamento!\n\nAgende uma visita — Manutenção Preventiva a partir de **R$ 150**.`,
             qr: ['📅 Agendar manutenção', '📱 Chamar agora no WhatsApp']
         },
@@ -420,7 +478,7 @@ function fallbackResponse(texto) {
         },
         // ─── PREÇOS / VALORES ─────────────────────────────────────
         {
-            kw: ['preco', 'valor', 'quanto custa', 'quanto e', 'quanto fica', 'tabela', 'custo', 'orcamento', 'orcar'],
+            kw: ['preco', 'valor', 'quanto custa', 'quanto e', 'quanto fica', 'tabela', 'custo', 'orcamento', 'orcar', 'desconto', 'promocao', 'promo', 'oferta', 'cupom', 'mais barato', 'barato'],
             resp: `**Tabela de referência Renostter:**\n\n💰 Higienização: a partir de **R$ 120/aparelho**\n💰 Manutenção Preventiva: a partir de **R$ 150**\n💰 Instalação Split: a partir de **R$ 280**\n💰 Manutenção Corretiva: a partir de **R$ 200** (diagnóstico grátis)\n💰 Recarga de Gás: a partir de **R$ 160**\n💰 Contrato Mensal: a partir de **R$ 90/mês**\n\n**Formas de pagamento:** PIX (5% off), cartão em até 12x, dinheiro, transferência.\n\nO preço exato depende do modelo e situação. Quer um orçamento gratuito?`,
             qr: ['📅 Orçamento grátis', '📱 Chamar agora']
         },
@@ -459,6 +517,18 @@ function fallbackResponse(texto) {
             kw: ['inverter', 'eficiencia', 'gasta energia', 'conta de luz', 'economia', 'consumo', 'kwh', 'procel', 'temperatura ideal'],
             resp: `**Dicas de economia com ar-condicionado:**\n\n⚡ **Inverter** economiza 30–60% vs. convencional — vale o investimento!\n🌡️ **Temperatura ideal:** 23–24°C (cada grau a menos = +5% de consumo)\n🧹 **Filtro limpo** pode reduzir o consumo em até 30%\n🌬️ **Ventiladores de teto** em conjunto permitem usar o AC em temperatura mais alta\n🔒 **Vedação de janelas e portas** evita que o frio escape\n\nSe o seu aparelho está gastando muito, pode ser sinal de filtro sujo ou gás baixo. Quer um diagnóstico?`,
             qr: ['📅 Diagnóstico de eficiência', '📱 Chamar no WhatsApp']
+        },
+        // ─── BIP / BUZINA / APITANDO ──────────────────────────────
+        {
+            kw: ['bip', 'bipando', 'beep', 'buzina', 'buzinando', 'apitando', 'apita', 'emitindo som', 'barulho de alarme', 'alarmando'],
+            resp: `Som de bip ou buzina no ar-condicionado geralmente indica:\n\n🔔 **Bip único ao ligar/desligar** → normal (confirmação de comando)\n🔔 **Bips repetidos contínuos** → pode ser código de erro na placa eletrônica\n🔔 **Bip de alarme** → proteção ativada (sobrecarga, superaquecimento, pressão anormal)\n\nO número de bips geralmente corresponde a um código de erro específico da marca.\n\nMe diga a **marca e modelo** do aparelho e quantos bips ele emite — posso te ajudar a identificar o problema!`,
+            qr: ['📱 Enviar vídeo do barulho no WhatsApp', '📅 Agendar diagnóstico grátis']
+        },
+        // ─── DÚVIDA TÉCNICA GENÉRICA ──────────────────────────────
+        {
+            kw: ['por que', 'como funciona', 'qual a diferenca', 'qual e melhor', 'me explica', 'explicar', 'entender', 'diferenca entre', 'o que e', 'o que significa'],
+            resp: `Boa pergunta! Sou especialista em climatização e posso explicar qualquer dúvida técnica sobre ar-condicionado. 🤓\n\nAlguns temas que respondo agora:\n\n🔹 Cálculo de BTU ideal para seu ambiente\n🔹 Diferença entre Split, Multi-Split, Cassete, VRF\n🔹 Gases refrigerantes (R-32, R-410A, R-22)\n🔹 Inverter vs. Convencional\n🔹 Frequência de manutenção ideal\n🔹 Como interpretar códigos de erro\n\n**Qual é a sua dúvida?** Me conta em detalhes!`,
+            qr: ['❓ Calcular BTU', '🔧 Tipos de aparelho', '💨 Gases refrigerantes', '⚡ Inverter vs. Convencional']
         },
         // ─── ERRO NO DISPLAY / CÓDIGO ─────────────────────────────
         {
@@ -536,12 +606,50 @@ function buildWhatsAppMsg() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   💾  SESSION STORAGE
+   ═══════════════════════════════════════════════════════════ */
+function saveHistoryToSession() {
+    try { sessionStorage.setItem('rn_chat_history', JSON.stringify(conversationHistory)); } catch {}
+}
+
+function loadHistoryFromSession() {
+    try {
+        const raw = sessionStorage.getItem('rn_chat_history');
+        if (raw) conversationHistory = JSON.parse(raw);
+    } catch {}
+}
+
+function clearHistoryFromSession() {
+    try { sessionStorage.removeItem('rn_chat_history'); } catch {}
+    conversationHistory = [];
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🔒  CONTROLE DE INPUT
+   ═══════════════════════════════════════════════════════════ */
+function setInputEnabled(enabled) {
+    const input = getEl('chatInput');
+    const btn   = getEl('chatSendBtn');
+    if (input) input.disabled = !enabled;
+    if (btn)   btn.disabled   = !enabled;
+}
+
+/* ═══════════════════════════════════════════════════════════
    🎨  RENDERIZAÇÃO
    ═══════════════════════════════════════════════════════════ */
 function getEl(id) { return document.getElementById(id); }
 
+function sanitizeHTML(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
 function formatText(text) {
-    return text
+    const safe = sanitizeHTML(text);
+    return safe
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/\n• /g, '<br>• ')
@@ -696,9 +804,16 @@ function toggleChat() {
         btn.classList.add('active');
         getEl('chatBadge')?.remove();
         getEl('chatWelcomePopup')?.classList.remove('visible');
+        try { sessionStorage.setItem('rn_chat_opened', '1'); } catch {}
 
         if (conversationHistory.length === 0) {
+            loadHistoryFromSession();
+        }
+        if (conversationHistory.length === 0) {
             setTimeout(() => initChat(), 400);
+        } else {
+            /* Restaura mensagens da sessão no DOM se o chat foi reaberto */
+            setTimeout(() => scrollBottom(), 100);
         }
     } else {
         widget.classList.remove('open');
@@ -713,7 +828,9 @@ function closeChat() {
 }
 
 async function initChat() {
-    // Corrigido: verifica proxy E chave direta
+    if (initInProgress) return;
+    initInProgress = true;
+
     const useProxy  = CONFIG.PROXY_URL && !CONFIG.PROXY_URL.includes('SEU_USUARIO');
     const useDirect = !useProxy && CONFIG.GEMINI_API_KEY && CONFIG.GEMINI_API_KEY.length > 10;
     const keyOk     = useProxy || useDirect;
@@ -734,6 +851,8 @@ async function initChat() {
     } else {
         showFallbackWelcome();
     }
+
+    initInProgress = false;
 }
 
 function showFallbackWelcome() {
@@ -757,16 +876,22 @@ function sendChatMessage() {
    🚀  DOMContentLoaded
    ═══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-    getEl('chatInput')?.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendChatMessage();
-        }
-    });
+    const _input = getEl('chatInput');
+    if (_input && !_input._keyListenerAdded) {
+        _input._keyListenerAdded = true;
+        _input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendChatMessage();
+            }
+        });
+    }
 
-    // Badge após 5s
+    const jaAbriu = () => { try { return !!sessionStorage.getItem('rn_chat_opened'); } catch { return false; } };
+
+    /* Badge após 5s — apenas se o chat nunca foi aberto nesta sessão */
     setTimeout(() => {
-        if (!isOpen) {
+        if (!isOpen && !jaAbriu()) {
             const btn = getEl('chatToggleBtn');
             if (btn && !getEl('chatBadge')) {
                 const badge = document.createElement('div');
@@ -778,9 +903,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 5000);
 
-    // Popup após 10s
+    /* Popup após 10s — apenas uma vez por sessão */
     setTimeout(() => {
-        if (!isOpen) {
+        if (!isOpen && !jaAbriu()) {
             const popup = getEl('chatWelcomePopup');
             if (popup) {
                 popup.classList.add('visible');
