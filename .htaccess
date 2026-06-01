@@ -1,0 +1,10 @@
+Options -Indexes
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+</IfModule>
+
+<FilesMatch "^(composer\.(json|lock)|package(-lock)?\.json)$">
+  Require all denied
+</FilesMatch>

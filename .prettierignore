@@ -1,0 +1,9 @@
+node_modules
+GITHUB-SITE
+.wrangler
+coverage
+package-lock.json
+django-trabalhe-conosco/.venv/**
+django-trabalhe-conosco/private_media/**
+django-trabalhe-conosco/staticfiles/**
+django-trabalhe-conosco/.lancedb/**

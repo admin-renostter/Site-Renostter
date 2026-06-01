@@ -1,0 +1,36 @@
+name = "renostter-gemini-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Workers gratuito: 100.000 req/dia — sem cartão de crédito
+
+[vars]
+RATE_LIMIT_RPM = "20"
+LUCAS_SYSTEM_PROMPT = ""
+
+[env.staging]
+name = "renostter-gemini-proxy-staging"
+
+[env.staging.vars]
+RATE_LIMIT_RPM = "20"
+LUCAS_SYSTEM_PROMPT = ""
+
+# ─── Secrets (NÃO colocar aqui — usar wrangler secret put) ────────────────
+#
+# Provedores IA — ordem de prioridade do fallback:
+#   wrangler secret put GROQ_API_KEY           # [1] Primário — groq.com
+#   wrangler secret put CEREBRAS_API_KEY       # [2] Primário — cerebras.ai
+#   wrangler secret put GEMINI_API_KEY         # [3] Legado   — Google Gemini
+#   wrangler secret put MISTRAL_API_KEY        # [4] Secundário — mistral.ai
+#   wrangler secret put DEEPSEEK_API_KEY       # [5] Secundário — deepseek.com
+#   wrangler secret put OPENROUTER_API_KEY     # [6] Fallback universal — openrouter.ai
+#   wrangler secret put AIMLAPI_API_KEY        # [7] Backup — aimlapi.com
+#   wrangler secret put ZAI_API_KEY            # [8] Backup — together.xyz
+#
+# Lead capture (opcional — encaminha leads do chatbot para n8n / Zapier / Make):
+#   wrangler secret put WEBHOOK_URL
+#
+# Serviços Google:
+#   wrangler secret put YOUTUBE_API_KEY
+#   wrangler secret put GOOGLE_PLACES_API_KEY
+# ──────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,11 @@
+<p>Nova candidatura recebida no site da Renostter.</p>
+<ul>
+  <li><strong>Vaga:</strong> {{ application.job.title }}</li>
+  <li><strong>Nome:</strong> {{ application.name }}</li>
+  <li><strong>E-mail:</strong> {{ application.email }}</li>
+  <li><strong>Telefone:</strong> {{ application.phone|default:"Nao informado" }}</li>
+  <li><strong>Score QA:</strong> {{ application.qa_score }}</li>
+</ul>
+{% if application.message %}
+  <p><strong>Mensagem:</strong><br>{{ application.message|linebreaksbr }}</p>
+{% endif %}

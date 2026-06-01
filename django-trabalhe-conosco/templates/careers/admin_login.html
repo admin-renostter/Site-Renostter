@@ -1,0 +1,87 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Login RH | Renostter{% endblock %}
+
+{% block content %}
+  <section class="careers-login-shell">
+    <aside class="careers-login-hero" aria-label="Renostter RH">
+      <div class="careers-login-brand">
+        <span class="careers-brand-mark">R</span>
+        <span>renostter</span>
+      </div>
+      <div>
+        <p class="careers-kicker">Area restrita</p>
+        <h1>Gestao de vagas com clareza.</h1>
+        <p>Cadastre oportunidades, acompanhe candidaturas e mantenha o processo seletivo organizado para o time Renostter.</p>
+      </div>
+    </aside>
+
+    <section class="careers-login-card">
+      <p class="careers-kicker">Painel do recrutador</p>
+      <h2>Bem-vindo de volta</h2>
+      <p class="careers-login-note">Acesse com seu usuario autorizado pelo administrador.</p>
+
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        {% if form.non_field_errors %}
+          <div class="careers-form-error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label class="careers-auth-field" for="{{ form.username.id_for_label }}">
+          <span>{{ form.username.label }}</span>
+          <span class="careers-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.6"></circle>
+              <path d="M4.5 19a7.5 7.5 0 0 1 15 0"></path>
+            </svg>
+            {{ form.username }}
+          </span>
+          {% for error in form.username.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
+        </label>
+
+        <label class="careers-auth-field" for="{{ form.password.id_for_label }}">
+          <span class="careers-label-row">
+            <span>{{ form.password.label }}</span>
+            <a href="{% url 'password_reset' %}">Esqueceu sua senha?</a>
+          </span>
+          <span class="careers-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="4" y="11" width="16" height="10" rx="2"></rect>
+              <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+            </svg>
+            {{ form.password }}
+            <button type="button" class="careers-password-toggle" id="toggle-password" aria-label="Mostrar senha">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </span>
+          {% for error in form.password.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
+        </label>
+
+        <label class="careers-check">
+          {{ form.remember_me }}
+          <span></span>
+          <strong>{{ form.remember_me.label }}</strong>
+        </label>
+
+        <button class="careers-button careers-login-submit" type="submit">Entrar no painel RH</button>
+      </form>
+    </section>
+  </section>
+
+  <script>
+    const toggle = document.getElementById("toggle-password");
+    const passwordInput = document.getElementById("id_password");
+
+    if (toggle && passwordInput) {
+      toggle.addEventListener("click", function () {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+        toggle.setAttribute("aria-label", isPassword ? "Ocultar senha" : "Mostrar senha");
+      });
+    }
+  </script>
+{% endblock %}

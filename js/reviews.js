@@ -21,6 +21,24 @@ const CACHE_TTL_PID   = 7  * 24 * 60 * 60 * 1000; /* 7 dias — place_id */
 let PLACE_ID    = PLACE_ID_STATIC;  /* será substituído após descoberta */
 let MAPS_PROFILE = `https://www.google.com/maps/place/?q=place_id:${PLACE_ID}`;
 
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function safeExternalUrl(value, fallback = MAPS_PROFILE) {
+    try {
+        const url = new URL(value || fallback);
+        return ['https:', 'http:'].includes(url.protocol) ? url.href : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
 /* ─── Ícone G do Google ─── */
 const GOOGLE_ICON = `<svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -32,9 +50,11 @@ const GOOGLE_ICON = `<svg class="review-google-icon" width="20" height="20" view
 /* ─── HTML dos botões de ação que aparece em TODOS os cards ─── */
 function cardActionsHtml(reviewUrl) {
     /* reviewUrl: link para a avaliação específica (ou perfil geral) */
+    const safeReviewUrl = escapeHtml(safeExternalUrl(reviewUrl));
+    const safeWriteUrl = escapeHtml(safeExternalUrl(REVIEW_WRITE));
     return `
     <div class="review-actions">
-        <a href="${reviewUrl}"
+        <a href="${safeReviewUrl}"
            target="_blank" rel="noopener noreferrer"
            class="review-ver-google"
            aria-label="Ver avaliação no Google">
@@ -44,7 +64,7 @@ function cardActionsHtml(reviewUrl) {
             </svg>
             Ver no Google
         </a>
-        <a href="${REVIEW_WRITE}"
+        <a href="${safeWriteUrl}"
            target="_blank" rel="noopener noreferrer"
            class="review-responder"
            aria-label="Deixar uma resposta no Google">
@@ -107,14 +127,16 @@ function renderReviews(result) {
 
     grid.innerHTML = reviews.map((r, i) => {
         const color = AVATAR_PALETTE[i % AVATAR_PALETTE.length];
-        const date  = r.relative_time_description || ptDate(r.time);
-        const photo = r.profile_photo_url;
+        const date  = escapeHtml(r.relative_time_description || ptDate(r.time));
+        const photo = safeExternalUrl(r.profile_photo_url, '');
+        const authorName = escapeHtml(r.author_name || 'Cliente Renostter');
+        const reviewText = escapeHtml(r.text || '');
         const avatar = photo
-            ? `<img src="${photo}" alt="${r.author_name}" class="review-avatar review-avatar-img" width="40" height="40" loading="lazy">`
-            : `<div class="review-avatar" style="background:${color}" aria-hidden="true">${initials(r.author_name)}</div>`;
+            ? `<img src="${escapeHtml(photo)}" alt="${authorName}" class="review-avatar review-avatar-img" width="40" height="40" loading="lazy">`
+            : `<div class="review-avatar" style="background:${color}" aria-hidden="true">${escapeHtml(initials(r.author_name))}</div>`;
 
         /* URL do autor — link direto para o perfil do avaliador no Google Maps */
-        const authorUrl = r.author_url || MAPS_PROFILE;
+        const authorUrl = safeExternalUrl(r.author_url);
 
         return `
         <div class="review-card fade-up" data-enhanced="1">
@@ -122,14 +144,14 @@ function renderReviews(result) {
             <div class="review-top">
                 ${avatar}
                 <div class="review-info">
-                    <a href="${authorUrl}" target="_blank" rel="noopener noreferrer" class="review-author-link">
-                        <strong>${r.author_name}</strong>
+                    <a href="${escapeHtml(authorUrl)}" target="_blank" rel="noopener noreferrer" class="review-author-link">
+                        <strong>${authorName}</strong>
                     </a>
                     <span>${date}</span>
                 </div>
             </div>
-            <div class="review-stars" aria-label="${r.rating} estrelas">${starsHtml(r.rating)}</div>
-            <p class="review-text">${r.text || ''}</p>
+            <div class="review-stars" aria-label="${escapeHtml(r.rating)} estrelas">${starsHtml(r.rating)}</div>
+            <p class="review-text">${reviewText}</p>
             ${cardActionsHtml(authorUrl)}
         </div>`;
     }).join('');

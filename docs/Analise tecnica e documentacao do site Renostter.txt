@@ -1,0 +1,99 @@
+# Analise tecnica e documentacao do site Renostter
+
+Data da analise: 2026-05-27  
+Escopo: estrutura principal do site em `Site-Renostter`, excluindo a copia espelhada em `GITHUB-SITE` e arquivos internos de `.git`.
+
+## 1. Resumo executivo
+
+O site Renostter esta estruturado como uma aplicacao web estatica com HTML, CSS e JavaScript puros, enriquecida por PWA, chatbot com IA, integracoes de conversao, carrossel de videos, Google Places, Calendly, WhatsApp, mapa interativo e um Cloudflare Worker como camada de proxy para IA e APIs externas.
+
+Do ponto de vista de produto, o projeto ja apresenta uma proposta forte: captar leads de manutencao, instalacao, higienizacao, PMOC e servicos tecnicos de climatizacao com uma experiencia visual rica e assistida por IA. Do ponto de vista de engenharia, a base funciona como um MVP avancado, mas ainda precisa evoluir em modularizacao, pipeline DevOps, observabilidade, testes, seguranca e governanca de IA.
+
+Diagnostico central:
+
+- Produto: forte orientacao a conversao, com CTAs recorrentes, chatbot SDR, agenda e WhatsApp.
+- Frontend: rico em secoes, animacoes e interacoes, mas com arquivos muito grandes e responsabilidades misturadas.
+- Backend/serverless: Worker bem posicionado como proxy seguro para chaves e fallback de provedores de IA.
+- DevOps: ainda incipiente; falta automacao de build, lint, testes, deploy, verificacoes de performance e ambientes.
+- AI-first: presente na experiencia do usuario, mas ainda sem avaliacao automatizada de prompts, metricas de qualidade, guardrails formais ou trilha de auditoria.
+
+## 2. Inventario da estrutura
+
+Arquivos principais analisados:
+
+| Arquivo | Papel | Tamanho aproximado | Linhas |
+|---|---:|---:|---:|
+| `index.html` | Estrutura completa da landing page, SEO, secoes, modais e scripts inline | 90,7 KB | 1467 |
+| `styles.css` | Estilos globais, responsividade, UI, animacoes e secoes | 77,1 KB | 3155 |
+| `chatbot.js` | Chatbot Lucas IA, prompt, fallback, historico, leads e acoes | 57,5 KB | 820 |
+| `chatbot.css` | Estilo do widget de chat | 12,2 KB | 503 |
+| `script.js` | Navbar, scroll, contadores, status, modal de pintura e eventos | 8,8 KB | 214 |
+| `calendar.js` | Fluxo de agendamento, Google Calendar e WhatsApp | 14,4 KB | 290 |
+| `js/portfolio.js` | Videos do YouTube via Worker e Swiper | 12,3 KB | 269 |
+| `js/reviews.js` | Avaliacoes Google via Worker e cache local | 10,5 KB | 220 |
+| `js/carousel.js` | Carrossel tecnico horizontal | 2,4 KB | 53 |
+| `sw.js` | Service Worker e cache PWA | 2,8 KB | 85 |
+| `manifest.json` | Manifesto PWA | 0,9 KB | 34 |
+| `proxy/worker.js` | Cloudflare Worker para IA, YouTube, Places e leads | 18,5 KB | 373 |
+| `proxy/wrangler.toml` | Configuracao de deploy do Worker | 0,7 KB | - |
+
+Pastas relevantes:
+
+- `assets/`: imagens, videos, logos e marcas.
+- `assets/residencial/`: imagens de servicos residenciais.
+- `assets/empresarial/`: imagens de projetos corporativos.
+- `assets/marcas/`: logos de fabricantes atendidos.
+- `js/`: modulos adicionais de portfolio, avaliacoes e carrossel.
+- `proxy/`: camada serverless em Cloudflare Workers.
+- `GITHUB-SITE/`: copia espelhada da estrutura principal, aparentemente usada para publicacao ou backup.
+
+## 3. Arquitetura atual
+
+```mermaid
+flowchart TD
+    U["Usuario no site"] --> H["index.html"]
+    H --> CSS["styles.css / chatbot.css"]
+    H --> JS["script.js / calendar.js / chatbot.js"]
+    H --> MOD["js/portfolio.js / js/reviews.js / js/carousel.js"]
+    H --> SW["sw.js PWA cache"]
+    JS --> WA["WhatsApp"]
+    JS --> CAL["Calendly / Google Calendar"]
+    JS --> MAP["Leaflet + Nominatim"]
+    MOD --> WK["Cloudflare Worker"]
+    CHAT["chatbot.js"] --> WK
+    WK --> AI["Pool IA: Groq, Cerebras, Gemini, Mistral, DeepSeek, OpenRouter, AIMLAPI, Z.ai"]
+    WK --> YT["YouTube Data API"]
+    WK --> GP["Google Places API"]
+    WK --> WH["Webhook externo: n8n, Zapier ou Make"]
+```
+
+### Frontend
+
+O frontend e uma landing page unica com secoes de alto impacto:
+
+- hero com video de fundo;
+- marcas atendidas;
+- numeros de autoridade;
+- servicos;
+- portfolio e videos;
+- avaliacoes Google;
+- cobertura por mapa;
+- agendamento;
+- contato;
+- chatbot IA;
+- modais de termos, avaliacao Google e simulador de pintura.
+
+Pontos fortes:
+
+- Boa cobertura de intencoes de conversao.
+- Uso de dados estruturados `LocalBusiness` e `Service`.
+- Lazy loading em imagens e videos dinamicos.
+- PWA com manifest e service worker.
+- Experiencia rica sem depender de framework.
+
+Pontos de atencao:
+
+- `index.html` concentra muito conteudo, scripts inline e logica de negocio.
+- `styles.css` tem mais de 3000 linhas, dificultando manutencao e revisao.
+- Ha dependencias externas por CDN sem estrategia visivel de pinagem com SRI.
+- Varios blocos usam `innerHTML`; ha sanitizacao no chat, mas nem todos os pontos dinamicos tem o mesmo nivel de protecao.

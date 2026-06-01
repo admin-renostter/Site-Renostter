@@ -1,0 +1,22 @@
+{
+    "brand": "Renostter Climatizacao",
+    "siteUrl": "https://renostter.com",
+    "workerUrl": "https://renostter-gemini-proxy.adminrenostter.workers.dev",
+    "contact": {
+        "phone": "+55 11 95273-0593",
+        "whatsapp": "5511952730593",
+        "email": "comercial.renostter@gmail.com",
+        "instagram": "https://www.instagram.com/renostter",
+        "calendly": "https://calendly.com/renostter/visita-tecnica"
+    },
+    "google": {
+        "placeId": "ChIJZX-bcVRjzpQRIvN6uq9QL-k",
+        "reviewUrl": "https://g.page/r/CW0qmJKGFkgNEBI/review"
+    },
+    "coverage": ["Sao Paulo", "Grande Sao Paulo"],
+    "pricingNotes": [
+        "Valores sao estimativas iniciais.",
+        "Preco final depende de vistoria, modelo, acesso, distancia da tubulacao e pecas.",
+        "Nao prometer prazo ou disponibilidade sem confirmacao da equipe."
+    ]
+}

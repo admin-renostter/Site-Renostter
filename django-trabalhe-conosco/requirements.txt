@@ -1,0 +1,10 @@
+Django>=5.1,<6.0
+gunicorn>=22.0
+psycopg[binary]>=3.2
+django-q2>=1.6
+docling>=2.0
+python-decouple>=3.8
+lancedb>=0.16
+SQLAlchemy>=2.0
+tzlocal>=5.2
+agno>=1.0

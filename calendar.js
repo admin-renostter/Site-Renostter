@@ -7,6 +7,15 @@
 const BUSINESS_EMAIL = 'comercial.renostter@gmail.com';
 const WHATSAPP_NUM = '5511952730593';
 
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // Estado do formulário
 const state = {
     servico: '',
@@ -73,7 +82,7 @@ function showDateError(msg) {
         el.style.cssText = 'color:#ef4444;font-size:0.85rem;margin-top:6px;display:flex;align-items:center;gap:4px;';
         dataInput?.parentNode?.appendChild(el);
     }
-    el.innerHTML = `⚠️ ${msg}`;
+    el.textContent = `⚠️ ${msg}`;
 }
 
 function clearDateError() {
@@ -139,13 +148,14 @@ function checkStep2() {
     const available = Math.max(1, totalSlots - taken);
 
     const urgency = available <= 3 ? 'urgente' : available <= 6 ? 'medio' : 'normal';
-    const label = urgency === 'urgente'
-        ? `🔴 Apenas <strong>${available}</strong> vaga${available > 1 ? 's' : ''} esta semana!`
-        : urgency === 'medio'
-        ? `🟡 <strong>${available}</strong> vagas disponíveis esta semana`
-        : `🟢 <strong>${available}</strong> vagas disponíveis esta semana`;
+    const prefix = urgency === 'urgente' ? '🔴 Apenas ' : urgency === 'medio' ? '🟡 ' : '🟢 ';
+    const suffix = urgency === 'urgente'
+        ? ` vaga${available > 1 ? 's' : ''} esta semana!`
+        : ' vagas disponíveis esta semana';
 
-    container.innerHTML = label;
+    const amount = document.createElement('strong');
+    amount.textContent = String(available);
+    container.replaceChildren(document.createTextNode(prefix), amount, document.createTextNode(suffix));
     container.className = `slots-indicator slots-${urgency}`;
 })();
 
@@ -214,14 +224,14 @@ function buildResumo() {
         : '–';
 
     card.innerHTML = `
-    <div class="resumo-row"><span class="resumo-key">🔧 Serviço</span><span class="resumo-val">${state.servico || '–'}</span></div>
-    <div class="resumo-row"><span class="resumo-key">📅 Data</span><span class="resumo-val">${dataFmt}</span></div>
-    <div class="resumo-row"><span class="resumo-key">🕐 Horário</span><span class="resumo-val">${state.hora || '–'}h</span></div>
-    <div class="resumo-row"><span class="resumo-key">📍 Endereço</span><span class="resumo-val">${state.endereco || '–'}</span></div>
-    <div class="resumo-row"><span class="resumo-key">🏠 Ambiente</span><span class="resumo-val">${state.tipoLocal || '–'}</span></div>
-    <div class="resumo-row"><span class="resumo-key">👤 Nome</span><span class="resumo-val">${state.nome || '–'}</span></div>
-    <div class="resumo-row"><span class="resumo-key">📱 WhatsApp</span><span class="resumo-val">${state.telefone || '–'}</span></div>
-    ${state.obs ? `<div class="resumo-row"><span class="resumo-key">💬 Obs.</span><span class="resumo-val">${state.obs}</span></div>` : ''}
+    <div class="resumo-row"><span class="resumo-key">🔧 Serviço</span><span class="resumo-val">${escapeHtml(state.servico || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">📅 Data</span><span class="resumo-val">${escapeHtml(dataFmt)}</span></div>
+    <div class="resumo-row"><span class="resumo-key">🕐 Horário</span><span class="resumo-val">${escapeHtml(state.hora || '–')}h</span></div>
+    <div class="resumo-row"><span class="resumo-key">📍 Endereço</span><span class="resumo-val">${escapeHtml(state.endereco || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">🏠 Ambiente</span><span class="resumo-val">${escapeHtml(state.tipoLocal || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">👤 Nome</span><span class="resumo-val">${escapeHtml(state.nome || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">📱 WhatsApp</span><span class="resumo-val">${escapeHtml(state.telefone || '–')}</span></div>
+    ${state.obs ? `<div class="resumo-row"><span class="resumo-key">💬 Obs.</span><span class="resumo-val">${escapeHtml(state.obs)}</span></div>` : ''}
   `;
 }
 

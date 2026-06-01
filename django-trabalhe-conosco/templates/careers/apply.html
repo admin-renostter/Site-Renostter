@@ -1,0 +1,55 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Candidatura | {{ job.title }}{% endblock %}
+
+{% block content %}
+  <section class="careers-split">
+    <article class="careers-detail">
+      <p class="careers-kicker">Candidatura</p>
+      <h1>{{ job.title }}</h1>
+      <div class="careers-tags">
+        <span>{{ job.location }}</span>
+        <span>{{ job.modality }}</span>
+        <span>{{ job.contract_type }}</span>
+      </div>
+      <div class="careers-richtext">{{ job.description|linebreaks }}</div>
+      {% if job.requirements %}
+        <h2>Requisitos</h2>
+        <div class="careers-richtext">{{ job.requirements|linebreaks }}</div>
+      {% endif %}
+      {% if job.benefits %}
+        <h2>Beneficios</h2>
+        <div class="careers-richtext">{{ job.benefits|linebreaks }}</div>
+      {% endif %}
+    </article>
+
+    <aside class="careers-form-panel">
+      <h2>Enviar candidatura</h2>
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="vaga" value="{{ job.pk }}">
+        {{ form.non_field_errors }}
+        {% for field in form %}
+          <label>
+            <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
+            {{ field }}
+            {% for error in field.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
+          </label>
+        {% endfor %}
+        <p class="careers-consent">Ao enviar, voce autoriza a Renostter a usar seus dados somente para processos seletivos e contato profissional.</p>
+        <button class="careers-button" type="submit">Enviar candidatura</button>
+      </form>
+    </aside>
+  </section>
+
+  <script>
+    document.addEventListener("change", function (event) {
+      const input = event.target;
+      if (input.type !== "file" || !input.files.length) return;
+      if (input.files[0].size > 5 * 1024 * 1024) {
+        input.value = "";
+        alert("O curriculo deve ter no maximo 5 MB.");
+      }
+    });
+  </script>
+{% endblock %}

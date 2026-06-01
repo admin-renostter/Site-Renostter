@@ -1,0 +1,31 @@
+{% extends "careers/base.html" %}
+
+{% block title %}{% if object %}Editar vaga{% else %}Nova vaga{% endif %} | Painel RH{% endblock %}
+
+{% block content %}
+  <section class="careers-form-wide">
+    <div class="careers-admin-head">
+      <div>
+        <p class="careers-kicker">Painel do recrutador</p>
+        <h1>{% if object %}Editar vaga{% else %}Nova vaga{% endif %}</h1>
+        {% if object and object.rejection_reason %}<p class="careers-login-note">Feedback do master: {{ object.rejection_reason }}</p>{% endif %}
+      </div>
+      <a class="careers-button careers-button-ghost" href="{% url 'careers:admin_jobs' %}">Voltar</a>
+    </div>
+
+    <form method="post" class="careers-grid-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <label class="{% if field.name == 'description' or field.name == 'requirements' or field.name == 'benefits' or field.name == 'internal_notes' or field.name == 'rejection_reason' %}careers-field-full{% endif %}">
+          <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
+          {{ field }}
+          {% for error in field.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
+        </label>
+      {% endfor %}
+      <div class="careers-field-full careers-actions">
+        <button class="careers-button" type="submit">Salvar vaga</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}

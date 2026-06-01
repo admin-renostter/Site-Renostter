@@ -1,0 +1,18 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Excluir vaga | Painel RH{% endblock %}
+
+{% block content %}
+  <section class="careers-auth">
+    <div class="careers-form-panel">
+      <p class="careers-kicker">Confirmacao</p>
+      <h1>Excluir vaga</h1>
+      <p>Confirme a exclusao de <strong>{{ object.title }}</strong>. Se houver candidaturas vinculadas, a vaga sera marcada como preenchida.</p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="careers-button" type="submit">Confirmar</button>
+        <a class="careers-button careers-button-ghost" href="{% url 'careers:admin_jobs' %}">Cancelar</a>
+      </form>
+    </div>
+  </section>
+{% endblock %}

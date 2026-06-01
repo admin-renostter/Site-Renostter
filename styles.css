@@ -2878,126 +2878,213 @@ textarea.field-input {
 
 
 /* =========================================
-   REVIEWS / AVALIAÇÕES
+   GOOGLE REVIEWS / BOTÕES E MODAL
    ========================================= */
-.reviews {
-    background: var(--dark);
-}
-.reviews-header-bar {
-    display: flex;
+.btn-google-footer {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    margin-bottom: 48px;
-    flex-wrap: wrap;
-}
-.google-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 50px;
-    padding: 8px 20px;
-}
-.google-badge svg { flex-shrink: 0; }
-.google-badge-text strong {
-    display: block;
-    color: #fff;
-    font-size: 1.1rem;
-}
-.google-badge-text span {
-    color: rgba(255,255,255,0.5);
-    font-size: 0.78rem;
-}
-.reviews-stars-avg {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #fff;
-}
-.stars-row {
-    display: flex;
-    gap: 3px;
-    color: #FBBF24;
-}
-.reviews-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-}
-.review-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 20px;
-    padding: 28px;
-    transition: var(--transition);
-    position: relative;
-}
-.review-card:hover {
-    border-color: rgba(0,174,239,0.25);
-    background: rgba(255,255,255,0.06);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.3);
-}
-.review-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-.review-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: #fff;
-    flex-shrink: 0;
-}
-.review-info strong {
-    display: block;
-    color: #fff;
-    font-size: 0.95rem;
-}
-.review-info span {
-    color: rgba(255,255,255,0.4);
-    font-size: 0.78rem;
-}
-.review-stars {
-    display: flex;
-    gap: 2px;
-    color: #FBBF24;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff !important;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 30px;
+    cursor: pointer;
     font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.btn-google-footer:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(0, 174, 239, 0.5);
+    transform: scale(1.02);
+}
+
+.google-review-success-wrapper {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.review-success-p {
+    color: var(--gray);
+    font-size: 0.95rem;
+    font-weight: 600;
     margin-bottom: 12px;
 }
-.review-text {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.9rem;
-    line-height: 1.65;
+.btn-google-review-success {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #ffffff;
+    color: #374151 !important;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: 0.4s var(--ease-spring);
+    text-decoration: none;
 }
-.review-google-icon {
+.btn-google-review-success:hover {
+    background: #f9fafb;
+    border-color: rgba(66, 133, 244, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(66, 133, 244, 0.12);
+}
+
+/* Modal de Avaliação do Google (Gatilho Chatbot) */
+@keyframes googleFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes googleSlideIn {
+    from { transform: scale(0.9) translateY(20px); }
+    to { transform: scale(1) translateY(0); }
+}
+
+.google-review-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 15, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    justify-content: center;
+    align-items: center;
+    z-index: 11000;
+}
+
+/* Quando o display mudar para flex via JS, a animação do modal ativa */
+.google-review-modal-overlay[style*="display: flex"],
+.google-review-modal-overlay[style*="display:flex"] {
+    animation: googleFadeIn 0.3s forwards;
+}
+
+.google-review-modal-box {
+    background: rgba(30, 30, 47, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    width: 90%;
+    max-width: 480px;
+    padding: 36px 30px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
+                0 0 40px rgba(0, 174, 239, 0.12);
+    text-align: center;
+    transform: scale(0.9) translateY(20px);
+}
+
+.google-review-modal-overlay[style*="display: flex"] .google-review-modal-box,
+.google-review-modal-overlay[style*="display:flex"] .google-review-modal-box {
+    animation: googleSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.google-review-btn-close {
     position: absolute;
     top: 20px;
     right: 20px;
-    opacity: 0.3;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
 }
-.reviews-cta {
-    text-align: center;
-    margin-top: 48px;
+.google-review-btn-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
 }
-.reviews-cta p {
-    color: rgba(255,255,255,0.4);
-    font-size: 0.85rem;
-    margin-top: 12px;
+
+.google-review-modal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
 }
-@media (max-width: 600px) {
-    .reviews-grid { grid-template-columns: 1fr; }
+.google-review-modal-header svg {
+    filter: drop-shadow(0 4px 10px rgba(66, 133, 244, 0.3));
+}
+.google-review-modal-header h3 {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.75) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.google-review-modal-body p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 16px 0;
+}
+.google-review-modal-body p:last-of-type {
+    margin-bottom: 28px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.google-review-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.btn-google-modal-confirm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF6B00 0%, #FF8A00 100%);
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(255, 107, 0, 0.3);
+}
+.btn-google-modal-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(255, 107, 0, 0.45);
+    background: linear-gradient(135deg, #FF8A00 0%, #FFA500 100%);
+}
+.btn-google-modal-cancel {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.btn-google-modal-cancel:hover {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 

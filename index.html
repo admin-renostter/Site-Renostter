@@ -25,13 +25,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="video" href="assets/hero-background.mp4" type="video/mp4">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+        crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260528" />
     <link rel="stylesheet" href="chatbot.css" />
     <!-- Swiper.js — carrossel de vídeos -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"
+        integrity="sha384-gAPqlBuTCdtVcYt9ocMOYWrnBZ4XSL6q+4eXqwNycOr4iFczhNKtnYhF3NEXJM51"
+        crossorigin="anonymous" />
     <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
     <style>
         /* Estilos do modal de Termos de Uso */
@@ -259,10 +263,9 @@
                 <img src="assets/logo.png" alt="Renostter Climatização" class="logo-img-static" />
             </a>
             <ul class="nav-links" id="navLinks">
+                <li><a href="/trabalhe-conosco/">Trabalhe Conosco</a></li>
                 <li><a href="#servicos">Serviços</a></li>
-                <li><a href="#calculadora">Calculadora</a></li>
                 <li><a href="#portfolio">Portfólio</a></li>
-                <li><a href="#reviews">Avaliações</a></li>
                 <li><a href="#mapa">Cobertura</a></li>
                 <li><a href="#agendar">Agendar</a></li>
                 <li><a href="#contato" class="btn-nav">Orçamento Grátis</a></li>
@@ -517,7 +520,6 @@
                 Quero um Orçamento Gratuito
             </a>
         </div>
-        </div>
     </section>
 
 
@@ -625,202 +627,7 @@
         </div>
     </section>
 
-    <!-- ========== AVALIAÇÕES / REVIEWS ========== -->
-    <section class="reviews section-pad" id="reviews">
-        <div class="container">
-            <div class="section-header">
-                <p class="section-tag">O que dizem nossos clientes</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">+218
-                            avaliações<br /><span class="gradient-text">4,9 ★ no Google</span></span></span></h2>
-            </div>
-            <div class="reviews-header-bar">
-                <div class="google-badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="google-badge-text">
-                        <strong>Google Meu Negócio</strong>
-                        <span>218 avaliações verificadas</span>
-                    </div>
-                </div>
-                <div class="reviews-stars-avg">
-                    4,9
-                    <div class="stars-row">★★★★★</div>
-                </div>
-            </div>
-            <div class="reviews-grid" id="reviews-grid-container">
-                <div class="review-card fade-up">
-                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="review-top">
-                        <div class="review-avatar" style="background:linear-gradient(135deg,#00AEEF,#0088CC)">MC</div>
-                        <div class="review-info"><strong>Mariana C.</strong><span>Vila Madalena, SP · há 2
-                                semanas</span></div>
-                    </div>
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">Atendimento impecável do início ao fim. O técnico chegou no horário, explicou
-                        tudo antes de começar e o ar ficou gelando muito melhor depois da higienização. Recebi o laudo
-                        técnico no mesmo dia. Super recomendo!</p>
-                </div>
-                <div class="review-card fade-up">
-                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="review-top">
-                        <div class="review-avatar" style="background:linear-gradient(135deg,#FF6B00,#E55A00)">RF</div>
-                        <div class="review-info"><strong>Ricardo F.</strong><span>Clínica Médica Excellence · há 1
-                                mês</span></div>
-                    </div>
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">Contratamos para o PMOC da nossa clínica. Toda a documentação exigida pela
-                        ANVISA foi entregue corretamente e dentro do prazo. O preço foi muito justo. Renovamos o
-                        contrato anual sem pensar duas vezes.</p>
-                </div>
-                <div class="review-card fade-up">
-                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="review-top">
-                        <div class="review-avatar" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9)">LS</div>
-                        <div class="review-info"><strong>Luciana S.</strong><span>Lapa, SP · há 3 semanas</span></div>
-                    </div>
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">Instalei dois splits e a equipe foi muito profissional. Fizeram a passagem de
-                        tubulação com cuidado, sem estragar nada. O ar ficou perfeito e o preço foi mais barato que
-                        outro orçamento que peguei. Nota 10!</p>
-                </div>
-                <div class="review-card fade-up">
-                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="review-top">
-                        <div class="review-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">AP</div>
-                        <div class="review-info"><strong>André P.</strong><span>Empresa Industrial · há 2 meses</span>
-                        </div>
-                    </div>
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">Nosso sistema VRF precisava de manutenção urgente e a Renostter atendeu no
-                        mesmo dia. Técnicos altamente capacitados, resolveram um vazamento que outra empresa não
-                        conseguiu identificar. Agora são nossos parceiros fixos.</p>
-                </div>
-                <div class="review-card fade-up">
-                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="review-top">
-                        <div class="review-avatar" style="background:linear-gradient(135deg,#F59E0B,#D97706)">CM</div>
-                        <div class="review-info"><strong>Cláudia M.</strong><span>Perdizes, SP · há 1 semana</span>
-                        </div>
-                    </div>
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">Serviço de pintura do ar-condicionado — incrível! Pintaram no azul petróleo
-                        que combinou perfeitamente com a decoração do meu escritório. Qualidade automotiva mesmo. Todo
-                        mundo que entra pergunta onde fiz!</p>
-                </div>
-                <div class="review-card fade-up">
-                    <svg class="review-google-icon" width="20" height="20" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                    <div class="review-top">
-                        <div class="review-avatar" style="background:linear-gradient(135deg,#EF4444,#DC2626)">JT</div>
-                        <div class="review-info"><strong>João T.</strong><span>Santana, SP · há 1 mês</span></div>
-                    </div>
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">Meu aparelho parou de funcionar numa sexta à noite. Mandei mensagem pelo
-                        WhatsApp e respondem super rápido. Técnico veio no sábado de manhã, diagnosticou o problema e
-                        resolveu na hora. Excelente suporte!</p>
-                </div>
-            </div>
-            <div class="reviews-cta">
-                <a href="https://g.page/r/CW0qmJKGFkgNEBI/review" data-review-write-url class="btn-primary"
-                    target="_blank" rel="noopener noreferrer" aria-label="Deixar avaliação no Google">
-                    ⭐ Avalie-nos no Google
-                </a>
-                <a href="https://wa.me/5511952730593?text=Olá!%20Quero%20contratar%20um%20serviço%20da%20Renostter."
-                    class="btn-secondary-outline" target="_blank" rel="noopener">Faça parte dos nossos clientes
-                    satisfeitos</a>
-                <p>Avaliações verificadas via Google Meu Negócio · renostter.com</p>
-            </div>
-        </div>
-    </section>
+
 
     <!-- ========== MAPA DE ATENDIMENTO ========== -->
     <section class="mapa-atendimento section-pad" id="mapa">
@@ -1123,6 +930,22 @@
                             receberá a solicitação e entrará em contato para confirmar.</p>
                         <a href="https://wa.me/5511952730593" class="btn-whatsapp" target="_blank">💬 Tirar dúvidas pelo
                             WhatsApp</a>
+                        
+                        <div class="google-review-success-wrapper">
+                            <p class="review-success-p">Sua opinião é muito importante para nós! ⭐</p>
+                            <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" 
+                               class="btn-google-review-success" target="_blank" rel="noopener noreferrer" 
+                               aria-label="Avalie nosso atendimento no Google">
+                                <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                </svg>
+                                Compartilhe sua experiência – 5 estrelas nos ajudam muito! ⭐
+                            </a>
+                        </div>
+
                         <button class="btn-back" onclick="resetForm()"
                             aria-label="Voltar para o início do agendamento">↩️ Novo Agendamento</button>
 
@@ -1160,8 +983,18 @@
         </div>
         <div class="footer-bottom">
             <p>© 2025 Renostter Climatização. Todos os direitos reservados. CNPJ: 31.535.191/0001-10</p>
-            <div style="margin-top: 15px;">
+            <div class="footer-bottom-buttons" style="margin-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
                 <button id="openTermosModal" class="btn-open" aria-label="Abrir Termos de Uso">📜 Termos de Uso</button>
+                <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" 
+                   target="_blank" rel="noopener noreferrer" class="btn-google-footer" aria-label="Avaliar no Google">
+                    <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                    </svg>
+                    Avalie nosso atendimento no Google ⭐
+                </a>
             </div>
 
         </div>
@@ -1265,14 +1098,20 @@
         </svg>
     </a>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=20260528"></script>
     <!-- Swiper.js deve vir antes de portfolio.js -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
+        integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
+        crossorigin="anonymous"></script>
     <script src="js/portfolio.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="js/carousel.js"></script>
     <script src="calendar.js"></script>
     <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
     <script src="chatbot.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
+        crossorigin="anonymous"></script>
 
     <script>
         /* ─── SERVICE WORKER ─── */
@@ -1392,6 +1231,25 @@
             let checkedMarker = null;
             let userMarker = null;
 
+            function setCoverageResult(element, ok, label, actionText) {
+                if (!element) return;
+                element.replaceChildren();
+                element.append(document.createTextNode(ok ? '✅ ' : '📞 '));
+
+                const strong = document.createElement('strong');
+                strong.textContent = label;
+                element.appendChild(strong);
+                element.append(document.createTextNode(ok ? ' está na nossa área de cobertura! ' : ' pode estar fora da Grande SP. '));
+
+                const link = document.createElement('a');
+                link.href = 'https://wa.me/5511952730593';
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.style.color = '#00AEEF';
+                link.textContent = actionText;
+                element.appendChild(link);
+            }
+
             function showResult(lat, lng, label) {
                 const inside = isInsideCoverage(lat, lng);
                 const resultEl = document.getElementById('cep-result');
@@ -1399,10 +1257,10 @@
 
                 if (resultEl) {
                     if (inside) {
-                        resultEl.innerHTML = `✅ <strong>${label}</strong> está na nossa área de cobertura! <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Agendar agora →</a>`;
+                        setCoverageResult(resultEl, true, label, 'Agendar agora →');
                         resultEl.className = 'cep-result ok';
                     } else {
-                        resultEl.innerHTML = `📞 <strong>${label}</strong> pode estar fora da Grande SP. <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Consulte-nos →</a>`;
+                        setCoverageResult(resultEl, false, label, 'Consulte-nos →');
                         resultEl.className = 'cep-result fail';
                     }
                 }
@@ -1469,7 +1327,7 @@
                 return;
             }
 
-            result.innerHTML = '🔄 Buscando localização...';
+            result.textContent = '🔄 Buscando localização...';
             result.className = 'cep-result';
             if (btn) btn.disabled = true;
 
@@ -1492,9 +1350,15 @@
                 /* Fallback por prefixo de 2 dígitos (CEPs da Grande SP: 01xxx–09xxx) */
                 const prefix = parseInt(cep.substring(0, 2));
                 const grandeSP = prefix >= 1 && prefix <= 9;
-                result.innerHTML = grandeSP
-                    ? `✅ CEP da Grande SP — atendemos! <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Agendar →</a>`
-                    : '📞 Pode estar fora da Grande SP. <a href="https://wa.me/5511952730593" target="_blank" style="color:#00AEEF">Consulte-nos →</a>';
+                result.replaceChildren();
+                result.append(document.createTextNode(grandeSP ? '✅ CEP da Grande SP — atendemos! ' : '📞 Pode estar fora da Grande SP. '));
+                const link = document.createElement('a');
+                link.href = 'https://wa.me/5511952730593';
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.style.color = '#00AEEF';
+                link.textContent = grandeSP ? 'Agendar →' : 'Consulte-nos →';
+                result.appendChild(link);
                 result.className = grandeSP ? 'cep-result ok' : 'cep-result fail';
                 const cta = document.getElementById('mapa-cta-orcamento');
                 if (cta) cta.style.display = grandeSP ? 'inline-flex' : 'none';
@@ -1687,6 +1551,33 @@
         </div>
     </div>
 
+    <!-- ========== MODAL AVALIAÇÃO DO GOOGLE (GATILHO CHATBOT) ========== -->
+    <div class="google-review-modal-overlay" id="googleReviewModalOverlay">
+        <div class="google-review-modal-box">
+            <button class="google-review-btn-close" id="closeGoogleReviewModal" aria-label="Fechar Modal">✕</button>
+            <div class="google-review-modal-header">
+                <svg width="32" height="32" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                </svg>
+                <h3>Sua opinião é valiosa!</h3>
+            </div>
+            <div class="google-review-modal-body">
+                <p>Ficamos muito felizes em saber que você teve uma boa experiência com a nossa equipe no chat!</p>
+                <p>Que tal compartilhar a sua experiência no Google? Leva menos de 1 minuto e nos ajuda imensamente a crescer e continuar oferecendo um excelente serviço. ⭐⭐⭐⭐⭐</p>
+                <div class="google-review-modal-actions">
+                    <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" 
+                       target="_blank" rel="noopener noreferrer" class="btn-google-modal-confirm" id="confirmGoogleReviewBtn">
+                        ⭐ Avaliar no Google
+                    </a>
+                    <button class="btn-google-modal-cancel" id="cancelGoogleReviewBtn">Depois</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const termosOverlay = document.getElementById('termosModalOverlay');
         const openTermosBtn = document.getElementById('openTermosModal');
@@ -1707,6 +1598,31 @@
         // Fecha se clicar fora da caixa
         window.addEventListener('click', (event) => {
             if (event.target === termosOverlay) termosOverlay.style.display = 'none';
+        });
+
+        // Google Review Modal
+        const googleReviewOverlay = document.getElementById('googleReviewModalOverlay');
+        const closeGoogleReviewBtn = document.getElementById('closeGoogleReviewModal');
+        const cancelGoogleReviewBtn = document.getElementById('cancelGoogleReviewBtn');
+        const confirmGoogleReviewBtn = document.getElementById('confirmGoogleReviewBtn');
+
+        if (closeGoogleReviewBtn) {
+            closeGoogleReviewBtn.addEventListener('click', () => {
+                googleReviewOverlay.style.display = 'none';
+            });
+        }
+        if (cancelGoogleReviewBtn) {
+            cancelGoogleReviewBtn.addEventListener('click', () => {
+                googleReviewOverlay.style.display = 'none';
+            });
+        }
+        if (confirmGoogleReviewBtn) {
+            confirmGoogleReviewBtn.addEventListener('click', () => {
+                googleReviewOverlay.style.display = 'none';
+            });
+        }
+        window.addEventListener('click', (event) => {
+            if (event.target === googleReviewOverlay) googleReviewOverlay.style.display = 'none';
         });
     </script>
     <!-- Spinner de carregamento da galeria de vídeos (controlado por js/portfolio.js) -->

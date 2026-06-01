@@ -1,0 +1,45 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Usuarios | Painel RH{% endblock %}
+
+{% block content %}
+  <section class="careers-admin-head">
+    <div>
+      <p class="careers-kicker">Usuario master</p>
+      <h1>Usuarios e permissoes</h1>
+    </div>
+    <a class="careers-button" href="{% url 'careers:user_create' %}">Novo usuario</a>
+  </section>
+
+  <section class="careers-table-wrap">
+    <table class="careers-table">
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>E-mail</th>
+          <th>Perfil</th>
+          <th>Area</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in users %}
+          <tr>
+            <td><strong>{{ item.username }}</strong><span>{{ item.first_name|default:"-" }}</span></td>
+            <td>{{ item.email|default:"-" }}</td>
+            <td>{{ item.career_profile.get_role_display|default:"-" }}</td>
+            <td>{{ item.career_profile.area|default:"Todas" }}</td>
+            <td class="careers-row-actions">
+              <a href="{% url 'careers:user_update' item.pk %}">Editar</a>
+              {% if item.pk != request.user.pk and item.career_profile.role != "master" %}
+                <a href="{% url 'careers:user_delete' item.pk %}">Excluir</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">Nenhum usuario cadastrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock %}

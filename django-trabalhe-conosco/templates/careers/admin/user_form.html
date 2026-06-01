@@ -1,0 +1,30 @@
+{% extends "careers/base.html" %}
+
+{% block title %}{% if object %}Editar usuario{% else %}Novo usuario{% endif %} | Painel RH{% endblock %}
+
+{% block content %}
+  <section class="careers-form-wide">
+    <div class="careers-admin-head">
+      <div>
+        <p class="careers-kicker">Usuario master</p>
+        <h1>{% if object %}Editar usuario{% else %}Novo usuario{% endif %}</h1>
+      </div>
+      <a class="careers-button careers-button-ghost" href="{% url 'careers:user_list' %}">Voltar</a>
+    </div>
+
+    <form method="post" class="careers-grid-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <label>
+          <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
+          {{ field }}
+          {% for error in field.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
+        </label>
+      {% endfor %}
+      <div class="careers-field-full careers-actions">
+        <button class="careers-button" type="submit">Salvar usuario</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}

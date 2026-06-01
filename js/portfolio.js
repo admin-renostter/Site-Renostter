@@ -32,6 +32,29 @@ function toggleSpinner(show) {
     if (el) el.classList.toggle('hidden', !show);
 }
 
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function safeYoutubeId(value) {
+    const id = String(value ?? '').trim();
+    return /^[\w-]{6,20}$/.test(id) ? id : '';
+}
+
+function safeExternalUrl(value, fallback = '') {
+    try {
+        const url = new URL(value || fallback);
+        return ['https:', 'http:'].includes(url.protocol) ? url.href : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
 /* ─── Busca via proxy Cloudflare Worker (produção) ─── */
 async function fetchViaProxy() {
     const params = new URLSearchParams({ channelId: CHANNEL_ID, maxResults: MAX_RESULTS });
@@ -102,22 +125,26 @@ function renderCarousel(videos) {
     /* Gera os slides */
     const slidesHTML = vids.map((v, i) => {
         /* Usa thumbnail vinda da API; fallback para ytimg */
-        const thumb   = v.thumbnail || `https://i.ytimg.com/vi/${v.id}/maxresdefault.jpg`;
-        const thumbFb = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
-        const dateStr = formatDate(v.publishedAt);
+        const id = safeYoutubeId(v.id);
+        if (!id) return '';
+        const title = escapeHtml(v.title || 'VÃ­deo Renostter');
+        const publishedAt = escapeHtml(v.publishedAt || '');
+        const thumb   = escapeHtml(safeExternalUrl(v.thumbnail, `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`));
+        const thumbFb = escapeHtml(`https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
+        const dateStr = escapeHtml(formatDate(v.publishedAt));
 
         return `
         <div class="swiper-slide yc3-slide">
 
             <!-- Thumbnail clicável → ativa iframe ao clicar -->
             <div class="yc3-thumb-wrap"
-                 data-videoid="${v.id}"
+                 data-videoid="${id}"
                  role="button"
                  tabindex="0"
-                 aria-label="Reproduzir: ${v.title}">
+                 aria-label="Reproduzir: ${title}">
 
                 <img src="${thumb}"
-                     alt="${v.title}"
+                     alt="${title}"
                      loading="${i < 3 ? 'eager' : 'lazy'}"
                      class="yt-lite-thumb"
                      width="480" height="854"
@@ -134,13 +161,13 @@ function renderCarousel(videos) {
 
             <!-- Informações abaixo do vídeo -->
             <div class="yc3-info">
-                <h3 class="yc3-title">${v.title}</h3>
-                ${dateStr ? `<time class="yc3-date" datetime="${v.publishedAt}">${dateStr}</time>` : ''}
-                <a href="https://www.youtube.com/watch?v=${v.id}"
+                <h3 class="yc3-title">${title}</h3>
+                ${dateStr ? `<time class="yc3-date" datetime="${publishedAt}">${dateStr}</time>` : ''}
+                <a href="https://www.youtube.com/watch?v=${id}"
                    target="_blank"
                    rel="noopener noreferrer"
                    class="yc3-yt-link"
-                   aria-label="Ver '${v.title}' no YouTube">
+                   aria-label="Ver '${title}' no YouTube">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M10 15l5.19-3L10 9v6z"/>
                         <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
@@ -225,7 +252,8 @@ function initSwiper() {
 function attachLiteEmbed() {
     document.querySelectorAll('.yc3-thumb-wrap').forEach(wrap => {
         const activate = () => {
-            const id = wrap.dataset.videoid;
+            const id = safeYoutubeId(wrap.dataset.videoid);
+            if (!id) return;
             wrap.innerHTML = `<iframe
                 src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1"
                 title="Vídeo Renostter"

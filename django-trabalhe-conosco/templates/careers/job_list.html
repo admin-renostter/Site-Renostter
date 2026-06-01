@@ -1,0 +1,57 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Trabalhe Conosco | Renostter{% endblock %}
+
+{% block content %}
+  <section class="careers-hero">
+    <div>
+      <p class="careers-kicker">Carreiras Renostter</p>
+      <h1>Trabalhe Conosco</h1>
+      <p>Faca parte de uma equipe tecnica focada em atendimento claro, instalacao bem executada e manutencao de ar condicionado com qualidade.</p>
+    </div>
+  </section>
+
+  <section class="careers-panel">
+    <form class="careers-filter" method="get">
+      <label><span>Busca</span>{{ filter_form.q }}</label>
+      <label><span>Area</span>{{ filter_form.area }}</label>
+      <label><span>Modalidade</span>{{ filter_form.modality }}</label>
+      <label><span>Contrato</span>{{ filter_form.contract_type }}</label>
+      <div class="careers-actions">
+        <button class="careers-button" type="submit">Buscar</button>
+        <a class="careers-button careers-button-ghost" href="{% url 'careers:job_list' %}">Limpar</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="careers-list" aria-label="Vagas abertas">
+    {% for job in jobs %}
+      <article class="careers-job-card">
+        <div>
+          <p class="careers-kicker">{{ job.area|default:"Operacoes" }}</p>
+          <h2>{{ job.title }}</h2>
+          <p>{{ job.description|striptags|truncatewords:28 }}</p>
+          <div class="careers-tags">
+            <span>{{ job.location }}</span>
+            <span>{{ job.modality }}</span>
+            <span>{{ job.contract_type }}</span>
+          </div>
+        </div>
+        <a class="careers-button" href="{{ job.get_absolute_url }}">Ver detalhes</a>
+      </article>
+    {% empty %}
+      <div class="careers-empty">
+        <h2>No momento nao temos vagas abertas.</h2>
+        <p>Voce pode voltar em breve para conferir novas oportunidades na Renostter.</p>
+      </div>
+    {% endfor %}
+  </section>
+
+  {% if is_paginated %}
+    <nav class="careers-pagination" aria-label="Paginacao">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Anterior</a>{% endif %}
+      <span>Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Proxima</a>{% endif %}
+    </nav>
+  {% endif %}
+{% endblock %}

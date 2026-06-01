@@ -1,0 +1,51 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Aprovacoes | Painel RH{% endblock %}
+
+{% block content %}
+  <section class="careers-admin-head">
+    <div>
+      <p class="careers-kicker">Usuario master</p>
+      <h1>Vagas aguardando aprovacao</h1>
+    </div>
+    <a class="careers-button careers-button-ghost" href="{% url 'careers:admin_jobs' %}">Voltar as vagas</a>
+  </section>
+
+  <section class="careers-list">
+    {% for job in jobs %}
+      <article class="careers-job-card careers-approval-card">
+        <div>
+          <p class="careers-kicker">{{ job.area_owner|default:job.area|default:"Sem area" }}</p>
+          <h2>{{ job.title }}</h2>
+          <p>{{ job.description|truncatewords:34 }}</p>
+          <div class="careers-tags">
+            <span>{{ job.location }}</span>
+            <span>{{ job.contract_type }}</span>
+            <span>Criada por {{ job.created_by|default:"-" }}</span>
+          </div>
+        </div>
+        <div class="careers-approval-actions">
+          <form method="post" action="{% url 'careers:admin_job_approve' job.pk %}">
+            {% csrf_token %}
+            <button class="careers-button" type="submit">Aprovar e publicar</button>
+          </form>
+          <form method="post" action="{% url 'careers:admin_job_adjustments' job.pk %}">
+            {% csrf_token %}
+            <textarea class="careers-field" name="rejection_reason" rows="2" placeholder="Ajustes solicitados"></textarea>
+            <button class="careers-button careers-button-ghost" type="submit">Solicitar ajustes</button>
+          </form>
+          <form method="post" action="{% url 'careers:admin_job_reject' job.pk %}">
+            {% csrf_token %}
+            <textarea class="careers-field" name="rejection_reason" rows="2" placeholder="Motivo da rejeicao"></textarea>
+            <button class="careers-button careers-button-ghost" type="submit">Rejeitar</button>
+          </form>
+        </div>
+      </article>
+    {% empty %}
+      <div class="careers-empty">
+        <h2>Nenhuma vaga pendente.</h2>
+        <p>Quando uma area enviar uma vaga para aprovacao, ela aparecera aqui.</p>
+      </div>
+    {% endfor %}
+  </section>
+{% endblock %}

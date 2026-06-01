@@ -3,7 +3,8 @@
    Cache estratégico para performance offline
    ================================================ */
 
-const CACHE_NAME = 'renostter-v1';
+const RELEASE_VERSION = '2026.05.28';
+const CACHE_NAME = `renostter-v${RELEASE_VERSION}`;
 const STATIC_ASSETS = [
     '/',
     '/index.html',
@@ -13,6 +14,7 @@ const STATIC_ASSETS = [
     '/calendar.js',
     '/chatbot.js',
     '/js/portfolio.js',
+    '/js/reviews.js',
     '/js/carousel.js',
     '/assets/logo.png',
     '/assets/logo-dinamico.webm',
@@ -34,9 +36,13 @@ const STATIC_ASSETS = [
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(STATIC_ASSETS).catch(err => {
-                console.warn('[SW] Alguns assets não puderam ser cacheados:', err);
-            });
+            return Promise.allSettled(
+                STATIC_ASSETS.map(asset =>
+                    cache.add(asset).catch(err => {
+                        console.warn('[SW] Asset não cacheado:', asset, err);
+                    })
+                )
+            );
         })
     );
     self.skipWaiting();
@@ -61,12 +67,14 @@ self.addEventListener('fetch', event => {
 
     /* Ignorar requests que não são GET ou são de outras origens */
     if (request.method !== 'GET' || url.origin !== location.origin) return;
+    if (url.pathname.startsWith('/proxy/') || url.pathname.startsWith('/api/')) return;
 
     /* HTML: Network-First (sempre busca versão nova, fallback no cache) */
     if (request.headers.get('accept')?.includes('text/html')) {
         event.respondWith(
             fetch(request)
                 .then(res => {
+                    if (!res || !res.ok) return res;
                     const clone = res.clone();
                     caches.open(CACHE_NAME).then(c => c.put(request, clone));
                     return res;
@@ -82,12 +90,12 @@ self.addEventListener('fetch', event => {
             if (cached) return cached;
 
             return fetch(request).then(res => {
-                if (res.ok) {
+                if (res && res.ok) {
                     const clone = res.clone();
                     caches.open(CACHE_NAME).then(c => c.put(request, clone));
                 }
                 return res;
-            });
+            }).catch(() => Response.error());
         })
     );
 });

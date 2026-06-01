@@ -49,15 +49,104 @@ function corsHeaders(origin) {
 
 /* ── Rate limiting (por IP, em memória) ─────────────────────────────────── */
 const rateLimitMap = new Map();
-const RATE_LIMIT_RPM = 20;
+const DEFAULT_RATE_LIMIT_RPM = 20;
 
-function checkRateLimit(ip) {
+export function getRateLimitRpm(env = {}) {
+    const rpm = Number.parseInt(env.RATE_LIMIT_RPM, 10);
+    return Number.isFinite(rpm) && rpm > 0 ? rpm : DEFAULT_RATE_LIMIT_RPM;
+}
+
+function checkRateLimit(ip, env = {}) {
     const now = Date.now();
     const entry = rateLimitMap.get(ip) || { count: 0, resetAt: now + 60_000 };
     if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + 60_000; }
     entry.count++;
     rateLimitMap.set(ip, entry);
-    return entry.count <= RATE_LIMIT_RPM;
+    return entry.count <= getRateLimitRpm(env);
+}
+
+function sanitizeString(value, maxLength = 240) {
+    if (typeof value !== 'string') return '';
+    return value.trim().replace(/\s+/g, ' ').slice(0, maxLength);
+}
+
+function clampNumber(value, fallback, min, max) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return fallback;
+    return Math.min(max, Math.max(min, number));
+}
+
+function sanitizeChatPart(part) {
+    const text = sanitizeString(part?.text, 4000);
+    return text ? { text } : null;
+}
+
+export function validateLeadPayload(payload) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+        return { ok: false, error: 'Payload de lead invalido.' };
+    }
+
+    return {
+        ok: true,
+        value: {
+            nome: sanitizeString(payload.nome),
+            servico: sanitizeString(payload.servico),
+            tipo: sanitizeString(payload.tipo),
+            urgencia: sanitizeString(payload.urgencia),
+            origem: sanitizeString(payload.origem) || 'chatbot',
+        },
+    };
+}
+
+export function validateChatPayload(payload, env = {}) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+        return { ok: false, error: 'Payload de chat invalido.' };
+    }
+
+    if (!Array.isArray(payload.contents) || payload.contents.length === 0) {
+        return { ok: false, error: 'Historico do chat ausente.' };
+    }
+
+    if (payload.contents.length > 20) {
+        return { ok: false, error: 'Historico do chat excede o limite permitido.' };
+    }
+
+    const contents = payload.contents
+        .map((turn) => {
+            const parts = Array.isArray(turn?.parts)
+                ? turn.parts.map(sanitizeChatPart).filter(Boolean).slice(0, 8)
+                : [];
+
+            return {
+                role: turn?.role === 'model' ? 'model' : 'user',
+                parts,
+            };
+        })
+        .filter((turn) => turn.parts.length > 0);
+
+    if (!contents.length) {
+        return { ok: false, error: 'Mensagem do chat vazia.' };
+    }
+
+    const generationConfig = payload.generationConfig || {};
+    const promptFromEnv = sanitizeString(env.LUCAS_SYSTEM_PROMPT, 4000);
+    const promptFromPayload = sanitizeString(payload.system_instruction?.parts?.[0]?.text, 4000);
+
+    return {
+        ok: true,
+        value: {
+            ...payload,
+            contents,
+            system_instruction: {
+                parts: [{ text: promptFromEnv || promptFromPayload }],
+            },
+            generationConfig: {
+                temperature: clampNumber(generationConfig.temperature, 0.75, 0, 1),
+                topP: clampNumber(generationConfig.topP, 0.95, 0, 1),
+                maxOutputTokens: Math.round(clampNumber(generationConfig.maxOutputTokens, 1024, 1, 1024)),
+            },
+        },
+    };
 }
 
 /* ── Pool de provedores ──────────────────────────────────────────────────── */
@@ -260,7 +349,7 @@ export default {
 
         /* ── Rate limit ── */
         const clientIP = request.headers.get('CF-Connecting-IP') || '0.0.0.0';
-        if (!checkRateLimit(clientIP)) {
+        if (!checkRateLimit(clientIP, env)) {
             return new Response(
                 JSON.stringify({ error: 'Rate limit exceeded. Tente novamente em 1 minuto.' }),
                 { status: 429, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } },
@@ -276,6 +365,13 @@ export default {
                 });
             }
 
+            const leadValidation = validateLeadPayload(lead);
+            if (!leadValidation.ok) {
+                return new Response(JSON.stringify({ error: leadValidation.error }), {
+                    status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
+                });
+            }
+
             /* Encaminha para webhook externo se configurado (n8n, Zapier, Make, etc.)
                wrangler secret put WEBHOOK_URL */
             if (env.WEBHOOK_URL) {
@@ -283,7 +379,7 @@ export default {
                     await fetch(env.WEBHOOK_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(lead),
+                        body: JSON.stringify(leadValidation.value),
                     });
                 } catch (e) {
                     console.error('[worker] Webhook lead error:', e.message);
@@ -402,7 +498,15 @@ export default {
                 );
             }
 
-            const result = await callAI(body, env);
+            const chatValidation = validateChatPayload(body, env);
+            if (!chatValidation.ok) {
+                return new Response(
+                    JSON.stringify({ error: chatValidation.error }),
+                    { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } },
+                );
+            }
+
+            const result = await callAI(chatValidation.value, env);
 
             if (result) {
                 return new Response(JSON.stringify(result), {
