@@ -1,0 +1,79 @@
+databases:
+  - name: renostter-careers-db
+    plan: free
+    databaseName: renostter_careers
+    user: renostter_app
+
+services:
+  - type: web
+    name: renostter-careers
+    runtime: python
+    plan: free
+    rootDir: django-trabalhe-conosco
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: bash start.sh
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: carreiras.renostter.com,renostter-careers.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://carreiras.renostter.com,https://renostter-careers.onrender.com
+      - key: DB_ENGINE
+        value: django.db.backends.postgresql
+      - key: DB_NAME
+        fromDatabase:
+          name: renostter-careers-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: renostter-careers-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: renostter-careers-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: renostter-careers-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: renostter-careers-db
+          property: port
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: SECURE_HSTS_INCLUDE_SUBDOMAINS
+        value: "True"
+      - key: SECURE_HSTS_PRELOAD
+        value: "True"
+      - key: DJANGO_ADMIN_URL
+        value: internal-django-admin-renostter/
+      - key: TIME_ZONE
+        value: America/Sao_Paulo
+      - key: PRIVATE_MEDIA_ROOT
+        value: /var/data/renostter/private_media
+      - key: MASTER_USERNAME
+        value: adminrenostter@gmail.com
+      - key: MASTER_EMAIL
+        value: adminrenostter@gmail.com
+      - key: MASTER_PASSWORD
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: Renostter RH <rh@renostter.com.br>
+      - key: RH_EMAIL
+        value: rh@renostter.com.br
