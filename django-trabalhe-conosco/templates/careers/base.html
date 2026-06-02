@@ -6,13 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Trabalhe Conosco | Renostter{% endblock %}</title>
     <link rel="stylesheet" href="/styles.css?v=20260528">
-    <link rel="stylesheet" href="{% static 'careers/careers.css' %}?v=20260602-fields">
+    <link rel="stylesheet" href="{% static 'careers/careers.css' %}?v=20260602-logo">
   </head>
   <body class="careers-django-page">
     <header class="careers-topbar">
       <a class="careers-brand" href="https://www.renostter.com/">
-        <span class="careers-brand-mark">R</span>
-        <span>renostter</span>
+        <video
+          class="careers-brand-logo"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster="https://www.renostter.com/assets/logo.png"
+          aria-label="Renostter"
+        >
+          <source src="https://www.renostter.com/assets/logo-dinamico.webm" type="video/webm">
+        </video>
       </a>
       <nav class="careers-nav" aria-label="Navegacao principal">
         <a class="is-active" href="{% url 'careers:job_list' %}">Trabalhe Conosco</a>
