@@ -9,6 +9,7 @@
       <h1>Vagas cadastradas</h1>
     </div>
     <div class="careers-actions">
+      <a class="careers-button careers-button-ghost" href="{% url 'careers:applications' %}">Candidaturas</a>
       {% if is_master %}<a class="careers-button careers-button-ghost" href="{% url 'careers:approvals' %}">Aprovar vagas</a>{% endif %}
       <a class="careers-button" href="{% url 'careers:admin_job_create' %}">Nova vaga</a>
     </div>
@@ -37,7 +38,7 @@
               <span class="careers-status">{{ job.get_approval_status_display }}</span>
               {% if job.rejection_reason %}<small>{{ job.rejection_reason|truncatewords:12 }}</small>{% endif %}
             </td>
-            <td>{{ job.total_applications }}</td>
+            <td><a href="{% url 'careers:applications' %}?vaga={{ job.pk }}">{{ job.total_applications }}</a></td>
             <td>{{ job.updated_at|date:"d/m/Y H:i" }}</td>
             <td class="careers-row-actions">
               <a href="{% url 'careers:admin_job_update' job.pk %}">Editar</a>

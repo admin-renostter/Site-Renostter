@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -16,6 +17,9 @@ from django_q.tasks import async_task
 
 from .forms import ApplicationForm, JobAdminForm, JobFilterForm, MasterJobAdminForm, RecruiterAuthenticationForm, RecruiterPasswordResetForm, UserProfileForm
 from .models import Application, Job, UserProfile
+from .tasks import send_application_emails
+from .services.storage import StorageNotConfigured, create_signed_resume_url
+from .services.storage import upload_resume_to_supabase
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +74,21 @@ class ApplicationCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.job = self.job
+        if form.instance.resume:
+            form.instance.resume_original_name = form.instance.resume.name
         response = super().form_valid(form)
+        try:
+            stored_file = upload_resume_to_supabase(self.object)
+            Application.objects.filter(pk=self.object.pk).update(resume_storage_key=stored_file.key)
+            self.object.resume_storage_key = stored_file.key
+        except StorageNotConfigured:
+            pass
+        except Exception:
+            logger.exception("Falha ao enviar curriculo da candidatura %s para Supabase.", self.object.pk)
+        try:
+            send_application_emails(self.object)
+        except Exception:
+            logger.exception("Falha ao enviar e-mails da candidatura %s.", self.object.pk)
         try:
             async_task("careers.tasks.process_application", self.object.pk)
         except Exception:
@@ -146,6 +164,50 @@ class RecruiterJobListView(RecruiterRequiredMixin, ListView):
         ctx = super().get_context_data(**kwargs)
         ctx["is_master"] = _is_master(self.request.user)
         return ctx
+
+
+class ApplicationListView(RecruiterRequiredMixin, ListView):
+    model = Application
+    template_name = "careers/admin/application_list.html"
+    context_object_name = "applications"
+    paginate_by = 30
+
+    def get_queryset(self):
+        qs = Application.objects.select_related("job").order_by("-created_at")
+        if _is_master(self.request.user):
+            allowed_qs = qs
+        else:
+            profile = _profile(self.request.user)
+            allowed_qs = qs.filter(Q(job__created_by=self.request.user) | Q(job__area_owner=profile.area))
+        job_id = self.request.GET.get("vaga")
+        if job_id:
+            allowed_qs = allowed_qs.filter(job_id=job_id)
+        return allowed_qs
+
+
+def download_application_resume(request, pk):
+    if not request.user.is_authenticated or not (request.user.is_staff or _is_master(request.user)):
+        return redirect("login")
+
+    application = get_object_or_404(Application.objects.select_related("job"), pk=pk)
+    if not _is_master(request.user):
+        profile = _profile(request.user)
+        if application.job.created_by_id != request.user.id and application.job.area_owner != profile.area:
+            return HttpResponseForbidden("Sem permissao para acessar este curriculo.")
+
+    if application.resume_storage_key:
+        try:
+            return redirect(create_signed_resume_url(application.resume_storage_key))
+        except (StorageNotConfigured, ValueError):
+            pass
+        except Exception:
+            logger.exception("Falha ao gerar link assinado para candidatura %s", application.pk)
+
+    if settings.DEBUG and application.resume:
+        return redirect(application.resume.url)
+
+    messages.error(request, "Curriculo indisponivel. Verifique a configuracao do storage.")
+    return redirect("careers:applications")
 
 
 class RecruiterJobCreateView(RecruiterRequiredMixin, CreateView):

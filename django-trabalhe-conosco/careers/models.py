@@ -121,6 +121,8 @@ class Application(models.Model):
         validators=[FileExtensionValidator(["pdf", "doc", "docx"])],
     )
     resume_text = models.TextField("Texto extraido", blank=True)
+    resume_storage_key = models.CharField("Chave do curriculo no storage", max_length=500, blank=True)
+    resume_original_name = models.CharField("Nome original do curriculo", max_length=255, blank=True)
     qa_score = models.FloatField("Score QA", default=0)
     created_at = models.DateTimeField("Data da candidatura", auto_now_add=True, db_index=True)
 

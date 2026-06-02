@@ -1,0 +1,58 @@
+{% extends "careers/base.html" %}
+
+{% block title %}Candidaturas | Painel RH{% endblock %}
+
+{% block content %}
+  <section class="careers-admin-head">
+    <div>
+      <p class="careers-kicker">Painel do recrutador</p>
+      <h1>Candidaturas</h1>
+    </div>
+    <a class="careers-button careers-button-ghost" href="{% url 'careers:admin_jobs' %}">Voltar as vagas</a>
+  </section>
+
+  <section class="careers-table-wrap">
+    <table class="careers-table">
+      <thead>
+        <tr>
+          <th>Candidato</th>
+          <th>Vaga</th>
+          <th>Contato</th>
+          <th>Score QA</th>
+          <th>Data</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for application in applications %}
+          <tr>
+            <td>
+              <strong>{{ application.name }}</strong>
+              <span>{{ application.resume_original_name|default:application.resume.name|default:"Curriculo enviado" }}</span>
+            </td>
+            <td>{{ application.job.title }}</td>
+            <td>
+              {{ application.email }}
+              {% if application.phone %}<span>{{ application.phone }}</span>{% endif %}
+            </td>
+            <td>{{ application.qa_score|floatformat:0 }}</td>
+            <td>{{ application.created_at|date:"d/m/Y H:i" }}</td>
+            <td class="careers-row-actions">
+              <a href="{% url 'careers:application_resume' application.pk %}">Baixar curriculo</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">Nenhuma candidatura recebida.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  {% if is_paginated %}
+    <nav class="careers-pagination" aria-label="Paginacao">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Anterior</a>{% endif %}
+      <span>Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Proxima</a>{% endif %}
+    </nav>
+  {% endif %}
+{% endblock %}

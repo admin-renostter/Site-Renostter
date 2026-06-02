@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Trabalhe Conosco | Renostter{% endblock %}</title>
     <link rel="stylesheet" href="/styles.css?v=20260528">
-    <link rel="stylesheet" href="{% static 'careers/careers.css' %}?v=20260602-logo">
+    <link rel="stylesheet" href="{% static 'careers/careers.css' %}?v=20260602-storage">
   </head>
   <body class="careers-django-page">
     <header class="careers-topbar">
@@ -28,6 +28,7 @@
         <a class="is-active" href="{% url 'careers:job_list' %}">Trabalhe Conosco</a>
         {% if user.is_authenticated %}
           <a href="{% url 'careers:admin_jobs' %}">Painel RH</a>
+          <a href="{% url 'careers:applications' %}">Candidaturas</a>
           {% if user.career_profile.is_master %}
             <a href="{% url 'careers:user_list' %}">Usuarios</a>
           {% endif %}

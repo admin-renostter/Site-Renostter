@@ -126,6 +126,11 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="Renostter RH <rh@renostter.com.br>")
 RH_EMAIL = config("RH_EMAIL", default="rh@renostter.com.br")
+RESEND_API_KEY = config("RESEND_API_KEY", default="")
+SUPABASE_URL = config("SUPABASE_URL", default="")
+SUPABASE_SERVICE_ROLE_KEY = config("SUPABASE_SERVICE_ROLE_KEY", default="")
+SUPABASE_STORAGE_BUCKET = config("SUPABASE_STORAGE_BUCKET", default="curriculos")
+SUPABASE_SIGNED_URL_TTL_SECONDS = config("SUPABASE_SIGNED_URL_TTL_SECONDS", default=3600, cast=int)
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 DATA_UPLOAD_MAX_MEMORY_SIZE = 8 * 1024 * 1024

@@ -9,3 +9,4 @@ lancedb>=0.16
 SQLAlchemy>=2.0
 tzlocal>=5.2
 agno>=1.0
+requests>=2.32
