@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import quote
 
 import requests
 from django.conf import settings
@@ -49,7 +50,7 @@ def create_signed_resume_url(storage_key: str) -> str:
     if not storage_key:
         raise ValueError("Chave do curriculo ausente.")
 
-    url = f"{_storage_object_url(storage_key)}/sign"
+    url = _storage_signed_url(storage_key)
     response = requests.post(
         url,
         headers={**_auth_headers(), "Content-Type": "application/json"},
@@ -65,8 +66,18 @@ def create_signed_resume_url(storage_key: str) -> str:
 
 def _storage_object_url(storage_key: str) -> str:
     bucket = settings.SUPABASE_STORAGE_BUCKET.strip("/")
-    key = storage_key.lstrip("/")
+    key = _quote_storage_key(storage_key)
     return f"{settings.SUPABASE_URL.rstrip('/')}/storage/v1/object/{bucket}/{key}"
+
+
+def _storage_signed_url(storage_key: str) -> str:
+    bucket = settings.SUPABASE_STORAGE_BUCKET.strip("/")
+    key = _quote_storage_key(storage_key)
+    return f"{settings.SUPABASE_URL.rstrip('/')}/storage/v1/object/sign/{bucket}/{key}"
+
+
+def _quote_storage_key(storage_key: str) -> str:
+    return quote(storage_key.lstrip("/"), safe="/")
 
 
 def _auth_headers() -> dict[str, str]:

@@ -203,6 +203,16 @@ def download_application_resume(request, pk):
         except Exception:
             logger.exception("Falha ao gerar link assinado para candidatura %s", application.pk)
 
+    if application.resume:
+        try:
+            stored_file = upload_resume_to_supabase(application)
+            Application.objects.filter(pk=application.pk).update(resume_storage_key=stored_file.key)
+            return redirect(create_signed_resume_url(stored_file.key))
+        except (StorageNotConfigured, ValueError):
+            pass
+        except Exception:
+            logger.exception("Falha ao reenviar curriculo da candidatura %s para Supabase.", application.pk)
+
     if settings.DEBUG and application.resume:
         return redirect(application.resume.url)
 
