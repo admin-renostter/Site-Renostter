@@ -18,6 +18,12 @@ class StoredFile:
     public_url: str = ""
 
 
+@dataclass(frozen=True)
+class DownloadedFile:
+    content: bytes
+    content_type: str
+
+
 def is_supabase_storage_configured() -> bool:
     return bool(settings.SUPABASE_URL and settings.SUPABASE_SERVICE_ROLE_KEY and settings.SUPABASE_STORAGE_BUCKET)
 
@@ -42,6 +48,20 @@ def upload_resume_to_supabase(application) -> StoredFile:
 
     response.raise_for_status()
     return StoredFile(key=key)
+
+
+def download_resume_from_supabase(storage_key: str) -> DownloadedFile:
+    if not is_supabase_storage_configured():
+        raise StorageNotConfigured("Supabase Storage nao configurado.")
+    if not storage_key:
+        raise ValueError("Chave do curriculo ausente.")
+
+    response = requests.get(_storage_object_url(storage_key), headers=_auth_headers(), timeout=30)
+    response.raise_for_status()
+    return DownloadedFile(
+        content=response.content,
+        content_type=response.headers.get("Content-Type") or _content_type_for(storage_key),
+    )
 
 
 def create_signed_resume_url(storage_key: str) -> str:

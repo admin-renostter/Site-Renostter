@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.core.cache import cache
 from django.db.models import Count, Q
-from django.http import FileResponse, HttpResponseForbidden
+from django.http import FileResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -18,7 +18,7 @@ from django_q.tasks import async_task
 from .forms import ApplicationForm, JobAdminForm, JobFilterForm, MasterJobAdminForm, RecruiterAuthenticationForm, RecruiterPasswordResetForm, UserProfileForm
 from .models import Application, Job, UserProfile
 from .tasks import send_application_emails
-from .services.storage import StorageNotConfigured, create_signed_resume_url
+from .services.storage import StorageNotConfigured, download_resume_from_supabase
 from .services.storage import upload_resume_to_supabase
 
 logger = logging.getLogger(__name__)
@@ -197,17 +197,17 @@ def download_application_resume(request, pk):
 
     if application.resume_storage_key:
         try:
-            return redirect(create_signed_resume_url(application.resume_storage_key))
+            return _serve_supabase_resume(application, application.resume_storage_key)
         except (StorageNotConfigured, ValueError):
             pass
         except Exception:
-            logger.exception("Falha ao gerar link assinado para candidatura %s", application.pk)
+            logger.exception("Falha ao baixar curriculo da candidatura %s pelo Supabase.", application.pk)
 
     if application.resume:
         try:
             stored_file = upload_resume_to_supabase(application)
             Application.objects.filter(pk=application.pk).update(resume_storage_key=stored_file.key)
-            return redirect(create_signed_resume_url(stored_file.key))
+            return _serve_supabase_resume(application, stored_file.key)
         except (StorageNotConfigured, ValueError):
             pass
         except Exception:
@@ -227,6 +227,14 @@ def _serve_private_resume(application):
     filename = application.resume_original_name or application.resume.name.rsplit("/", 1)[-1] or "curriculo"
     content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
     return FileResponse(application.resume.open("rb"), as_attachment=True, filename=filename, content_type=content_type)
+
+
+def _serve_supabase_resume(application, storage_key: str):
+    filename = application.resume_original_name or storage_key.rsplit("/", 1)[-1] or "curriculo"
+    downloaded_file = download_resume_from_supabase(storage_key)
+    response = HttpResponse(downloaded_file.content, content_type=downloaded_file.content_type)
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
 
 
 class RecruiterJobCreateView(RecruiterRequiredMixin, CreateView):
