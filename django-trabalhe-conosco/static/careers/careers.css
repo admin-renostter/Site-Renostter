@@ -11,6 +11,15 @@
 .careers-django-page {
   background: var(--career-bg);
   color: var(--career-text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
   min-height: 100vh;
 }
 
@@ -142,66 +151,105 @@
 .careers-panel,
 .careers-form-wide,
 .careers-table-wrap {
-  padding: 20px;
+  padding: clamp(18px, 2.4vw, 28px);
 }
 
 .careers-filter,
 .careers-grid-form {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  gap: 16px 18px;
+}
+
+.careers-filter {
+  grid-template-columns:
+    minmax(220px, 1.1fr)
+    minmax(180px, 0.95fr)
+    minmax(190px, 0.95fr)
+    minmax(170px, 0.85fr);
+  align-items: end;
+}
+
+.careers-grid-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .careers-filter label,
 .careers-grid-form label,
 .careers-form-panel label {
   display: grid;
-  gap: 7px;
+  gap: 8px;
   font-weight: 700;
 }
 
-.careers-field {
+.careers-django-page .careers-field {
+  box-sizing: border-box;
   width: 100%;
-  min-height: 46px;
+  height: 48px;
+  min-height: 48px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   background: #ffffff;
   color: #111827;
-  padding: 11px 12px;
-  font: inherit;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.careers-django-page select.careers-field {
+  appearance: auto;
+  cursor: pointer;
 }
 
 .careers-form-panel input[type="text"],
 .careers-form-panel input[type="password"],
 .careers-form-panel input[type="email"] {
+  box-sizing: border-box;
   width: 100%;
-  min-height: 46px;
+  height: 48px;
+  min-height: 48px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   background: #ffffff;
   color: #111827;
-  padding: 11px 12px;
-  font: inherit;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.25;
 }
 
-textarea.careers-field {
-  min-height: 118px;
+.careers-django-page textarea.careers-field {
+  height: auto;
+  min-height: 132px;
+  line-height: 1.55;
   resize: vertical;
+}
+
+.careers-django-page input[type="file"].careers-field {
+  height: auto;
+  min-height: 48px;
+  padding: 10px 12px;
 }
 
 .careers-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
+  box-sizing: border-box;
+  min-height: 46px;
   border: 0;
   border-radius: 8px;
-  padding: 0 18px;
+  padding: 0 20px;
   background: linear-gradient(135deg, var(--career-orange), #ff9f1c);
   color: #ffffff;
+  font-size: 0.96rem;
   font-weight: 800;
+  line-height: 1.1;
   text-decoration: none;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .careers-button-ghost {
@@ -213,6 +261,10 @@ textarea.careers-field {
   gap: 10px;
   align-self: end;
   flex-wrap: wrap;
+}
+
+.careers-filter .careers-actions {
+  grid-column: 1 / -1;
 }
 
 .careers-admin-actions {
@@ -229,9 +281,19 @@ textarea.careers-field {
 
 .careers-job-card {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
   padding: 22px;
+}
+
+.careers-job-card > div {
+  min-width: 0;
+}
+
+.careers-job-card > .careers-button {
+  align-self: center;
+  flex: 0 0 auto;
 }
 
 .careers-job-card h2,
