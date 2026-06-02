@@ -58,7 +58,10 @@ def create_signed_resume_url(storage_key: str) -> str:
         timeout=15,
     )
     response.raise_for_status()
-    signed_url = response.json().get("signedURL", "")
+    response_data = response.json()
+    signed_url = response_data.get("signedURL") or response_data.get("signedUrl") or response_data.get("url") or ""
+    if not signed_url:
+        raise ValueError("Supabase nao retornou URL assinada para o curriculo.")
     if signed_url.startswith("http"):
         return signed_url
     return f"{settings.SUPABASE_URL.rstrip('/')}{signed_url}"

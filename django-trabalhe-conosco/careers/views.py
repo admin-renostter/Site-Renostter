@@ -1,13 +1,13 @@
 import logging
+import mimetypes
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.core.cache import cache
 from django.db.models import Count, Q
-from django.http import HttpResponseForbidden
+from django.http import FileResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -213,11 +213,20 @@ def download_application_resume(request, pk):
         except Exception:
             logger.exception("Falha ao reenviar curriculo da candidatura %s para Supabase.", application.pk)
 
-    if settings.DEBUG and application.resume:
-        return redirect(application.resume.url)
+    if application.resume:
+        try:
+            return _serve_private_resume(application)
+        except OSError:
+            logger.exception("Arquivo local do curriculo indisponivel para candidatura %s.", application.pk)
 
     messages.error(request, "Curriculo indisponivel. Verifique a configuracao do storage.")
     return redirect("careers:applications")
+
+
+def _serve_private_resume(application):
+    filename = application.resume_original_name or application.resume.name.rsplit("/", 1)[-1] or "curriculo"
+    content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+    return FileResponse(application.resume.open("rb"), as_attachment=True, filename=filename, content_type=content_type)
 
 
 class RecruiterJobCreateView(RecruiterRequiredMixin, CreateView):
