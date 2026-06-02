@@ -28,6 +28,56 @@ def is_supabase_storage_configured() -> bool:
     return bool(settings.SUPABASE_URL and settings.SUPABASE_SERVICE_ROLE_KEY and settings.SUPABASE_STORAGE_BUCKET)
 
 
+def ensure_private_resume_bucket() -> str:
+    if not is_supabase_storage_configured():
+        raise StorageNotConfigured("Supabase Storage nao configurado.")
+
+    bucket = settings.SUPABASE_STORAGE_BUCKET.strip("/")
+    response = requests.get(_storage_bucket_url(bucket), headers=_auth_headers(), timeout=15)
+    if response.status_code == 200:
+        data = response.json()
+        if data.get("public") is True:
+            raise RuntimeError(f"Bucket '{bucket}' existe, mas esta publico. Altere para privado no Supabase.")
+        return "exists"
+    if response.status_code != 404:
+        response.raise_for_status()
+
+    create_response = requests.post(
+        _storage_bucket_collection_url(),
+        headers={**_auth_headers(), "Content-Type": "application/json"},
+        json={
+            "id": bucket,
+            "name": bucket,
+            "public": False,
+            "file_size_limit": 5242880,
+            "allowed_mime_types": [
+                "application/pdf",
+                "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            ],
+        },
+        timeout=15,
+    )
+    create_response.raise_for_status()
+    return "created"
+
+
+def upload_bytes_to_supabase(storage_key: str, content: bytes, content_type: str = "application/octet-stream") -> StoredFile:
+    if not is_supabase_storage_configured():
+        raise StorageNotConfigured("Supabase Storage nao configurado.")
+    if not storage_key:
+        raise ValueError("Chave do arquivo ausente.")
+
+    response = requests.post(
+        _storage_object_url(storage_key),
+        headers={**_auth_headers(), "Content-Type": content_type, "x-upsert": "true"},
+        data=content,
+        timeout=30,
+    )
+    response.raise_for_status()
+    return StoredFile(key=storage_key)
+
+
 def upload_resume_to_supabase(application) -> StoredFile:
     if not is_supabase_storage_configured():
         raise StorageNotConfigured("Supabase Storage nao configurado.")
@@ -64,6 +114,17 @@ def download_resume_from_supabase(storage_key: str) -> DownloadedFile:
     )
 
 
+def delete_resume_from_supabase(storage_key: str) -> None:
+    if not is_supabase_storage_configured():
+        raise StorageNotConfigured("Supabase Storage nao configurado.")
+    if not storage_key:
+        raise ValueError("Chave do arquivo ausente.")
+
+    response = requests.delete(_storage_object_url(storage_key), headers=_auth_headers(), timeout=15)
+    if response.status_code not in {200, 204, 404}:
+        response.raise_for_status()
+
+
 def create_signed_resume_url(storage_key: str) -> str:
     if not is_supabase_storage_configured():
         raise StorageNotConfigured("Supabase Storage nao configurado.")
@@ -97,6 +158,14 @@ def _storage_signed_url(storage_key: str) -> str:
     bucket = settings.SUPABASE_STORAGE_BUCKET.strip("/")
     key = _quote_storage_key(storage_key)
     return f"{_supabase_url()}/storage/v1/object/sign/{bucket}/{key}"
+
+
+def _storage_bucket_collection_url() -> str:
+    return f"{_supabase_url()}/storage/v1/bucket"
+
+
+def _storage_bucket_url(bucket: str) -> str:
+    return f"{_storage_bucket_collection_url()}/{quote(bucket, safe='')}"
 
 
 def _supabase_url() -> str:

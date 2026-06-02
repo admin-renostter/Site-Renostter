@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from django.test import SimpleTestCase, override_settings
 
-from careers.services.storage import create_signed_resume_url, download_resume_from_supabase
+from careers.services.storage import create_signed_resume_url, download_resume_from_supabase, ensure_private_resume_bucket
 from careers.views import _serve_supabase_resume
 
 
@@ -78,3 +78,34 @@ class SupabaseStorageTests(SimpleTestCase):
         self.assertIn("attachment", response["Content-Disposition"])
         self.assertIn("curriculo-renostter.pdf", response["Content-Disposition"])
         self.assertEqual(response.content, b"%PDF-1.4")
+
+    @override_settings(
+        SUPABASE_URL="https://abc.supabase.co/rest/v1/",
+        SUPABASE_SERVICE_ROLE_KEY="sb_secret_test",
+        SUPABASE_STORAGE_BUCKET="curriculos",
+    )
+    @patch("careers.services.storage.requests.get")
+    def test_bucket_check_rejects_public_bucket(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {"id": "curriculos", "public": True}
+
+        with self.assertRaises(RuntimeError):
+            ensure_private_resume_bucket()
+
+    @override_settings(
+        SUPABASE_URL="https://abc.supabase.co/rest/v1/",
+        SUPABASE_SERVICE_ROLE_KEY="sb_secret_test",
+        SUPABASE_STORAGE_BUCKET="curriculos",
+    )
+    @patch("careers.services.storage.requests.post")
+    @patch("careers.services.storage.requests.get")
+    def test_bucket_check_creates_private_bucket_when_missing(self, mock_get, mock_post):
+        mock_get.return_value.status_code = 404
+        mock_post.return_value.raise_for_status.return_value = None
+
+        result = ensure_private_resume_bucket()
+
+        self.assertEqual(result, "created")
+        self.assertEqual(mock_get.call_args.args[0], "https://abc.supabase.co/storage/v1/bucket/curriculos")
+        self.assertEqual(mock_post.call_args.args[0], "https://abc.supabase.co/storage/v1/bucket")
+        self.assertIs(mock_post.call_args.kwargs["json"]["public"], False)
