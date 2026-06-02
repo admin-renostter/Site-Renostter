@@ -12,12 +12,21 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 if not DEBUG and SECRET_KEY == "dev-only-change-me":
     raise RuntimeError("SECRET_KEY must be configured for production.")
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1,renostter.com,www.renostter.com", cast=Csv())
-CSRF_TRUSTED_ORIGINS = config(
-    "CSRF_TRUSTED_ORIGINS",
-    default="https://renostter.com,https://www.renostter.com",
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="localhost,127.0.0.1,renostter.com,www.renostter.com,carreiras.renostter.com,renostter-careers.onrender.com",
     cast=Csv(),
 )
+CSRF_TRUSTED_ORIGINS = list(
+    config(
+        "CSRF_TRUSTED_ORIGINS",
+        default="https://renostter.com,https://www.renostter.com,https://carreiras.renostter.com,https://renostter-careers.onrender.com",
+        cast=Csv(),
+    )
+)
+for required_origin in ["https://carreiras.renostter.com", "https://renostter-careers.onrender.com"]:
+    if required_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(required_origin)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
