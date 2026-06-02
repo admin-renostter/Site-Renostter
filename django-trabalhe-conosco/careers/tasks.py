@@ -28,7 +28,19 @@ def process_application(application_id: int) -> None:
         except Exception:
             logger.exception("Falha ao enviar curriculo da candidatura %s para o storage.", application.pk)
 
-    resume_text = extract_resume_text(application.resume.path)
+    try:
+        resume_text = extract_resume_text(application.resume.path)
+    except (OSError, ValueError):
+        logger.warning("Curriculo local indisponivel para processamento da candidatura %s.", application.pk)
+        resume_text = ""
+
+    if not resume_text:
+        audit_event(
+            "application_received",
+            {"application_id": application.pk, "job_id": application.job_id, "score": application.qa_score, "resume_text": "unavailable"},
+        )
+        return
+
     score = score_application(application.job, application, resume_text)
 
     Application.objects.filter(pk=application.pk).update(resume_text=resume_text[:20000], qa_score=score)

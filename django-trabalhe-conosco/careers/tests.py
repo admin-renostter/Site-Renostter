@@ -8,7 +8,7 @@ from careers.views import _serve_supabase_resume
 
 class SupabaseStorageTests(SimpleTestCase):
     @override_settings(
-        SUPABASE_URL="https://abc.supabase.co",
+        SUPABASE_URL="https://abc.supabase.co/rest/v1/",
         SUPABASE_SERVICE_ROLE_KEY="sb_secret_test",
         SUPABASE_STORAGE_BUCKET="curriculos",
         SUPABASE_SIGNED_URL_TTL_SECONDS=3600,
@@ -31,7 +31,7 @@ class SupabaseStorageTests(SimpleTestCase):
         self.assertEqual(mock_get.call_args.kwargs["headers"]["Authorization"], "Bearer sb_secret_test")
 
     @override_settings(
-        SUPABASE_URL="https://abc.supabase.co",
+        SUPABASE_URL="https://abc.supabase.co/rest/v1/",
         SUPABASE_SERVICE_ROLE_KEY="sb_secret_test",
         SUPABASE_STORAGE_BUCKET="curriculos",
         SUPABASE_SIGNED_URL_TTL_SECONDS=3600,

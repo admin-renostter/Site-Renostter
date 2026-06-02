@@ -84,19 +84,27 @@ def create_signed_resume_url(storage_key: str) -> str:
         raise ValueError("Supabase nao retornou URL assinada para o curriculo.")
     if signed_url.startswith("http"):
         return signed_url
-    return f"{settings.SUPABASE_URL.rstrip('/')}{signed_url}"
+    return f"{_supabase_url()}{signed_url}"
 
 
 def _storage_object_url(storage_key: str) -> str:
     bucket = settings.SUPABASE_STORAGE_BUCKET.strip("/")
     key = _quote_storage_key(storage_key)
-    return f"{settings.SUPABASE_URL.rstrip('/')}/storage/v1/object/{bucket}/{key}"
+    return f"{_supabase_url()}/storage/v1/object/{bucket}/{key}"
 
 
 def _storage_signed_url(storage_key: str) -> str:
     bucket = settings.SUPABASE_STORAGE_BUCKET.strip("/")
     key = _quote_storage_key(storage_key)
-    return f"{settings.SUPABASE_URL.rstrip('/')}/storage/v1/object/sign/{bucket}/{key}"
+    return f"{_supabase_url()}/storage/v1/object/sign/{bucket}/{key}"
+
+
+def _supabase_url() -> str:
+    url = settings.SUPABASE_URL.rstrip("/")
+    for suffix in ("/rest/v1", "/rest/v1/"):
+        if url.endswith(suffix.rstrip("/")):
+            return url[: -len(suffix.rstrip("/"))].rstrip("/")
+    return url
 
 
 def _quote_storage_key(storage_key: str) -> str:
