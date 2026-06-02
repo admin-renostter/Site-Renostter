@@ -8,7 +8,10 @@
       <p class="careers-kicker">Usuario master</p>
       <h1>Usuarios e permissoes</h1>
     </div>
-    <a class="careers-button" href="{% url 'careers:user_create' %}">Novo usuario</a>
+    <div class="careers-admin-actions">
+      <a class="careers-button careers-button-ghost" href="{% url 'careers:approvals' %}">Aprovacoes</a>
+      <a class="careers-button" href="{% url 'careers:user_create' %}">Novo usuario</a>
+    </div>
   </section>
 
   <section class="careers-table-wrap">

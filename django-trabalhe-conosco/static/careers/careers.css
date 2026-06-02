@@ -43,7 +43,8 @@
 .careers-footer,
 .careers-tags,
 .careers-actions,
-.careers-row-actions {
+.careers-row-actions,
+.careers-admin-actions {
   display: flex;
   align-items: center;
 }
@@ -212,6 +213,12 @@ textarea.careers-field {
   gap: 10px;
   align-self: end;
   flex-wrap: wrap;
+}
+
+.careers-admin-actions {
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .careers-list {
