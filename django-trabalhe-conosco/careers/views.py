@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -14,6 +16,8 @@ from django_q.tasks import async_task
 
 from .forms import ApplicationForm, JobAdminForm, JobFilterForm, MasterJobAdminForm, RecruiterAuthenticationForm, RecruiterPasswordResetForm, UserProfileForm
 from .models import Application, Job, UserProfile
+
+logger = logging.getLogger(__name__)
 
 
 class JobListView(ListView):
@@ -67,7 +71,10 @@ class ApplicationCreateView(CreateView):
     def form_valid(self, form):
         form.instance.job = self.job
         response = super().form_valid(form)
-        async_task("careers.tasks.process_application", self.object.pk)
+        try:
+            async_task("careers.tasks.process_application", self.object.pk)
+        except Exception:
+            logger.exception("Falha ao agendar processamento da candidatura %s", self.object.pk)
         messages.success(self.request, "Candidatura enviada com sucesso! Em breve entraremos em contato.")
         return response
 

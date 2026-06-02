@@ -1,3 +1,5 @@
+import os
+import tempfile
 from pathlib import Path
 
 from decouple import Csv, config
@@ -81,8 +83,33 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+def _resolve_private_media_root() -> Path:
+    configured_root = Path(config("PRIVATE_MEDIA_ROOT", default=str(BASE_DIR / "private_media")))
+    candidates = [configured_root]
+
+    render_disk = os.environ.get("RENDER_DISK_MOUNT_PATH")
+    if render_disk:
+        candidates.append(Path(render_disk) / "private_media")
+
+    candidates.append(Path(tempfile.gettempdir()) / "renostter_private_media")
+
+    for candidate in candidates:
+        try:
+            candidate.mkdir(parents=True, exist_ok=True)
+            probe = candidate / ".write-test"
+            probe.write_text("ok", encoding="utf-8")
+            probe.unlink(missing_ok=True)
+            return candidate
+        except OSError:
+            continue
+
+    fallback = BASE_DIR / "private_media"
+    fallback.mkdir(parents=True, exist_ok=True)
+    return fallback
+
+
 MEDIA_URL = "/media/"
-PRIVATE_MEDIA_ROOT = Path(config("PRIVATE_MEDIA_ROOT", default=str(BASE_DIR / "private_media")))
+PRIVATE_MEDIA_ROOT = _resolve_private_media_root()
 MEDIA_ROOT = PRIVATE_MEDIA_ROOT
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
