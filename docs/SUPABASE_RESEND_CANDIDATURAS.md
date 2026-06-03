@@ -98,3 +98,40 @@ Botao Baixar curriculo gera link assinado temporario
 - Mantenha o bucket privado.
 - Use links assinados com expiração curta.
 - Remova currículos antigos conforme política LGPD.
+
+## Monitoramento de storage e limpeza aos 95%
+
+O projeto possui o comando:
+
+```bash
+python manage.py monitor_storage_usage
+```
+
+Ele mede:
+
+- uso local do Render em `PRIVATE_MEDIA_ROOT`;
+- uso do bucket privado do Supabase, somando os arquivos listados pela API de Storage.
+
+Configure no Render:
+
+```env
+SUPABASE_STORAGE_LIMIT_BYTES=1073741824
+RENDER_STORAGE_LIMIT_BYTES=1073741824
+STORAGE_CLEANUP_THRESHOLD_PERCENT=95
+```
+
+Use o valor real do seu plano em bytes. Quando `RENDER_STORAGE_LIMIT_BYTES` nao estiver configurado, o Django tenta usar o tamanho reportado pelo sistema de arquivos. Para Supabase, configure o limite manualmente porque a API de Storage usada pela aplicacao nao expoe a cota total do projeto de forma confiavel.
+
+Simulacao segura:
+
+```bash
+python manage.py monitor_storage_usage --cleanup --dry-run
+```
+
+Execucao real:
+
+```bash
+python manage.py monitor_storage_usage --cleanup
+```
+
+Importante: a limpeza automatica chama `purge_expired_applications`, ou seja, remove apenas candidaturas vencidas pela politica LGPD. O sistema nao apaga curriculos ainda dentro do prazo de retencao apenas para liberar espaco. Se mesmo apos a limpeza o uso continuar acima de 95%, revise manualmente, aumente o plano ou reduza a politica operacional de retencao com apoio juridico.

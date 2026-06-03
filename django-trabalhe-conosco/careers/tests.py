@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from careers.models import Application, Job
 from careers.services.storage import create_signed_resume_url, download_resume_from_supabase, ensure_private_resume_bucket
+from careers.services.storage_usage import StorageUsage, get_supabase_storage_usage
 from careers.views import _serve_supabase_resume
 
 
@@ -115,6 +116,57 @@ class SupabaseStorageTests(SimpleTestCase):
         self.assertEqual(mock_get.call_args.args[0], "https://abc.supabase.co/storage/v1/bucket/curriculos")
         self.assertEqual(mock_post.call_args.args[0], "https://abc.supabase.co/storage/v1/bucket")
         self.assertIs(mock_post.call_args.kwargs["json"]["public"], False)
+
+    @override_settings(
+        SUPABASE_URL="https://abc.supabase.co/rest/v1/",
+        SUPABASE_SERVICE_ROLE_KEY="sb_secret_test",
+        SUPABASE_STORAGE_BUCKET="curriculos",
+        SUPABASE_STORAGE_LIMIT_BYTES=1000,
+    )
+    @patch("careers.services.storage_usage.requests.post")
+    def test_supabase_usage_sums_bucket_files(self, mock_post):
+        mock_post.return_value.json.return_value = [
+            {"name": "cv-1.pdf", "metadata": {"size": 125}},
+            {"name": "cv-2.pdf", "metadata": {"size": 375}},
+        ]
+        mock_post.return_value.raise_for_status.return_value = None
+
+        usage = get_supabase_storage_usage()
+
+        self.assertEqual(usage.used_bytes, 500)
+        self.assertEqual(usage.total_bytes, 1000)
+        self.assertEqual(usage.percent_used, 50.0)
+
+
+class StorageMonitorCommandTests(SimpleTestCase):
+    @patch("careers.management.commands.monitor_storage_usage.call_command")
+    @patch("careers.management.commands.monitor_storage_usage.audit_event")
+    @patch("careers.management.commands.monitor_storage_usage.get_supabase_storage_usage")
+    @patch("careers.management.commands.monitor_storage_usage.get_render_storage_usage")
+    def test_monitor_triggers_lgpd_cleanup_above_threshold(self, mock_render, mock_supabase, mock_audit, mock_call_command):
+        mock_render.return_value = StorageUsage("render", used_bytes=10, total_bytes=100)
+        mock_supabase.return_value = StorageUsage("supabase", used_bytes=96, total_bytes=100)
+
+        call_command("monitor_storage_usage", cleanup=True, threshold=95)
+
+        mock_call_command.assert_called_once_with(
+            "purge_expired_applications",
+            days=30,
+            limit=500,
+            dry_run=False,
+        )
+        mock_audit.assert_called_once()
+
+    @patch("careers.management.commands.monitor_storage_usage.call_command")
+    @patch("careers.management.commands.monitor_storage_usage.get_supabase_storage_usage")
+    @patch("careers.management.commands.monitor_storage_usage.get_render_storage_usage")
+    def test_monitor_does_not_cleanup_below_threshold(self, mock_render, mock_supabase, mock_call_command):
+        mock_render.return_value = StorageUsage("render", used_bytes=10, total_bytes=100)
+        mock_supabase.return_value = StorageUsage("supabase", used_bytes=94, total_bytes=100)
+
+        call_command("monitor_storage_usage", cleanup=True, threshold=95)
+
+        mock_call_command.assert_not_called()
 
 
 class PublicApplicationFlowTests(TestCase):
