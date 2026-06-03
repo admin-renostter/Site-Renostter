@@ -1,5 +1,7 @@
 from unittest.mock import patch
+from datetime import timedelta
 
+from django.core.management import call_command
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
@@ -152,3 +154,71 @@ class PublicApplicationFlowTests(TestCase):
         self.assertEqual(Application.objects.first().resume_storage_key, "curriculos/vaga-1/teste.pdf")
         mock_send_email.assert_called_once()
         mock_async_task.assert_called_once()
+
+
+class LgpdRetentionCommandTests(TestCase):
+    def setUp(self):
+        self.job = Job.objects.create(
+            title="Tecnico em Climatizacao",
+            description="Atendimento tecnico em campo.",
+            location="Sao Paulo",
+            contract_type=Job.ContractType.PJ,
+            status=Job.Status.PUBLICADA,
+            approval_status=Job.ApprovalStatus.APROVADA,
+            published_at=timezone.now(),
+        )
+
+    @patch("careers.management.commands.purge_expired_applications.delete_resume_from_supabase")
+    def test_dry_run_does_not_anonymize_expired_application(self, mock_delete):
+        application = self._create_application(days_old=31)
+
+        call_command("purge_expired_applications", "--dry-run")
+
+        application.refresh_from_db()
+        self.assertIsNone(application.deleted_at)
+        self.assertEqual(application.email, "candidato@example.com")
+        mock_delete.assert_not_called()
+
+    @patch("careers.management.commands.purge_expired_applications.delete_resume_from_supabase")
+    def test_retention_keeps_applications_younger_than_30_days(self, mock_delete):
+        application = self._create_application(days_old=29)
+
+        call_command("purge_expired_applications")
+
+        application.refresh_from_db()
+        self.assertIsNone(application.deleted_at)
+        self.assertEqual(application.email, "candidato@example.com")
+        mock_delete.assert_not_called()
+
+    @patch("careers.management.commands.purge_expired_applications.audit_event")
+    @patch("careers.management.commands.purge_expired_applications.delete_resume_from_supabase")
+    def test_retention_anonymizes_application_at_30_days(self, mock_delete, mock_audit):
+        application = self._create_application(days_old=30)
+
+        call_command("purge_expired_applications")
+
+        application.refresh_from_db()
+        self.assertIsNotNone(application.deleted_at)
+        self.assertEqual(application.email, f"deleted+{application.pk}@lgpd.local")
+        self.assertEqual(application.phone, "")
+        self.assertEqual(application.resume_storage_key, "")
+        self.assertEqual(application.deletion_reason, "retencao_lgpd_30_dias")
+        mock_delete.assert_called_once_with("curriculos/vaga-1/teste.pdf")
+        mock_audit.assert_called()
+
+    def _create_application(self, days_old: int):
+        created_at = timezone.now() - timedelta(days=days_old)
+        application = Application.objects.create(
+            job=self.job,
+            name="Candidato Teste",
+            email="candidato@example.com",
+            phone="11999999999",
+            message="Mensagem do candidato",
+            resume="curriculos/vaga-1/teste.pdf",
+            resume_storage_key="curriculos/vaga-1/teste.pdf",
+            resume_original_name="curriculo.pdf",
+            retention_until=created_at + timedelta(days=30),
+        )
+        Application.objects.filter(pk=application.pk).update(created_at=created_at)
+        application.refresh_from_db()
+        return application

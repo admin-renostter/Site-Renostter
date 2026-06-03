@@ -12,6 +12,7 @@
   </section>
 
   <section class="careers-table-wrap">
+    <p class="careers-consent">Os dados e curriculos das candidaturas sao mantidos por 30 dias corridos. Apos esse prazo, sao anonimizados e os arquivos sao removidos conforme politica LGPD.</p>
     <table class="careers-table">
       <thead>
         <tr>
@@ -20,6 +21,7 @@
           <th>Contato</th>
           <th>Score QA</th>
           <th>Data</th>
+          <th>Retencao</th>
           <th>Acoes</th>
         </tr>
       </thead>
@@ -37,12 +39,19 @@
             </td>
             <td>{{ application.qa_score|floatformat:0 }}</td>
             <td>{{ application.created_at|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if application.retention_until %}
+                {{ application.retention_until|date:"d/m/Y" }}
+              {% else %}
+                {{ application.lgpd_retention_deadline|date:"d/m/Y" }}
+              {% endif %}
+            </td>
             <td class="careers-row-actions">
               <a href="{% url 'careers:application_resume' application.pk %}">Baixar curriculo</a>
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="6">Nenhuma candidatura recebida.</td></tr>
+          <tr><td colspan="7">Nenhuma candidatura recebida.</td></tr>
         {% endfor %}
       </tbody>
     </table>

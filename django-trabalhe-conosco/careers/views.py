@@ -80,6 +80,9 @@ class ApplicationCreateView(CreateView):
         if form.instance.resume:
             form.instance.resume_original_name = form.instance.resume.name
         response = super().form_valid(form)
+        if not self.object.retention_until:
+            self.object.retention_until = self.object.lgpd_retention_deadline
+            Application.objects.filter(pk=self.object.pk).update(retention_until=self.object.retention_until)
         try:
             stored_file = upload_resume_to_supabase(self.object)
             Application.objects.filter(pk=self.object.pk).update(resume_storage_key=stored_file.key)
@@ -176,7 +179,7 @@ class ApplicationListView(RecruiterRequiredMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
-        qs = Application.objects.select_related("job").order_by("-created_at")
+        qs = Application.objects.select_related("job").filter(deleted_at__isnull=True).order_by("-created_at")
         if _is_master(self.request.user):
             allowed_qs = qs
         else:

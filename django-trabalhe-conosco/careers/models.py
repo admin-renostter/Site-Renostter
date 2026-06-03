@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 from uuid import uuid4
 
 from django.conf import settings
@@ -124,6 +125,10 @@ class Application(models.Model):
     resume_storage_key = models.CharField("Chave do curriculo no storage", max_length=500, blank=True)
     resume_original_name = models.CharField("Nome original do curriculo", max_length=255, blank=True)
     qa_score = models.FloatField("Score QA", default=0)
+    retention_until = models.DateTimeField("Reter dados ate", null=True, blank=True, db_index=True)
+    deleted_at = models.DateTimeField("Anonimizada em", null=True, blank=True, db_index=True)
+    deletion_reason = models.CharField("Motivo da anonimização", max_length=120, blank=True)
+    resume_deleted_at = models.DateTimeField("Curriculo removido em", null=True, blank=True)
     created_at = models.DateTimeField("Data da candidatura", auto_now_add=True, db_index=True)
 
     class Meta:
@@ -131,6 +136,7 @@ class Application(models.Model):
         indexes = [
             models.Index(fields=["job", "created_at"]),
             models.Index(fields=["email", "created_at"]),
+            models.Index(fields=["retention_until", "deleted_at"]),
         ]
 
     def __str__(self) -> str:
@@ -141,3 +147,12 @@ class Application(models.Model):
         if settings.DEBUG and self.resume:
             return self.resume.url
         return self.resume.name
+
+    @property
+    def lgpd_retention_deadline(self):
+        base_date = self.created_at or timezone.now()
+        return base_date + timedelta(days=30)
+
+    @property
+    def is_lgpd_anonymized(self) -> bool:
+        return self.deleted_at is not None
