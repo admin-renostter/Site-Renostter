@@ -1,7 +1,11 @@
 from unittest.mock import patch
 
-from django.test import SimpleTestCase, override_settings
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import Client, SimpleTestCase, TestCase, override_settings
+from django.urls import reverse
+from django.utils import timezone
 
+from careers.models import Application, Job
 from careers.services.storage import create_signed_resume_url, download_resume_from_supabase, ensure_private_resume_bucket
 from careers.views import _serve_supabase_resume
 
@@ -109,3 +113,42 @@ class SupabaseStorageTests(SimpleTestCase):
         self.assertEqual(mock_get.call_args.args[0], "https://abc.supabase.co/storage/v1/bucket/curriculos")
         self.assertEqual(mock_post.call_args.args[0], "https://abc.supabase.co/storage/v1/bucket")
         self.assertIs(mock_post.call_args.kwargs["json"]["public"], False)
+
+
+class PublicApplicationFlowTests(TestCase):
+    def setUp(self):
+        self.job = Job.objects.create(
+            title="Tecnico em Climatizacao",
+            description="Atendimento tecnico em campo.",
+            location="Sao Paulo",
+            contract_type=Job.ContractType.PJ,
+            status=Job.Status.PUBLICADA,
+            approval_status=Job.ApprovalStatus.APROVADA,
+            published_at=timezone.now(),
+        )
+
+    @patch("careers.views.async_task")
+    @patch("careers.views.send_application_emails")
+    @patch("careers.views.upload_resume_to_supabase")
+    def test_public_application_post_does_not_require_csrf_cookie(self, mock_upload, mock_send_email, mock_async_task):
+        mock_upload.return_value.key = "curriculos/vaga-1/teste.pdf"
+        client = Client(enforce_csrf_checks=True)
+        resume = SimpleUploadedFile("curriculo.pdf", b"%PDF-1.4\n%%EOF", content_type="application/pdf")
+
+        response = client.post(
+            f"{reverse('careers:apply')}?vaga={self.job.pk}",
+            {
+                "vaga": str(self.job.pk),
+                "name": "Joao Candidato",
+                "email": "joao@example.com",
+                "phone": "11999999999",
+                "message": "Tenho experiencia tecnica.",
+                "resume": resume,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Application.objects.count(), 1)
+        self.assertEqual(Application.objects.first().resume_storage_key, "curriculos/vaga-1/teste.pdf")
+        mock_send_email.assert_called_once()
+        mock_async_task.assert_called_once()

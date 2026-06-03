@@ -11,6 +11,8 @@ from django.http import FileResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django_q.tasks import async_task
@@ -52,6 +54,7 @@ class JobListView(ListView):
         return ctx
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class ApplicationCreateView(CreateView):
     model = Application
     form_class = ApplicationForm
