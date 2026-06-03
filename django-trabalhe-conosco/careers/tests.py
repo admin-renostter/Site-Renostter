@@ -147,9 +147,13 @@ class PublicApplicationFlowTests(TestCase):
                 "message": "Tenho experiencia tecnica.",
                 "resume": resume,
             },
+            follow=True,
         )
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Recebemos seu curriculo")
+        self.assertContains(response, "Nossa equipe avaliara suas informacoes")
+        self.assertContains(response, 'data-careers-success-modal')
         self.assertEqual(Application.objects.count(), 1)
         self.assertEqual(Application.objects.first().resume_storage_key, "curriculos/vaga-1/teste.pdf")
         mock_send_email.assert_called_once()

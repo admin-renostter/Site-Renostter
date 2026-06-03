@@ -606,6 +606,68 @@
   border: 1px solid rgba(31, 182, 255, 0.28);
 }
 
+.careers-success-modal[hidden] {
+  display: none;
+}
+
+.careers-success-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.careers-success-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.78);
+  backdrop-filter: blur(6px);
+}
+
+.careers-success-modal__card {
+  position: relative;
+  width: min(520px, 100%);
+  border: 1px solid rgba(31, 182, 255, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(31, 182, 255, 0.14), transparent 42%),
+    linear-gradient(315deg, rgba(255, 122, 0, 0.18), transparent 38%),
+    #0f1726;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+  padding: clamp(24px, 5vw, 38px);
+}
+
+.careers-success-modal__card h2 {
+  margin: 0 0 14px;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  line-height: 1;
+}
+
+.careers-success-modal__card p:not(.careers-kicker) {
+  margin: 0 0 24px;
+  color: var(--career-muted);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.careers-success-modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--career-line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--career-text);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .careers-empty {
   padding: 28px;
 }

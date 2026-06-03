@@ -99,7 +99,11 @@ class ApplicationCreateView(CreateView):
             async_task("careers.tasks.process_application", self.object.pk)
         except Exception:
             logger.exception("Falha ao agendar processamento da candidatura %s", self.object.pk)
-        messages.success(self.request, "Candidatura enviada com sucesso! Em breve entraremos em contato.")
+        messages.success(
+            self.request,
+            "Seu curriculo foi recebido com sucesso. Nossa equipe avaliara suas informacoes e, caso haja aderencia com a vaga, a Renostter entrara em contato para as proximas etapas.",
+            extra_tags="application-success",
+        )
         return response
 
     def get_context_data(self, **kwargs):

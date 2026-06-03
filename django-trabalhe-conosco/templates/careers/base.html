@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Trabalhe Conosco | Renostter{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'careers/careers.css' %}?v=20260602-storage">
+    <link rel="stylesheet" href="{% static 'careers/careers.css' %}?v=20260603-success-modal">
   </head>
   <body class="careers-django-page">
     <header class="careers-topbar">
@@ -40,11 +40,24 @@
     </header>
 
     {% if messages %}
-      <div class="careers-messages" role="status" aria-live="polite">
-        {% for message in messages %}
-          <div class="careers-message careers-message-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-      </div>
+      {% for message in messages %}
+        {% if "application-success" in message.tags %}
+          <div class="careers-success-modal" role="dialog" aria-modal="true" aria-labelledby="application-success-title" data-careers-success-modal>
+            <div class="careers-success-modal__backdrop" data-careers-success-close></div>
+            <section class="careers-success-modal__card">
+              <button class="careers-success-modal__close" type="button" aria-label="Fechar mensagem" data-careers-success-close>&times;</button>
+              <p class="careers-kicker">Candidatura enviada</p>
+              <h2 id="application-success-title">Recebemos seu curriculo</h2>
+              <p>{{ message }}</p>
+              <button class="careers-button" type="button" data-careers-success-close>Entendi</button>
+            </section>
+          </div>
+        {% else %}
+          <div class="careers-messages" role="status" aria-live="polite">
+            <div class="careers-message careers-message-{{ message.tags }}">{{ message }}</div>
+          </div>
+        {% endif %}
+      {% endfor %}
     {% endif %}
 
     <main>{% block content %}{% endblock %}</main>
@@ -53,5 +66,23 @@
       <span>Renostter Ar Condicionado</span>
       <a href="https://www.renostter.com/">Voltar ao site principal</a>
     </footer>
+    <script>
+      (function () {
+        const modal = document.querySelector("[data-careers-success-modal]");
+        if (!modal) return;
+
+        const closeModal = function () {
+          modal.setAttribute("hidden", "");
+        };
+
+        modal.querySelectorAll("[data-careers-success-close]").forEach(function (element) {
+          element.addEventListener("click", closeModal);
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") closeModal();
+        });
+      })();
+    </script>
   </body>
 </html>
