@@ -87,3 +87,5 @@ services:
         value: curriculos
       - key: SUPABASE_SIGNED_URL_TTL_SECONDS
         value: "3600"
+      - key: CONFIGURE_SUPABASE_STORAGE_ON_START
+        value: "False"

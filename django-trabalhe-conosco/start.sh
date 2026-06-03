@@ -10,4 +10,8 @@ if [ -n "${MASTER_PASSWORD:-}" ]; then
     --password "$MASTER_PASSWORD"
 fi
 
+if [ "${CONFIGURE_SUPABASE_STORAGE_ON_START:-False}" = "True" ]; then
+  python manage.py configure_supabase_storage || echo "Supabase Storage validation failed; check Render logs."
+fi
+
 gunicorn renostter_careers.wsgi:application --bind "0.0.0.0:${PORT:-8000}"
