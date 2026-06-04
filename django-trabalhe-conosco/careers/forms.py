@@ -95,6 +95,8 @@ class JobAdminForm(forms.ModelForm):
             "location",
             "modality",
             "contract_type",
+            "compensation_type",
+            "compensation_value",
             "area",
             "expires_at",
             "internal_notes",
@@ -110,6 +112,18 @@ class JobAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         apply_field_class(self.fields)
+        self.fields["compensation_value"].required = False
+        self.fields["compensation_value"].widget.attrs.setdefault("placeholder", "Ex: R$ 2.500,00, R$ 2.500 a R$ 3.200 ou deixe em branco")
+
+    def clean(self):
+        cleaned_data = super().clean()
+        compensation_type = cleaned_data.get("compensation_type")
+        compensation_value = (cleaned_data.get("compensation_value") or "").strip()
+        if compensation_type == Job.CompensationType.VALOR_SALARIAL and not compensation_value:
+            self.add_error("compensation_value", "Informe o valor ou faixa salarial para esta opcao.")
+        if compensation_type != Job.CompensationType.VALOR_SALARIAL:
+            cleaned_data["compensation_value"] = ""
+        return cleaned_data
 
 
 class MasterJobAdminForm(JobAdminForm):

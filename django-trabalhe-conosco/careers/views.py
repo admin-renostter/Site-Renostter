@@ -45,7 +45,7 @@ class JobListView(ListView):
                 qs = qs.filter(modality=data["modality"])
             if data["contract_type"]:
                 qs = qs.filter(contract_type=data["contract_type"])
-        return qs.only("id", "title", "description", "location", "modality", "contract_type", "area", "created_at")
+        return qs.only("id", "title", "description", "location", "modality", "contract_type", "compensation_type", "compensation_value", "area", "created_at")
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

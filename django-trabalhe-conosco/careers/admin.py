@@ -12,8 +12,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ("title", "area_owner", "location", "modality", "contract_type", "status", "approval_status", "created_at")
-    list_filter = ("status", "approval_status", "area_owner", "modality", "contract_type")
+    list_display = ("title", "area_owner", "location", "modality", "contract_type", "compensation_type", "status", "approval_status", "created_at")
+    list_filter = ("status", "approval_status", "area_owner", "modality", "contract_type", "compensation_type")
     search_fields = ("title", "description", "requirements")
     date_hierarchy = "created_at"
 

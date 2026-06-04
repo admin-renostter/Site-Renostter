@@ -64,6 +64,11 @@ class Job(models.Model):
         REMOTO = "Remoto", "Remoto"
         HIBRIDO = "Hibrido", "Hibrido"
 
+    class CompensationType(models.TextChoices):
+        A_COMBINAR = "a_combinar", "A combinar"
+        VALOR_SALARIAL = "valor_salarial", "Valor salarial"
+        PRETENSAO_SALARIAL = "pretensao_salarial", "Pretensao salarial"
+
     title = models.CharField("Titulo", max_length=150, db_index=True)
     description = models.TextField("Descricao")
     requirements = models.TextField("Requisitos", blank=True)
@@ -71,6 +76,8 @@ class Job(models.Model):
     location = models.CharField("Localidade", max_length=100, db_index=True)
     modality = models.CharField("Modalidade", max_length=20, choices=Modality.choices, default=Modality.PRESENCIAL)
     contract_type = models.CharField("Tipo de contrato", max_length=20, choices=ContractType.choices, db_index=True)
+    compensation_type = models.CharField("Informacao salarial", max_length=30, choices=CompensationType.choices, default=CompensationType.A_COMBINAR)
+    compensation_value = models.CharField("Valor ou faixa salarial", max_length=80, blank=True)
     area = models.CharField("Area", max_length=100, blank=True, db_index=True)
     status = models.CharField("Status", max_length=30, choices=Status.choices, default=Status.RASCUNHO, db_index=True)
     approval_status = models.CharField("Status de aprovacao", max_length=30, choices=ApprovalStatus.choices, default=ApprovalStatus.RASCUNHO, db_index=True)
@@ -103,6 +110,12 @@ class Job(models.Model):
 
     def get_absolute_url(self):
         return f"{reverse('careers:apply')}?vaga={self.pk}"
+
+    @property
+    def compensation_label(self) -> str:
+        if self.compensation_type == self.CompensationType.VALOR_SALARIAL and self.compensation_value:
+            return self.compensation_value
+        return self.get_compensation_type_display()
 
 
 def resume_upload_path(instance, filename: str) -> str:

@@ -7,6 +7,7 @@ from django.test import Client, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
+from careers.forms import JobAdminForm
 from careers.models import Application, Job
 from careers.services.storage import create_signed_resume_url, download_resume_from_supabase, ensure_private_resume_bucket
 from careers.services.storage_usage import StorageUsage, get_supabase_storage_usage
@@ -210,6 +211,43 @@ class PublicApplicationFlowTests(TestCase):
         self.assertEqual(Application.objects.first().resume_storage_key, "curriculos/vaga-1/teste.pdf")
         mock_send_email.assert_called_once()
         mock_async_task.assert_called_once()
+
+
+class JobCompensationFormTests(SimpleTestCase):
+    def _valid_payload(self, **overrides):
+        payload = {
+            "title": "Tecnico em Climatizacao",
+            "description": "Atendimento tecnico em campo.",
+            "requirements": "",
+            "benefits": "",
+            "location": "Sao Paulo/SP",
+            "modality": Job.Modality.PRESENCIAL,
+            "contract_type": Job.ContractType.PJ,
+            "compensation_type": Job.CompensationType.A_COMBINAR,
+            "compensation_value": "",
+            "area": "Operacoes",
+            "expires_at": "",
+            "internal_notes": "",
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_salary_value_is_required_when_type_is_fixed_salary(self):
+        form = JobAdminForm(data=self._valid_payload(compensation_type=Job.CompensationType.VALOR_SALARIAL))
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("compensation_value", form.errors)
+
+    def test_non_salary_type_clears_salary_value(self):
+        form = JobAdminForm(
+            data=self._valid_payload(
+                compensation_type=Job.CompensationType.PRETENSAO_SALARIAL,
+                compensation_value="R$ 3.000,00",
+            )
+        )
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data["compensation_value"], "")
 
 
 class LgpdRetentionCommandTests(TestCase):

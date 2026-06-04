@@ -17,7 +17,7 @@
       {% csrf_token %}
       {{ form.non_field_errors }}
       {% for field in form %}
-        <label class="{% if field.name == 'description' or field.name == 'requirements' or field.name == 'benefits' or field.name == 'internal_notes' or field.name == 'rejection_reason' %}careers-field-full{% endif %}">
+        <label class="careers-field-name-{{ field.name }} {% if field.name == 'description' or field.name == 'requirements' or field.name == 'benefits' or field.name == 'internal_notes' or field.name == 'rejection_reason' %}careers-field-full{% endif %}">
           <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
           {{ field }}
           {% for error in field.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
@@ -28,4 +28,23 @@
       </div>
     </form>
   </section>
+
+  <script>
+    (function () {
+      const typeField = document.getElementById("id_compensation_type");
+      const valueWrapper = document.querySelector(".careers-field-name-compensation_value");
+      const valueField = document.getElementById("id_compensation_value");
+      if (!typeField || !valueWrapper || !valueField) return;
+
+      const syncCompensationValue = function () {
+        const shouldShowValue = typeField.value === "valor_salarial";
+        valueWrapper.hidden = !shouldShowValue;
+        valueField.required = shouldShowValue;
+        if (!shouldShowValue) valueField.value = "";
+      };
+
+      typeField.addEventListener("change", syncCompensationValue);
+      syncCompensationValue();
+    })();
+  </script>
 {% endblock %}

@@ -31,7 +31,7 @@
       <tbody>
         {% for job in jobs %}
           <tr>
-            <td><strong>{{ job.title }}</strong><span>{{ job.location }} - {{ job.contract_type }}</span></td>
+            <td><strong>{{ job.title }}</strong><span>{{ job.location }} - {{ job.contract_type }} - {{ job.compensation_label }}</span></td>
             <td>{{ job.area_owner|default:job.area|default:"-" }}</td>
             <td><span class="careers-status careers-status-{{ job.status }}">{{ job.get_status_display }}</span></td>
             <td>
