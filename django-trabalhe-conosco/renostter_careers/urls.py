@@ -4,9 +4,10 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 
-from careers.views import RecruiterLoginView, RecruiterPasswordResetView
+from careers.views import RecruiterLoginView, RecruiterPasswordResetView, health_check
 
 urlpatterns = [
+    path("healthz/", health_check, name="health_check"),
     path(settings.DJANGO_ADMIN_URL, admin.site.urls),
     path("admin/login/", RecruiterLoginView.as_view(), name="login"),
     path("admin/logout/", auth_views.LogoutView.as_view(), name="logout"),

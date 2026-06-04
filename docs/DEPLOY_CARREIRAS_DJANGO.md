@@ -65,6 +65,7 @@ Depois, no Render:
 Depois do DNS propagar, teste:
 
 ```text
+https://carreiras.renostter.com/healthz/
 https://carreiras.renostter.com/trabalhe-conosco/
 https://carreiras.renostter.com/admin/login/
 ```
@@ -81,3 +82,17 @@ https://carreiras.renostter.com/trabalhe-conosco/
 - Nao deixe `DEBUG=True` em producao.
 - Nao hospede o Django no Netlify comum.
 - Mantenha `carreiras.renostter.com` com HTTPS ativo.
+
+## Tela de carregamento do Render Free
+
+No plano Free, o Render pode desligar o Web Service apos alguns minutos sem trafego. Quando o primeiro visitante acessa novamente, o Render mostra uma tela de carregamento enquanto a aplicacao acorda. Isso e esperado nesse plano.
+
+O projeto possui um endpoint leve para health check:
+
+```text
+https://carreiras.renostter.com/healthz/
+```
+
+Esse endpoint tambem esta configurado no `render.yaml` via `healthCheckPath: /healthz/`, melhorando a validacao de deploy e recuperacao do servico.
+
+Para reduzir a chance de cold start no plano Free, e possivel configurar um monitor externo para chamar `/healthz/` periodicamente. Essa alternativa consome horas gratuitas do Render. Para eliminar o comportamento de sono de forma correta em producao, use um plano pago do Render, pois instancias pagas nao entram em sleep por inatividade.

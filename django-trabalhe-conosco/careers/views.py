@@ -6,8 +6,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.core.cache import cache
+from django.db import connection
 from django.db.models import Count, Q
-from django.http import FileResponse, HttpResponse, HttpResponseForbidden
+from django.http import FileResponse, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -24,6 +25,13 @@ from .services.storage import StorageNotConfigured, download_resume_from_supabas
 from .services.storage import upload_resume_to_supabase
 
 logger = logging.getLogger(__name__)
+
+
+def health_check(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+    return JsonResponse({"status": "ok"})
 
 
 class JobListView(ListView):

@@ -213,6 +213,14 @@ class PublicApplicationFlowTests(TestCase):
         mock_async_task.assert_called_once()
 
 
+class HealthCheckTests(TestCase):
+    def test_health_check_is_public_and_reports_ok(self):
+        response = self.client.get(reverse("health_check"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
+
 class JobCompensationFormTests(SimpleTestCase):
     def _valid_payload(self, **overrides):
         payload = {
