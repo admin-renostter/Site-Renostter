@@ -14,6 +14,10 @@ describe('worker guardrails', () => {
             servico: 'Instalacao',
             tipo: 'Residencial',
             urgencia: 'Hoje',
+            bairro: 'Tatuape',
+            mensagem: 'Meu split parou de gelar',
+            pagina: 'https://renostter.com/#servicos',
+            user_agent: 'Vitest',
             extra: '<ignored>',
         });
 
@@ -23,6 +27,10 @@ describe('worker guardrails', () => {
             servico: 'Instalacao',
             tipo: 'Residencial',
             urgencia: 'Hoje',
+            bairro: 'Tatuape',
+            mensagem: 'Meu split parou de gelar',
+            pagina: 'https://renostter.com/#servicos',
+            user_agent: 'Vitest',
             origem: 'chatbot',
         });
         expect(result.value.extra).toBeUndefined();

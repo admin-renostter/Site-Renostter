@@ -15,6 +15,7 @@ const CONFIG = {
     CALENDLY_URL:    'https://calendly.com/renostter/visita-tecnica',
     WHATSAPP_NUM:    '5511952730593',
     BOT_NAME:        'Lucas',
+    MAX_QUICK_REPLIES: 6,
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -257,7 +258,7 @@ function parseAIResponse(rawText) {
                 actions.push(obj);
                 displayText = displayText.replace(match, '').trim();
             }
-        } catch (e) { /* skip */ }
+        } catch { /* skip */ }
     }
 
     return { displayText: displayText.trim(), actions };
@@ -267,7 +268,13 @@ function parseAIResponse(rawText) {
    📤  ENVIO DE LEAD
    ═══════════════════════════════════════════════════════════ */
 async function sendLead(data) {
-    const payload = { ...data, timestamp: new Date().toISOString(), origem: 'chatbot' };
+    const payload = {
+        ...data,
+        timestamp: new Date().toISOString(),
+        origem: 'chatbot',
+        pagina: window.location.href,
+        user_agent: navigator.userAgent,
+    };
 
     /* Persiste localmente mesmo sem proxy */
     try { localStorage.setItem('rn_last_lead', JSON.stringify(payload)); } catch {}
@@ -277,12 +284,15 @@ async function sendLead(data) {
     if (!proxyUrl) return;
 
     try {
-        await fetch(`${proxyUrl}/lead`, {
+        const response = await fetch(`${proxyUrl}/lead`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         });
-    } catch {}
+        if (!response.ok) throw new Error(`Lead HTTP ${response.status}`);
+    } catch (err) {
+        console.warn('[Lucas] Lead salvo localmente, mas nao enviado ao proxy:', err.message);
+    }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -601,8 +611,54 @@ function fallbackResponse(texto) {
 }
 
 function buildWhatsAppMsg() {
-    const { nome, servico, tipo } = leadData;
-    return `Olá! ${nome ? `Me chamo *${nome}*. ` : ''}${servico ? `Preciso de *${servico}*` : 'Gostaria de um orçamento'}${tipo ? ` (${tipo})` : ''}. Vi o site da Renostter!`;
+    const { nome, servico, tipo, urgencia, bairro } = leadData;
+    const partes = [
+        'Olá! Vim pelo site da Renostter.',
+        nome ? `Me chamo *${nome}*.` : '',
+        servico ? `Preciso de *${servico}*.` : 'Gostaria de um orçamento.',
+        tipo ? `Tipo de atendimento: *${tipo}*.` : '',
+        urgencia ? `Urgência: *${urgencia}*.` : '',
+        bairro ? `Bairro/cidade: *${bairro}*.` : '',
+    ].filter(Boolean);
+
+    return partes.join(' ');
+}
+
+function updateLeadFromText(texto) {
+    const normalized = texto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    const serviceRules = [
+        ['Instalação', ['instalacao', 'instalar', 'instalar split', 'colocar ar']],
+        ['Higienização', ['higienizacao', 'limpeza', 'limpar', 'mofo', 'cheiro']],
+        ['Manutenção corretiva', ['parou', 'nao liga', 'nao gela', 'vazando', 'barulho', 'defeito', 'conserto']],
+        ['Manutenção preventiva', ['preventiva', 'revisao', 'manutencao']],
+        ['PMOC empresarial', ['pmoc', 'empresa', 'clinica', 'hospital', 'condominio', 'comercial']],
+        ['Pintura de equipamento', ['pintura', 'pintar', 'personalizar', 'customizar']],
+        ['Cálculo de BTU', ['btu', 'capacidade', 'qual ar comprar']],
+    ];
+
+    const urgencyRules = [
+        ['Urgente', ['urgente', 'emergencia', 'hoje', 'agora', 'parou']],
+        ['Esta semana', ['essa semana', 'esta semana', 'amanha']],
+        ['Sem urgência', ['sem pressa', 'orcamento', 'pesquisando']],
+    ];
+
+    const typeRules = [
+        ['Empresarial', ['empresa', 'comercial', 'loja', 'escritorio', 'clinica', 'hospital', 'condominio']],
+        ['Residencial', ['casa', 'apartamento', 'apto', 'residencial']],
+    ];
+
+    const matchRule = (rules) => {
+        const found = rules.find(([, terms]) => terms.some(term => normalized.includes(term)));
+        return found?.[0] || '';
+    };
+
+    leadData.servico = leadData.servico || matchRule(serviceRules);
+    leadData.urgencia = leadData.urgencia || matchRule(urgencyRules);
+    leadData.tipo = leadData.tipo || matchRule(typeRules);
+
+    const bairroMatch = texto.match(/\b(?:bairro|cidade|regiao|região)\s+(?:de|da|do|em)?\s*([A-Za-zÀ-ÿ\s-]{3,40})/i);
+    if (bairroMatch?.[1]) leadData.bairro = bairroMatch[1].trim();
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -617,6 +673,25 @@ function loadHistoryFromSession() {
         const raw = sessionStorage.getItem('rn_chat_history');
         if (raw) conversationHistory = JSON.parse(raw);
     } catch {}
+}
+
+function renderHistoryToChat() {
+    const body = getEl('chatBody');
+    if (!body || body.children.length > 0 || conversationHistory.length === 0) return;
+
+    conversationHistory.forEach((turn) => {
+        const text = turn?.parts?.[0]?.text || '';
+        if (!text || text.startsWith('__init__:')) return;
+
+        if (turn.role === 'model') {
+            const { displayText } = parseAIResponse(text);
+            if (displayText) appendBotMsg(displayText);
+        } else {
+            appendUserMsg(text);
+        }
+    });
+
+    scrollBottom();
 }
 
 function clearHistoryFromSession() {
@@ -677,6 +752,7 @@ function formatText(text) {
 
 function appendBotMsg(text) {
     const body = getEl('chatBody');
+    if (!body) return;
     const div = document.createElement('div');
     div.className = 'chat-msg bot';
     div.innerHTML = `
@@ -688,6 +764,7 @@ function appendBotMsg(text) {
 
 function appendUserMsg(text) {
     const body = getEl('chatBody');
+    if (!body) return;
     const div = document.createElement('div');
     div.className = 'chat-msg user';
     div.innerHTML = `<div class="chat-bubble">${formatText(text)}</div>`;
@@ -697,16 +774,20 @@ function appendUserMsg(text) {
 
 function appendQuickReplies(options) {
     const body = getEl('chatBody');
+    if (!body) return;
+    clearQuickReplies();
     const qrDiv = document.createElement('div');
     qrDiv.className = 'quick-replies';
 
-    options.forEach(opt => {
+    options.slice(0, CONFIG.MAX_QUICK_REPLIES).forEach(opt => {
         const btn = document.createElement('button');
         btn.className = 'qr-btn';
         btn.textContent = opt;
         btn.onclick = () => {
             qrDiv.querySelectorAll('.qr-btn').forEach(b => b.disabled = true);
             qrDiv.style.opacity = '0.5';
+            updateLeadFromText(opt);
+            leadData.mensagem = opt;
 
             // Encerramentos
             if (/agendei|obrigado|obrigad|tchau|flw/i.test(opt)) {
@@ -752,6 +833,10 @@ function appendQuickReplies(options) {
     scrollBottom();
 }
 
+function clearQuickReplies() {
+    document.querySelectorAll('#chatBody .quick-replies').forEach((item) => item.remove());
+}
+
 function scrollBottom() {
     const body = getEl('chatBody');
     if (body) setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
@@ -759,6 +844,7 @@ function scrollBottom() {
 
 function showTyping() {
     const body = getEl('chatBody');
+    if (!body) return;
     if (getEl('typingIndicator')) return;
     const div = document.createElement('div');
     div.className = 'chat-msg bot';
@@ -798,6 +884,7 @@ function toggleChat() {
     isOpen = !isOpen;
     const widget = getEl('chatWidget');
     const btn    = getEl('chatToggleBtn');
+    if (!widget || !btn) return;
 
     if (isOpen) {
         widget.classList.add('open');
@@ -809,6 +896,7 @@ function toggleChat() {
         if (conversationHistory.length === 0) {
             loadHistoryFromSession();
         }
+        renderHistoryToChat();
         if (conversationHistory.length === 0) {
             setTimeout(() => initChat(), 400);
         } else {
@@ -868,9 +956,21 @@ function sendChatMessage() {
     const texto = input?.value?.trim();
     if (!texto || isLoading) return;
     input.value = '';
+    updateLeadFromText(texto);
+    leadData.mensagem = texto;
     appendUserMsg(texto);
     processarMensagem(texto);
 }
+
+window.toggleChat = toggleChat;
+window.closeChat = closeChat;
+window.sendChatMessage = sendChatMessage;
+window.LucasChat = {
+    clearHistory: clearHistoryFromSession,
+    open: () => {
+        if (!isOpen) toggleChat();
+    },
+};
 
 /* ═══════════════════════════════════════════════════════════
    🚀  DOMContentLoaded

@@ -93,6 +93,11 @@ export function validateLeadPayload(payload) {
             servico: sanitizeString(payload.servico),
             tipo: sanitizeString(payload.tipo),
             urgencia: sanitizeString(payload.urgencia),
+            bairro: sanitizeString(payload.bairro),
+            mensagem: sanitizeString(payload.mensagem, 1000),
+            pagina: sanitizeString(payload.pagina, 300),
+            user_agent: sanitizeString(payload.user_agent, 300),
+            timestamp: sanitizeString(payload.timestamp, 80),
             origem: sanitizeString(payload.origem) || 'chatbot',
         },
     };
