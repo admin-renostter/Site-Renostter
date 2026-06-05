@@ -1,0 +1,9 @@
+name = "renostter-gemini-proxy"
+main = "proxy/worker.js"
+compatibility_date = "2026-06-05"
+
+[observability]
+enabled = true
+
+[vars]
+RATE_LIMIT_RPM = "20"
