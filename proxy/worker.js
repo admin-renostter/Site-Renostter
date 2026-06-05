@@ -271,6 +271,28 @@ function wrapAsGemini(text) {
     };
 }
 
+function getLastUserMessage(geminiBody) {
+    const userTurns = (geminiBody?.contents || []).filter((turn) => turn.role !== 'model');
+    const lastTurn = userTurns[userTurns.length - 1];
+    return (lastTurn?.parts || []).map((part) => part.text || '').join(' ').trim();
+}
+
+export function buildFallbackAssistantResponse(geminiBody = {}) {
+    const lastMessage = getLastUserMessage(geminiBody);
+    const contextLine = lastMessage
+        ? `Recebi sua mensagem sobre: "${lastMessage.slice(0, 160)}".`
+        : 'Recebi sua mensagem.';
+
+    return wrapAsGemini(
+        [
+            'Estou com uma instabilidade temporaria na IA neste momento, mas consigo continuar seu atendimento.',
+            contextLine,
+            'Para agilizar, informe bairro, tipo de aparelho e se precisa de instalacao, manutencao, higienizacao ou PMOC.',
+            'Se preferir atendimento imediato, clique no WhatsApp e envie essas informacoes para a equipe Renostter.',
+        ].join('\n\n'),
+    );
+}
+
 /* ── Fetch com timeout ───────────────────────────────────────────────────── */
 async function fetchWithTimeout(url, options, ms = 8000) {
     const ctrl  = new AbortController();
@@ -520,11 +542,11 @@ export default {
                 });
             }
 
-            /* Falha catastrófica — todos os provedores esgotados */
-            return new Response(
-                JSON.stringify({ error: 'Todos os provedores de IA estão temporariamente indisponíveis.' }),
-                { status: 503, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } },
-            );
+            /* Degraded mode: mantem o Lucas responsivo quando a cota/API do provedor falhar. */
+            return new Response(JSON.stringify(buildFallbackAssistantResponse(chatValidation.value)), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
+            });
         }
 
         return new Response('Method Not Allowed', { status: 405 });

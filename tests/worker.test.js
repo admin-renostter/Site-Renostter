@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { getRateLimitRpm, validateChatPayload, validateLeadPayload } from '../proxy/worker.js';
+import {
+    buildFallbackAssistantResponse,
+    getRateLimitRpm,
+    validateChatPayload,
+    validateLeadPayload,
+} from '../proxy/worker.js';
 
 describe('worker guardrails', () => {
     it('reads RATE_LIMIT_RPM from env with fallback', () => {
@@ -57,5 +62,14 @@ describe('worker guardrails', () => {
         const contents = Array.from({ length: 21 }, () => ({ role: 'user', parts: [{ text: 'oi' }] }));
         const result = validateChatPayload({ contents }, {});
         expect(result.ok).toBe(false);
+    });
+
+    it('builds a Gemini-compatible fallback response', () => {
+        const response = buildFallbackAssistantResponse({
+            contents: [{ role: 'user', parts: [{ text: 'Meu ar-condicionado parou de gelar' }] }],
+        });
+
+        expect(response.candidates[0].content.role).toBe('model');
+        expect(response.candidates[0].content.parts[0].text).toContain('Meu ar-condicionado parou de gelar');
     });
 });
