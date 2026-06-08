@@ -36,7 +36,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"
         integrity="sha384-gAPqlBuTCdtVcYt9ocMOYWrnBZ4XSL6q+4eXqwNycOr4iFczhNKtnYhF3NEXJM51"
         crossorigin="anonymous" />
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
     <style>
         /* Estilos do modal de Termos de Uso */
         :root {
@@ -1106,16 +1105,14 @@
     <script src="js/portfolio.js"></script>
     <script src="js/reviews.js"></script>
     <script src="js/carousel.js"></script>
-    <script src="calendar.js"></script>
+    <script src="calendar.js?v=20260608-calcom-direct"></script>
     <script>
         window.RENOSTTER_CONFIG = {
-            // Cole aqui o link do evento do Calendly quando ele estiver criado.
-            // Exemplo: https://calendly.com/seu-usuario/visita-tecnica
-            calendlyUrl: 'https://calendly.com/agenda-renostter',
+            calUrl: 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true',
+            calLink: 'renostter-hbubv8/comercial-renostter',
         };
     </script>
-    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-    <script src="chatbot.js"></script>
+    <script src="chatbot.js?v=20260608-calcom-direct"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH"
         crossorigin="anonymous"></script>
@@ -1483,8 +1480,8 @@
             <span>Powered by</span>
             <strong>Renostter IA</strong>
             <span>·</span>
-            <a href="#agendar"
-                onclick="abrirCalendly(); return false;">📅
+            <a href="https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true"
+                target="_blank" rel="noopener noreferrer">📅
                 Agendar</a>
         </div>
     </div>

@@ -12,7 +12,7 @@ const CONFIG = {
     PROXY_URL:       'https://renostter-gemini-proxy.adminrenostter.workers.dev',
     GEMINI_API_KEY:  '',
     GEMINI_MODEL:    'gemini-2.0-flash',
-    CALENDLY_URL:    window.RENOSTTER_CONFIG?.calendlyUrl || '',
+    CAL_URL:         window.RENOSTTER_CONFIG?.calUrl || 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true',
     WHATSAPP_NUM:    '5511952730593',
     BOT_NAME:        'Lucas',
     MAX_QUICK_REPLIES: 6,
@@ -871,14 +871,18 @@ function hideTyping() {
    📅  CALENDLY
    ═══════════════════════════════════════════════════════════ */
 function getCalendlyUrl(url) {
-    const target = String(url || CONFIG.CALENDLY_URL || '').trim();
+    const target = String(url || CONFIG.CAL_URL || '').trim();
     if (!target) return '';
 
     try {
         const parsed = new URL(target);
-        const isCalendly = parsed.hostname === 'calendly.com' || parsed.hostname.endsWith('.calendly.com');
-        const hasCalendlyPath = parsed.pathname.split('/').filter(Boolean).length >= 1;
-        return isCalendly && hasCalendlyPath ? target : '';
+        const isAllowedCalendar =
+            parsed.hostname === 'cal.com' ||
+            parsed.hostname.endsWith('.cal.com') ||
+            parsed.hostname === 'calendly.com' ||
+            parsed.hostname.endsWith('.calendly.com');
+        const hasCalendarPath = parsed.pathname.split('/').filter(Boolean).length >= 1;
+        return isAllowedCalendar && hasCalendarPath ? target : '';
     } catch {
         return '';
     }
@@ -893,10 +897,11 @@ function abrirCalendly(url) {
         return;
     }
 
-    if (typeof Calendly !== 'undefined') {
-        Calendly.initPopupWidget({ url: target });
+    if (typeof window.abrirCalCom === 'function') {
+        window.abrirCalCom();
     } else {
-        window.open(target, '_blank');
+        const opened = window.open(target, '_blank', 'noopener,noreferrer');
+        if (!opened) window.location.href = target;
     }
 
     setTimeout(() => {

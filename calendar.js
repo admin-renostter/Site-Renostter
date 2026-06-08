@@ -6,6 +6,27 @@
 
 const BUSINESS_EMAIL = 'comercial.renostter@gmail.com';
 const WHATSAPP_NUM = '5511952730593';
+const RENOSTTER_CAL_URL = 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true';
+
+function abrirCalCom() {
+    const configuredUrl = window.RENOSTTER_CONFIG?.calUrl || RENOSTTER_CAL_URL;
+    const opened = window.open(configuredUrl, '_blank', 'noopener,noreferrer');
+
+    if (!opened) {
+        window.location.href = configuredUrl;
+    }
+}
+
+document.addEventListener('click', event => {
+    const trigger = event.target.closest('a[href="#agendar"], [data-open-calcom]');
+    if (!trigger) return;
+
+    event.preventDefault();
+    abrirCalCom();
+});
+
+window.abrirCalCom = abrirCalCom;
+window.abrirCalComModal = abrirCalCom;
 
 function escapeHtml(value) {
     return String(value ?? '')
