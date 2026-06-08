@@ -12,7 +12,7 @@ const CONFIG = {
     PROXY_URL:       'https://renostter-gemini-proxy.adminrenostter.workers.dev',
     GEMINI_API_KEY:  '',
     GEMINI_MODEL:    'gemini-2.0-flash',
-    CALENDLY_URL:    'https://calendly.com/renostter/visita-tecnica',
+    CALENDLY_URL:    window.RENOSTTER_CONFIG?.calendlyUrl || '',
     WHATSAPP_NUM:    '5511952730593',
     BOT_NAME:        'Lucas',
     MAX_QUICK_REPLIES: 6,
@@ -796,6 +796,13 @@ function appendQuickReplies(options) {
                 return;
             }
 
+            if (/agendamento do site/i.test(opt)) {
+                appendUserMsg(opt);
+                appendBotMsg('Claro. Vou te levar para o formulario de agendamento desta pagina.');
+                document.getElementById('agendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
             // Abrir Calendly
             if (/Calendly|Agendar|Ver datas|visita/i.test(opt)) {
                 appendUserMsg(opt);
@@ -863,8 +870,29 @@ function hideTyping() {
 /* ═══════════════════════════════════════════════════════════
    📅  CALENDLY
    ═══════════════════════════════════════════════════════════ */
+function getCalendlyUrl(url) {
+    const target = String(url || CONFIG.CALENDLY_URL || '').trim();
+    if (!target) return '';
+
+    try {
+        const parsed = new URL(target);
+        const isCalendly = parsed.hostname === 'calendly.com' || parsed.hostname.endsWith('.calendly.com');
+        const hasEventSlug = parsed.pathname.split('/').filter(Boolean).length >= 2;
+        return isCalendly && hasEventSlug ? target : '';
+    } catch {
+        return '';
+    }
+}
+
 function abrirCalendly(url) {
-    const target = url || CONFIG.CALENDLY_URL;
+    const target = getCalendlyUrl(url);
+    if (!target) {
+        appendBotMsg('O calendario online ainda esta em configuracao. Voce pode preencher o agendamento nesta pagina ou confirmar direto pelo WhatsApp.');
+        appendQuickReplies(['📱 Confirmar pelo WhatsApp', '📅 Usar agendamento do site']);
+        document.getElementById('agendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+    }
+
     if (typeof Calendly !== 'undefined') {
         Calendly.initPopupWidget({ url: target });
     } else {

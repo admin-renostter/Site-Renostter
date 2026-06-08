@@ -1107,6 +1107,13 @@
     <script src="js/reviews.js"></script>
     <script src="js/carousel.js"></script>
     <script src="calendar.js"></script>
+    <script>
+        window.RENOSTTER_CONFIG = {
+            // Cole aqui o link do evento do Calendly quando ele estiver criado.
+            // Exemplo: https://calendly.com/seu-usuario/visita-tecnica
+            calendlyUrl: 'https://calendly.com/agenda-renostter',
+        };
+    </script>
     <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
     <script src="chatbot.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -1476,7 +1483,7 @@
             <span>Powered by</span>
             <strong>Renostter IA</strong>
             <span>·</span>
-            <a href="https://calendly.com/renostter/visita-tecnica" target="_blank"
+            <a href="#agendar"
                 onclick="abrirCalendly(); return false;">📅
                 Agendar</a>
         </div>
