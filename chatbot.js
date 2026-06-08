@@ -877,8 +877,8 @@ function getCalendlyUrl(url) {
     try {
         const parsed = new URL(target);
         const isCalendly = parsed.hostname === 'calendly.com' || parsed.hostname.endsWith('.calendly.com');
-        const hasEventSlug = parsed.pathname.split('/').filter(Boolean).length >= 2;
-        return isCalendly && hasEventSlug ? target : '';
+        const hasCalendlyPath = parsed.pathname.split('/').filter(Boolean).length >= 1;
+        return isCalendly && hasCalendlyPath ? target : '';
     } catch {
         return '';
     }
