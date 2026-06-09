@@ -3542,3 +3542,108 @@ textarea.field-input {
     .yc3-info  { padding: 14px; }
     .yc3-title { font-size: 0.85rem; }
 }
+
+/* Modal leve para reproducao sob demanda */
+.yt-modal[hidden] {
+    display: none;
+}
+.yt-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    padding: clamp(16px, 4vw, 40px);
+}
+.yt-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 70% 20%, rgba(0, 174, 239, 0.18), transparent 28%),
+        rgba(2, 7, 18, 0.84);
+    backdrop-filter: blur(10px);
+}
+.yt-modal__dialog {
+    position: relative;
+    width: min(1080px, 100%);
+    max-height: min(86vh, 760px);
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: linear-gradient(145deg, #07101f 0%, #0f1a2e 70%, rgba(255, 140, 0, 0.14) 100%);
+    box-shadow: 0 32px 90px rgba(0, 0, 0, 0.62);
+}
+.yt-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.yt-modal__eyebrow {
+    margin: 0 0 4px;
+    color: var(--blue, #00AEEF);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.yt-modal__title {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1rem, 2.4vw, 1.35rem);
+    line-height: 1.25;
+}
+.yt-modal__close {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+.yt-modal__close:hover,
+.yt-modal__close:focus-visible {
+    background: var(--orange, #ff8c00);
+    border-color: transparent;
+    transform: translateY(-1px);
+    outline: none;
+}
+.yt-modal__player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+}
+.yt-modal__player iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+body.yt-modal-open {
+    overflow: hidden;
+}
+
+@media (max-width: 639px) {
+    .yt-modal {
+        padding: 12px;
+    }
+    .yt-modal__dialog {
+        border-radius: 14px;
+    }
+    .yt-modal__header {
+        padding: 14px;
+    }
+    .yt-modal__close {
+        width: 42px;
+        height: 42px;
+    }
+}

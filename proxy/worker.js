@@ -29,6 +29,13 @@ const PLACES_DETAILS_ENDPOINT  = 'https://maps.googleapis.com/maps/api/place/det
 const PLACES_FIND_ENDPOINT     = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
 const RENOSTTER_QUERY          = 'Renostter Rua do Pombo Correio 428 São Paulo';
 
+const YOUTUBE_STATIC_FALLBACK = [
+    { id: { videoId: 'Emgg1jkWolE' }, snippet: { title: 'Rotina de excelencia', thumbnails: {}, publishedAt: '' } },
+    { id: { videoId: '2-A3Gwn6YJg' }, snippet: { title: 'Instalacao Academia IZI', thumbnails: {}, publishedAt: '' } },
+    { id: { videoId: '99aP656ShAM' }, snippet: { title: 'Climatizacao de dutos', thumbnails: {}, publishedAt: '' } },
+    { id: { videoId: 'J5XsSC7xB3s' }, snippet: { title: 'Climatizacao Renostter - IZI Academia', thumbnails: {}, publishedAt: '' } },
+];
+
 /* ── CORS ────────────────────────────────────────────────────────────────── */
 const ALLOWED_ORIGINS = [
     'https://renostter.com',
@@ -45,6 +52,17 @@ function corsHeaders(origin) {
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Max-Age': '86400',
     };
+}
+
+function youtubeFallbackResponse(origin, reason = 'static-fallback') {
+    return new Response(JSON.stringify({ items: YOUTUBE_STATIC_FALLBACK, source: reason }), {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=3600',
+            ...corsHeaders(origin),
+        },
+    });
 }
 
 /* ── Rate limiting (por IP, em memória) ─────────────────────────────────── */
@@ -421,10 +439,7 @@ export default {
         /* ══ GET /youtube ══════════════════════════════════════════════════ */
         if (request.method === 'GET' && url.pathname === '/youtube') {
             if (!env.YOUTUBE_API_KEY) {
-                return new Response(
-                    JSON.stringify({ error: 'YOUTUBE_API_KEY not configured' }),
-                    { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } },
-                );
+                return youtubeFallbackResponse(origin, 'static-no-api-key');
             }
 
             const channelId  = url.searchParams.get('channelId') || '';
@@ -441,15 +456,15 @@ export default {
                 const params  = new URLSearchParams({ key: env.YOUTUBE_API_KEY, channelId, part: 'snippet', order: 'date', maxResults, type: 'video' });
                 const ytRes   = await fetch(`${YOUTUBE_SEARCH_ENDPOINT}?${params}`);
                 const data    = await ytRes.json();
+                if (!ytRes.ok || data.error || !data.items?.length) {
+                    return youtubeFallbackResponse(origin, 'static-youtube-unavailable');
+                }
                 return new Response(JSON.stringify(data), {
-                    status: ytRes.status,
+                    status: 200,
                     headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600', ...corsHeaders(origin) },
                 });
-            } catch (err) {
-                return new Response(
-                    JSON.stringify({ error: 'Upstream YouTube error', detail: err.message }),
-                    { status: 502, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } },
-                );
+            } catch {
+                return youtubeFallbackResponse(origin, 'static-fetch-error');
             }
         }
 

@@ -9,7 +9,7 @@
 const PROXY_BASE_URL  = 'https://renostter-gemini-proxy.adminrenostter.workers.dev';
 const YT_FALLBACK_KEY = ''; /* chave removida — configure YOUTUBE_API_KEY no Worker: wrangler secret put YOUTUBE_API_KEY */
 const CHANNEL_ID      = 'UCPdh_nMh4XLdkVRH1jn7LuA';  /* canal @renostter */
-const MAX_RESULTS     = 9;   /* múltiplo de 3 recomendado */
+const MAX_RESULTS     = 9;   /* multiplos de 3/4 funcionam bem no carrossel */
 
 /* ─── Utilitários ─── */
 function shuffle(arr) {
@@ -109,7 +109,10 @@ async function fetchChannelVideos() {
 
 /* ─── Fallback estático (se ambas as APIs falharem) ─── */
 const STATIC_FALLBACK = [
-    { id: '99aP656ShAM', title: 'Obra em Tempo Real — Renostter Climatização', thumbnail: '', publishedAt: '' },
+    { id: 'Emgg1jkWolE', title: 'Rotina de excelencia', thumbnail: '', publishedAt: '' },
+    { id: '2-A3Gwn6YJg', title: 'Instalacao Academia IZI', thumbnail: '', publishedAt: '' },
+    { id: '99aP656ShAM', title: 'Climatizacao de dutos', thumbnail: '', publishedAt: '' },
+    { id: 'J5XsSC7xB3s', title: 'Climatizacao Renostter - IZI Academia', thumbnail: '', publishedAt: '' },
 ];
 
 /* ════════════════════════════════════════════════
@@ -139,6 +142,7 @@ function renderCarousel(videos) {
             <!-- Thumbnail clicável → ativa iframe ao clicar -->
             <div class="yc3-thumb-wrap"
                  data-videoid="${id}"
+                 data-title="${title}"
                  role="button"
                  tabindex="0"
                  aria-label="Reproduzir: ${title}">
@@ -241,6 +245,7 @@ function initSwiper() {
         breakpoints: {
             640:  { slidesPerView: 2, spaceBetween: 20 },
             1024: { slidesPerView: 3, spaceBetween: 24 },
+            1280: { slidesPerView: 4, spaceBetween: 24 },
         },
     });
 }
@@ -249,27 +254,91 @@ function initSwiper() {
    LITE-EMBED — thumbnail → iframe ao clicar/Enter
    Evita carregar 9 iframes de uma vez (performance)
    ════════════════════════════════════════════════ */
+let lastVideoTrigger = null;
+
+function getVideoModal() {
+    let modal = document.getElementById('renostter-video-modal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'renostter-video-modal';
+    modal.className = 'yt-modal';
+    modal.hidden = true;
+    modal.innerHTML = `
+        <div class="yt-modal__backdrop" data-close-video-modal></div>
+        <div class="yt-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="yt-modal-title">
+            <div class="yt-modal__header">
+                <div>
+                    <p class="yt-modal__eyebrow">Canal Renostter</p>
+                    <h3 id="yt-modal-title" class="yt-modal__title">Video Renostter</h3>
+                </div>
+                <button type="button" class="yt-modal__close" data-close-video-modal aria-label="Fechar video">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="yt-modal__player" id="yt-modal-player"></div>
+        </div>`;
+
+    document.body.appendChild(modal);
+    modal.addEventListener('click', event => {
+        if (event.target.closest('[data-close-video-modal]')) closeVideoModal();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !modal.hidden) closeVideoModal();
+    });
+
+    return modal;
+}
+
+function openVideoModal(id, title, trigger) {
+    const safeId = safeYoutubeId(id);
+    if (!safeId) return;
+
+    lastVideoTrigger = trigger || null;
+    const modal = getVideoModal();
+    const titleEl = modal.querySelector('#yt-modal-title');
+    const player = modal.querySelector('#yt-modal-player');
+
+    titleEl.textContent = title || 'Video Renostter';
+    player.innerHTML = `<iframe
+        src="https://www.youtube-nocookie.com/embed/${safeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1"
+        title="${escapeHtml(title || 'Video Renostter')}"
+        referrerpolicy="strict-origin-when-cross-origin"
+        loading="eager"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+    </iframe>`;
+
+    modal.hidden = false;
+    document.body.classList.add('yt-modal-open');
+    modal.querySelector('.yt-modal__close')?.focus();
+}
+
+function closeVideoModal() {
+    const modal = document.getElementById('renostter-video-modal');
+    if (!modal) return;
+
+    const player = modal.querySelector('#yt-modal-player');
+    if (player) player.innerHTML = '';
+    modal.hidden = true;
+    document.body.classList.remove('yt-modal-open');
+
+    if (lastVideoTrigger && typeof lastVideoTrigger.focus === 'function') lastVideoTrigger.focus();
+    lastVideoTrigger = null;
+}
+
 function attachLiteEmbed() {
     document.querySelectorAll('.yc3-thumb-wrap').forEach(wrap => {
         const activate = () => {
             const id = safeYoutubeId(wrap.dataset.videoid);
             if (!id) return;
-            wrap.innerHTML = `<iframe
-                src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1"
-                title="Vídeo Renostter"
-                referrerpolicy="strict-origin-when-cross-origin"
-                frameborder="0"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-                style="position:absolute;inset:0;width:100%;height:100%;border-radius:12px 12px 0 0;">
-            </iframe>`;
+            openVideoModal(id, wrap.dataset.title || 'Video Renostter', wrap);
         };
 
-        wrap.addEventListener('click',   activate, { once: true });
+        wrap.addEventListener('click', activate);
         wrap.addEventListener('keydown', e => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
-        }, { once: true });
+        });
     });
 }
 
