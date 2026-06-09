@@ -557,7 +557,7 @@ export default {
                 });
             }
 
-            /* Degraded mode: mantem o Lucas responsivo quando a cota/API do provedor falhar. */
+            /* Degraded mode: mantem o Ronni responsivo quando a cota/API do provedor falhar. */
             return new Response(JSON.stringify(buildFallbackAssistantResponse(chatValidation.value)), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },

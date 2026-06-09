@@ -1,8 +1,8 @@
 /* =============================================================
-   RENOSTTER — LUCAS IA SDR v3.0
+   RENOSTTER — RONNI IA SDR v3.0
    Motor: Google Gemini 2.0 Flash
    Persona: SDR + especialista técnico em climatização
-   Ações estruturadas: Calendly • WhatsApp • Lead Capture
+   Ações estruturadas: Cal.com • WhatsApp • Lead Capture
    ============================================================= */
 
 /* ═══════════════════════════════════════════════════════════
@@ -14,15 +14,42 @@ const CONFIG = {
     GEMINI_MODEL:    'gemini-2.0-flash',
     CAL_URL:         window.RENOSTTER_CONFIG?.calUrl || 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true',
     WHATSAPP_NUM:    '5511952730593',
-    BOT_NAME:        'Lucas',
+    BOT_NAME:        'Ronni',
     MAX_QUICK_REPLIES: 6,
 };
+
+const SERVICE_PRICE_REFERENCE = `| Servico | Preco inicial | Duracao media | Referencia | Excedente |
+|---------|---------------|---------------|------------|-----------|
+| Instalacao Split 9.000 BTU | R$ 1200 | 6h | ate 15m2 | R$ 120 por m2 excedente |
+| Instalacao Split 12.000 BTU | R$ 1200 | 6h | ate 20m2 | sob avaliacao |
+| Instalacao Split 18.000 BTU | R$ 1400 | 8h | ate 25m2 | sob avaliacao |
+| Instalacao Split 24.000 BTU | R$ 1600 | 8h | ate 30m2 | sob avaliacao |
+| Instalacao Split 30.000 BTU | R$ 2000 | 8h | ate 35m2 | sob avaliacao |
+| Manutencao Preventiva Casete | R$ 700 | sob avaliacao | - | - |
+| Instalacao Piso-Teto/Cassete 9.000 BTU | R$ 1500 | 24h | - | - |
+| Instalacao Piso-Teto/Cassete 12.000 BTU | R$ 1500 | 24h | - | - |
+| Instalacao Piso-Teto/Cassete 18.000 BTU | R$ 1800 | 24h | - | - |
+| Instalacao Piso-Teto/Cassete 24.000 BTU | R$ 2100 | 24h | - | - |
+| Instalacao Piso-Teto/Cassete 30.000 BTU | R$ 2500 | 24h | - | - |
+| Manutencao Preventiva Piso-Teto | R$ 600 | 24h | - | - |
+| Manutencao Preventiva simples | R$ 280 | 2h | - | - |
+| Manutencao Corretiva | sob consulta | - | - | - |
+| Higienizacao Completa | R$ 350/aparelho | 8h | - | - |
+| Recarga de Gas R-410A 1KG | R$ 600 | 1h | - | R$ 600 por kg excedente |
+| Recarga de Gas R-32 1KG | R$ 600 | 1h | - | R$ 600 por kg excedente |
+| Recarga de Gas R-22 1KG | R$ 600 | 1h | - | R$ 600 por kg excedente |
+| PMOC (contrato empresarial) | sob consulta | - | - | - |
+| Remocao + Reinstalacao | sob consulta | - | - | - |
+| Contratos de Manutencao | sob consulta | - | - | - |
+| Laudo Tecnico | sob consulta | - | - | - |
+| Instalacao personalizada | sob consulta | - | - | - |
+| Pintura de Equipamento | sob consulta | - | - | - |`;
 
 /* ═══════════════════════════════════════════════════════════
    🧠  SYSTEM PROMPT — Especialista SDR + Técnico
    ═══════════════════════════════════════════════════════════ */
 const SYSTEM_PROMPT = `
-Você é LUCAS, assistente de vendas e especialista técnico em ar-condicionado da Renostter Climatização — empresa em São Paulo/SP.
+Você é RONNI, assistente de vendas e especialista técnico em ar-condicionado da Renostter Climatização — empresa em São Paulo/SP.
 
 ## SUA PERSONALIDADE
 - Comunicativo, caloroso e profissional. Usa emojis com moderação.
@@ -30,7 +57,7 @@ Você é LUCAS, assistente de vendas e especialista técnico em ar-condicionado 
 - Confiante, proativo e focado em converter a conversa em agendamento.
 - Responde QUALQUER dúvida técnica sobre climatização com precisão e clareza.
 - Usa técnicas de SPIN Selling: descobre Situação → Problema → Implicação → Necessidade.
-- Use sempre o gênero masculino ao se referir a si mesmo ("sou o Lucas", "estou disponível", "obrigado").
+- Use sempre o gênero masculino ao se referir a si mesmo ("sou o Ronni", "estou disponível", "obrigado").
 
 ## EMPRESA: RENOSTTER CLIMATIZAÇÃO
 - 📍 São Paulo e Grande SP — atendemos todos os bairros
@@ -43,23 +70,10 @@ Você é LUCAS, assistente de vendas e especialista técnico em ar-condicionado 
 - PIX (5% desconto), cartão de crédito (em até 12x), débito, dinheiro, transferência bancária
 - Contratos empresariais: boleto mensal
 
-## SERVIÇOS E PREÇOS
-| Serviço | Preço inicial | Duração |
-|---------|---------------|---------|
-| Instalação Split (até 18.000 BTU) | R$ 280 | 3h |
-| Instalação Split (acima de 18.000 BTU) | R$ 380 | 4h |
-| Instalação Cassete / Piso-Teto | a partir de R$ 450 | 4–6h |
-| Manutenção Preventiva | R$ 150 | 2h |
-| Manutenção Corretiva | a partir de R$ 200 (diagnóstico grátis) | 2–4h |
-| Higienização Completa | R$ 120/aparelho | 1,5h |
-| Recarga de Gás R-410A | R$ 180 | 1h |
-| Recarga de Gás R-32 | R$ 200 | 1h |
-| Recarga de Gás R-22 | R$ 160 | 1h |
-| PMOC (contrato empresarial) | sob consulta | - |
-| Remoção + Reinstalação | R$ 200 | 3h |
-| Contratos de Manutenção | R$ 90/mês (mín. 6 meses) | - |
-| Laudo Técnico Avulso | R$ 80 | - |
-| Pintura de Equipamento | sob consulta | - |
+## SERVICOS E PRECOS
+Use esta tabela como referencia de preco sugerido. Sempre explique que valores sao iniciais e podem variar apos avaliacao tecnica, distancia, infraestrutura, tubulacao, eletrica, acesso, carga termica e condicoes do local. Para itens "sob consulta", conduza para agendamento ou WhatsApp.
+
+${SERVICE_PRICE_REFERENCE}
 
 ## NORMAS TÉCNICAS (use quando relevante)
 - PMOC obrigatório: Portaria 3.523/MS + RDC 09/ANVISA
@@ -142,24 +156,24 @@ Fujitsu, Hitachi, York, Elgin, Philco, Electrolux, Comfortmaker, Bosch, Mitsubis
 4. Qualificar: RESIDENCIAL ou EMPRESARIAL
 5. Avaliar URGÊNCIA
 6. Superar objeções
-7. CONVERTER: agendamento Calendly OU WhatsApp
+7. CONVERTER: agendamento direto no Cal.com OU WhatsApp
 
 ## AÇÕES DISPONÍVEIS
 Inclua JSON no final da resposta (após o texto). O cliente NÃO vê.
 
-Para abrir Calendly: {"action":"calendly"}
+Para abrir Cal.com: {"action":"cal.com"}
 Para abrir WhatsApp: {"action":"whatsapp","msg":"[mensagem pré-redigida]"}
 Para mostrar quick replies: {"action":"quickreplies","options":["Op1","Op2","Op3"]}
 Para capturar lead: {"action":"lead","nome":"X","servico":"X","tipo":"X","urgencia":"X"}
 
 IMPORTANTE:
 - Combine ações quando fizer sentido
-- Máximo 1 ação "calendly" ou "whatsapp" por mensagem
+- Máximo 1 ação "cal.com" ou "whatsapp" por mensagem
 - Nunca simule conversa ou finja ser o cliente
 - Se o cliente digitar em outro idioma, responda em português do Brasil
 - Respostas CURTAS e diretas (máx 5 parágrafos)
 - Para perguntas técnicas: responda de forma completa e depois ofereça agendar
-- Lembre-se: você é o LUCAS
+- Lembre-se: você é o RONNI
 `;
 
 /* ═══════════════════════════════════════════════════════════
@@ -291,7 +305,7 @@ async function sendLead(data) {
         });
         if (!response.ok) throw new Error(`Lead HTTP ${response.status}`);
     } catch (err) {
-        console.warn('[Lucas] Lead salvo localmente, mas nao enviado ao proxy:', err.message);
+        console.warn('[Ronni] Lead salvo localmente, mas nao enviado ao proxy:', err.message);
     }
 }
 
@@ -311,8 +325,9 @@ function executeActions(actions) {
                 sendLead(leadData);
                 break;
 
+            case 'cal.com':
             case 'calendly':
-                setTimeout(() => abrirCalendly(), 800);
+                setTimeout(() => abrirCalendario(), 800);
                 break;
 
             case 'whatsapp':
@@ -334,10 +349,28 @@ function executeActions(actions) {
 /* ═══════════════════════════════════════════════════════════
    📨  FLUXO PRINCIPAL
    ═══════════════════════════════════════════════════════════ */
+function normalizeIntentText(value) {
+    return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+function isSchedulingIntent(texto) {
+    const t = normalizeIntentText(texto);
+    return /\b(agendar|agenda|agendamento|fazer agendamento|marcar visita|marcar horario|visita tecnica|data disponivel|horario disponivel|cal\.com)\b/.test(t);
+}
+
 async function processarMensagem(texto) {
     if (isLoading) return;
     isLoading = true;
     setInputEnabled(false);
+
+    if (isSchedulingIntent(texto)) {
+        appendBotMsg('Perfeito. Vou abrir o Cal.com para voce escolher o melhor dia e horario.');
+        abrirCalendario();
+        hideTyping();
+        isLoading = false;
+        setInputEnabled(true);
+        return;
+    }
 
     try {
         const useProxy  = CONFIG.PROXY_URL && !CONFIG.PROXY_URL.includes('SEU_USUARIO');
@@ -361,7 +394,7 @@ async function processarMensagem(texto) {
         if (qrOptions.length > 0) appendQuickReplies(qrOptions);
 
     } catch (err) {
-        console.error('[Lucas] Erro IA:', err);
+        console.error('[Ronni] Erro IA:', err);
         /* Degrada para fallback local por palavras-chave antes de mostrar erro */
         try {
             const { displayText, actions } = fallbackResponse(texto);
@@ -396,7 +429,7 @@ function fallbackResponse(texto) {
     // Saudações
     if (/^(oi|ola|ola!|bom dia|boa tarde|boa noite|hey|e ai|eai|opa|salve)\b/.test(t.trim())) {
         return {
-            displayText: `Olá! 👋 Sou o **Lucas**, especialista em climatização da **Renostter**!\n\nPosso te ajudar com qualquer dúvida sobre ar-condicionado — instalação, manutenção, problemas técnicos, preços e mais.\n\n**Como posso te ajudar hoje?**`,
+            displayText: `Olá! 👋 Sou o **Ronni**, especialista em climatização da **Renostter**!\n\nPosso te ajudar com qualquer dúvida sobre ar-condicionado — instalação, manutenção, problemas técnicos, preços e mais.\n\n**Como posso te ajudar hoje?**`,
             actions: [{ action: 'quickreplies', options: ['🚨 Meu aparelho parou!', '🔧 Instalação', '✨ Higienização', '🔍 Manutenção', '💨 Problema de gás', '📋 PMOC Empresarial', '💰 Preços', '❓ Dúvida técnica'] }]
         };
     }
@@ -411,7 +444,7 @@ function fallbackResponse(texto) {
         // ─── NÃO RESFRIA / GÁS ────────────────────────────────────
         {
             kw: ['nao resfria', 'nao esta gelando', 'nao gela', 'pouco frio', 'fraco', 'quente', 'nao esta frio', 'esta quente', 'falta de gas', 'sem gas', 'gas acabou', 'recarga', 'recarregar gas', 'gelo', 'congelado', 'congelando', 'formando gelo', 'gelando demais', 'cheio de gelo'],
-            resp: `Se o aparelho **não está resfriando bem**, as causas mais comuns são:\n\n🔹 **Falta de gás** (vazamento no circuito)\n🔹 **Filtro entupido** — aumenta até 30% o consumo sem resfriar direito\n🔹 **Condensadora suja** — perde eficiência no verão\n\n💨 Recarga de gás a partir de **R$ 160** com diagnóstico incluso.\n\nQuer agendar uma visita técnica? Diagnóstico é grátis! 😊`,
+            resp: `Se o aparelho **não está resfriando bem**, as causas mais comuns são:\n\n🔹 **Falta de gás** (vazamento no circuito)\n🔹 **Filtro entupido** — aumenta até 30% o consumo sem resfriar direito\n🔹 **Condensadora suja** — perde eficiência no verão\n\n💨 Recarga de gas a partir de **R$ 600 por 1KG** com diagnóstico incluso.\n\nQuer agendar uma visita técnica? Diagnóstico é grátis! 😊`,
             qr: ['📅 Agendar diagnóstico grátis', '📱 WhatsApp urgente']
         },
         // ─── BARULHO / RUÍDO ─────────────────────────────────────
@@ -423,19 +456,39 @@ function fallbackResponse(texto) {
         // ─── GOTEJANDO / ÁGUA ─────────────────────────────────────
         {
             kw: ['gotejando', 'vazando agua', 'pingando', 'agua caindo', 'dreno', 'agua no chao', 'vazamento de agua', 'escorrendo', 'vazamento', 'pingo', 'molhando', 'molhado'],
-            resp: `Água escorrendo do ar-condicionado é um sinal de:\n\n💧 **Dreno entupido** → a água não consegue escoar (causa mais comum)\n💧 **Inclinação incorreta** da evaporadora → água vai para o lado errado\n💧 **Gás baixo** → forma gelo que derrete e causa goteira\n\nÉ importante resolver rápido para evitar danos à parede e ao equipamento!\n\nAgende uma visita — Manutenção Preventiva a partir de **R$ 150**.`,
+            resp: `Agua escorrendo do ar-condicionado pode indicar:
+
+- Dreno entupido ou mal posicionado
+- Inclinacao incorreta da evaporadora
+- Gas baixo formando gelo e depois gotejamento
+
+E importante resolver rapido para evitar danos na parede e no equipamento. Manutencao preventiva simples: **R$ 280**. Quer agendar uma avaliacao?`,
             qr: ['📅 Agendar manutenção', '📱 Chamar agora no WhatsApp']
         },
         // ─── CHEIRO / MOFO ────────────────────────────────────────
         {
             kw: ['cheiro', 'cheirando', 'odor', 'mofo', 'mau cheiro', 'fedendo', 'fedorento', 'cheiro ruim', 'cheiro estranho', 'fumaca', 'queimado'],
-            resp: `Cheiro no ar-condicionado é sinal de alerta!\n\n🦠 **Cheiro de mofo** → fungos e bactérias nos filtros e evaporadora — **higienização urgente** para sua saúde\n🔥 **Cheiro de queimado** → problema elétrico — desligue o aparelho imediatamente e chame um técnico!\n\n✨ **Higienização completa** a partir de **R$ 120/aparelho** — elimina 99% dos microrganismos com bactericida profissional.`,
+            resp: `Cheiro no ar-condicionado e sinal de alerta.
+
+- Cheiro de mofo: fungos e bacterias nos filtros e evaporadora
+- Cheiro de queimado: desligue o aparelho e chame um tecnico
+
+A **higienizacao completa** parte de **R$ 350 por aparelho** e ajuda a eliminar odores e microrganismos com produto profissional. Quer agendar?`,
             qr: ['✨ Agendar higienização', '📱 WhatsApp urgente']
         },
         // ─── INSTALAÇÃO ───────────────────────────────────────────
         {
             kw: ['instalacao', 'instalar', 'colocar ar', 'montar', 'nova instalacao', 'instalar split', 'instalacao split'],
-            resp: `Ótimo! A **instalação** na Renostter inclui:\n\n✅ Split, Multi-Split, Cassete, Piso-Teto e VRF\n✅ Suporte de fixação e tubulação de cobre\n✅ Laudo técnico + garantia de 90 dias\n✅ Testamos tudo antes de sair\n\n💰 A partir de **R$ 280** (Split até 18.000 BTU)\n\nQuer um orçamento preciso? É só agendar!`,
+            resp: `Otimo! A **instalacao** na Renostter inclui suporte, tubulacao de cobre, teste completo e garantia de servico.
+
+Referencia inicial:
+- Split 9k/12k: **R$ 1200**
+- Split 18k: **R$ 1400**
+- Split 24k: **R$ 1600**
+- Split 30k: **R$ 2000**
+- Piso-Teto/Cassete: a partir de **R$ 1500** conforme BTU
+
+O valor final depende do local, eletrica, distancia e infraestrutura. Quer agendar uma avaliacao?`,
             qr: ['📅 Agendar visita', '📱 Pedir orçamento no WhatsApp', '❓ Qual BTU preciso?']
         },
         // ─── CÁLCULO DE BTU ───────────────────────────────────────
@@ -447,19 +500,32 @@ function fallbackResponse(texto) {
         // ─── MANUTENÇÃO PREVENTIVA ────────────────────────────────
         {
             kw: ['manutencao', 'manutencao preventiva', 'revisao', 'checar', 'verificar', 'inspecao', 'revisionar'],
-            resp: `A **manutenção preventiva** é essencial!\n\n✅ Prolonga a vida útil do equipamento\n✅ Reduz consumo de energia em até 30%\n✅ Previne problemas maiores e caros\n✅ Inclui laudo técnico e relatório\n\n💰 A partir de **R$ 150** | Duração: ~2h\n\n**Frequência recomendada:** a cada 6 meses para residências, a cada 3 meses para empresas.\n\nQuer agendar?`,
+            resp: `A **manutencao preventiva** e essencial para reduzir consumo, evitar falhas e prolongar a vida util do aparelho.
+
+Referencia inicial:
+- Preventiva simples: **R$ 280**
+- Preventiva Piso-Teto: **R$ 600**
+- Preventiva Cassete: **R$ 700**
+
+Residencias geralmente fazem a cada 6 meses; empresas podem precisar de rotina trimestral ou PMOC. Quer agendar?`,
             qr: ['🏠 Manutenção residencial', '🏢 Manutenção empresarial', '📅 Ver datas disponíveis']
         },
         // ─── MANUTENÇÃO CORRETIVA ─────────────────────────────────
         {
             kw: ['conserto', 'consertar', 'corretiva', 'reparo', 'reparar', 'trocar peca', 'peca quebrada', 'placa', 'compressor', 'capacitor'],
-            resp: `A **manutenção corretiva** resolve o problema de vez!\n\n🔧 Diagnóstico **gratuito** — identificamos a causa exata\n🔧 Orçamento aprovado antes de qualquer serviço\n🔧 Garantia de 90 dias no serviço + até 12 meses em peças\n\n💰 A partir de **R$ 200** (valor final conforme diagnóstico)\n\nMe conta o que está acontecendo com o aparelho para eu te ajudar melhor!`,
+            resp: `A **manutencao corretiva** resolve falhas como nao gelar, barulho, vazamento, erro no display ou pane eletrica.
+
+Esse servico e **sob consulta**, porque o valor depende do diagnostico, pecas, acesso e causa do defeito. Posso abrir a agenda para uma avaliacao tecnica.`,
             qr: ['📅 Agendar diagnóstico grátis', '📱 Descrever problema no WhatsApp']
         },
         // ─── HIGIENIZAÇÃO ─────────────────────────────────────────
         {
             kw: ['higienizacao', 'higienizar', 'limpeza', 'limpar filtro', 'limpar ar', 'bactericida', 'desinfecao'],
-            resp: `A **higienização completa** elimina o que você não vê!\n\n🦠 Remove fungos, bactérias e ácaros dos filtros e evaporadora\n🌿 Melhora a qualidade do ar e previne alergias\n💨 Elimina odores desagradáveis\n✅ Bactericida profissional certificado\n\n💰 **R$ 120/aparelho** | Duração: ~1,5h\n\nIdeal fazer a cada 6–12 meses (ou sempre que notar cheiro!). Agendar agora? 😊`,
+            resp: `A **higienizacao completa** remove sujeira, fungos, bacterias e odores dos filtros e evaporadora.
+
+Referencia: **R$ 350 por aparelho**. Duracao media: **8h**, conforme estado do equipamento e acesso.
+
+Ideal fazer a cada 6 a 12 meses, ou sempre que notar cheiro, alergia ou queda de desempenho. Agendar agora?`,
             qr: ['📅 Agendar higienização', '📱 Falar no WhatsApp']
         },
         // ─── PMOC / EMPRESARIAL ───────────────────────────────────
@@ -489,7 +555,20 @@ function fallbackResponse(texto) {
         // ─── PREÇOS / VALORES ─────────────────────────────────────
         {
             kw: ['preco', 'valor', 'quanto custa', 'quanto e', 'quanto fica', 'tabela', 'custo', 'orcamento', 'orcar', 'desconto', 'promocao', 'promo', 'oferta', 'cupom', 'mais barato', 'barato'],
-            resp: `**Tabela de referência Renostter:**\n\n💰 Higienização: a partir de **R$ 120/aparelho**\n💰 Manutenção Preventiva: a partir de **R$ 150**\n💰 Instalação Split: a partir de **R$ 280**\n💰 Manutenção Corretiva: a partir de **R$ 200** (diagnóstico grátis)\n💰 Recarga de Gás: a partir de **R$ 160**\n💰 Contrato Mensal: a partir de **R$ 90/mês**\n\n**Formas de pagamento:** PIX (5% off), cartão em até 12x, dinheiro, transferência.\n\nO preço exato depende do modelo e situação. Quer um orçamento gratuito?`,
+            resp: `**Tabela de referencia Renostter:**
+
+- Instalacao Split 9k/12k: a partir de **R$ 1200**
+- Instalacao Split 18k: a partir de **R$ 1400**
+- Instalacao Split 24k: a partir de **R$ 1600**
+- Instalacao Split 30k: a partir de **R$ 2000**
+- Preventiva simples: **R$ 280**
+- Preventiva Piso-Teto: **R$ 600**
+- Preventiva Cassete: **R$ 700**
+- Higienizacao completa: **R$ 350 por aparelho**
+- Recarga R-410A/R-32/R-22: **R$ 600 por 1KG**
+- Corretiva, PMOC, remocao/reinstalacao, contratos, laudo, instalacao personalizada e pintura: **sob consulta**
+
+Valores iniciais. O preco exato depende do modelo, local, infraestrutura e avaliacao tecnica. Quer agendar uma avaliacao?`,
             qr: ['📅 Orçamento grátis', '📱 Chamar agora']
         },
         // ─── PAGAMENTO / PARCELAMENTO ─────────────────────────────
@@ -561,21 +640,21 @@ function fallbackResponse(texto) {
         // ─── REMOÇÃO / REINSTALAÇÃO ───────────────────────────────
         {
             kw: ['remocao', 'remover', 'tirar o ar', 'mudanca', 'mudar o ar', 'reinstalar', 'reinstalacao', 'muda de lugar'],
-            resp: `Sim! Fazemos **remoção e reinstalação** com toda segurança.\n\n✅ Reaproveitamos a tubulação quando possível\n✅ Desmontagem e remontagem cuidadosa\n✅ Teste completo após a reinstalação\n\n💰 A partir de **R$ 200** | Duração: ~3h\n\nÉ uma mudança de imóvel ou dentro do mesmo local?`,
+            resp: `Sim! Fazemos **remoção e reinstalação** com toda segurança.\n\n✅ Reaproveitamos a tubulação quando possível\n✅ Desmontagem e remontagem cuidadosa\n✅ Teste completo após a reinstalação\n\n💰 Servico **sob consulta**, conforme local, estrutura e reinstalacao necessaria\n\nÉ uma mudança de imóvel ou dentro do mesmo local?`,
             qr: ['📅 Agendar remoção/reinstalação', '📱 Chamar no WhatsApp']
         },
         // ─── CONTRATO DE MANUTENÇÃO ───────────────────────────────
         {
             kw: ['contrato', 'plano mensal', 'manutencao mensal', 'visita mensal', 'pacote de manutencao', 'assinar contrato'],
-            resp: `Os **Contratos de Manutenção** da Renostter são a solução mais econômica!\n\n✅ Visitas programadas (mensal, trimestral ou semestral)\n✅ Prioridade no atendimento emergencial\n✅ Desconto especial nos serviços corretivos\n✅ Laudo e documentação incluídos\n\n💰 A partir de **R$ 90/mês** (mínimo 6 meses)\n\nIdeal para empresas e condomínios! Quantos aparelhos você tem?`,
+            resp: `Os **Contratos de Manutenção** da Renostter são a solução mais econômica!\n\n✅ Visitas programadas (mensal, trimestral ou semestral)\n✅ Prioridade no atendimento emergencial\n✅ Desconto especial nos serviços corretivos\n✅ Laudo e documentação incluídos\n\n💰 **Sob consulta**, conforme quantidade de aparelhos e frequencia de visitas\n\nIdeal para empresas e condomínios! Quantos aparelhos você tem?`,
             qr: ['📱 Pedir proposta de contrato', '📅 Agendar avaliação']
         },
         // ─── AGENDAMENTO ──────────────────────────────────────────
         {
-            kw: ['agendar', 'agenda', 'data disponivel', 'horario disponivel', 'calendly', 'marcar visita', 'visita tecnica', 'quando pode vir'],
+            kw: ['agendar', 'agenda', 'data disponivel', 'horario disponivel', 'cal.com', 'marcar visita', 'visita tecnica', 'quando pode vir'],
             resp: `Ótimo! Vou abrir nosso agendamento online para você escolher o melhor dia e horário. 📅`,
             qr: [],
-            actions: [{ action: 'calendly' }]
+            actions: [{ action: 'cal.com' }]
         },
         // ─── WHATSAPP ─────────────────────────────────────────────
         {
@@ -605,7 +684,7 @@ function fallbackResponse(texto) {
 
     // Default
     return {
-        displayText: `Olá! Sou o **Lucas**, especialista em climatização da **Renostter**! 😊\n\nPode me perguntar qualquer coisa sobre ar-condicionado — instalação, manutenção, problemas, preços, BTU, marcas, e muito mais.\n\n**Como posso te ajudar hoje?**`,
+        displayText: `Olá! Sou o **Ronni**, especialista em climatização da **Renostter**! 😊\n\nPode me perguntar qualquer coisa sobre ar-condicionado — instalação, manutenção, problemas, preços, BTU, marcas, e muito mais.\n\n**Como posso te ajudar hoje?**`,
         actions: [{ action: 'quickreplies', options: ['🚨 Meu aparelho parou!', '🔧 Instalação', '✨ Higienização', '🔍 Manutenção', '💨 Problema de gás', '📋 PMOC Empresarial', '💰 Preços', '❓ Calcular BTU'] }]
     };
 }
@@ -756,7 +835,7 @@ function appendBotMsg(text) {
     const div = document.createElement('div');
     div.className = 'chat-msg bot';
     div.innerHTML = `
-    <div class="chat-avatar"><img src="assets/lucas-ai.jpg" alt="Lucas"></div>
+    <div class="chat-avatar"><img src="assets/lucas-ai.jpg" alt="Ronni"></div>
     <div class="chat-bubble">${formatText(text)}</div>`;
     body.appendChild(div);
     scrollBottom();
@@ -796,18 +875,18 @@ function appendQuickReplies(options) {
                 return;
             }
 
-            if (/agendamento do site/i.test(opt)) {
+            if (/agendamento do site|usar agendamento/i.test(opt)) {
                 appendUserMsg(opt);
-                appendBotMsg('Claro. Vou te levar para o formulario de agendamento desta pagina.');
-                document.getElementById('agendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                appendBotMsg('Abrindo o Cal.com para agendamento...');
+                setTimeout(() => abrirCalendario(), 600);
                 return;
             }
 
-            // Abrir Calendly
-            if (/Calendly|Agendar|Ver datas|visita/i.test(opt)) {
+            // Abrir Cal.com
+            if (/Cal\.com|Agendar|Ver datas|visita/i.test(opt)) {
                 appendUserMsg(opt);
-                appendBotMsg('Abrindo o agendamento online... 📅');
-                setTimeout(() => abrirCalendly(), 600);
+                appendBotMsg('Abrindo o Cal.com para agendamento... 📅');
+                setTimeout(() => abrirCalendario(), 600);
                 return;
             }
 
@@ -857,7 +936,7 @@ function showTyping() {
     div.className = 'chat-msg bot';
     div.id = 'typingIndicator';
     div.innerHTML = `
-    <div class="chat-avatar"><img src="assets/lucas-ai.jpg" alt="Lucas"></div>
+    <div class="chat-avatar"><img src="assets/lucas-ai.jpg" alt="Ronni"></div>
     <div class="chat-bubble typing-bubble"><span></span><span></span><span></span></div>`;
     body.appendChild(div);
     scrollBottom();
@@ -868,9 +947,9 @@ function hideTyping() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   📅  CALENDLY
+   📅  CAL.COM
    ═══════════════════════════════════════════════════════════ */
-function getCalendlyUrl(url) {
+function getCalendarUrl(url) {
     const target = String(url || CONFIG.CAL_URL || '').trim();
     if (!target) return '';
 
@@ -888,11 +967,11 @@ function getCalendlyUrl(url) {
     }
 }
 
-function abrirCalendly(url) {
-    const target = getCalendlyUrl(url);
+function abrirCalendario(url) {
+    const target = getCalendarUrl(url);
     if (!target) {
-        appendBotMsg('O calendario online ainda esta em configuracao. Voce pode preencher o agendamento nesta pagina ou confirmar direto pelo WhatsApp.');
-        appendQuickReplies(['📱 Confirmar pelo WhatsApp', '📅 Usar agendamento do site']);
+        appendBotMsg('O agendamento online ainda esta em configuracao. Voce pode confirmar direto pelo WhatsApp.');
+        appendQuickReplies(['📱 Confirmar pelo WhatsApp']);
         document.getElementById('agendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
     }
@@ -959,7 +1038,7 @@ async function initChat() {
     if (keyOk) {
         showTyping();
         try {
-            const raw = await callGemini('__init__: cumprimente o cliente brevemente como Lucas e apresente as principais formas de ajuda disponíveis (instalação, manutenção, higienização, dúvidas técnicas, orçamentos). Ofereça quick replies.');
+            const raw = await callGemini('__init__: cumprimente o cliente brevemente como Ronni e apresente as principais formas de ajuda disponíveis (instalação, manutenção, higienização, dúvidas técnicas, orçamentos). Ofereça quick replies.');
             hideTyping();
             const { displayText, actions } = parseAIResponse(raw);
             if (displayText) appendBotMsg(displayText);
@@ -977,7 +1056,7 @@ async function initChat() {
 }
 
 function showFallbackWelcome() {
-    appendBotMsg(`Olá! 👋 Sou o **Lucas**, especialista em climatização da **Renostter**! 🤖\n\nPosso te ajudar com instalação, manutenção, higienização, PMOC e qualquer dúvida técnica sobre ar-condicionado em SP.\n\n**Como posso te ajudar hoje?**`);
+    appendBotMsg(`Olá! 👋 Sou o **Ronni**, especialista em climatização da **Renostter**! 🤖\n\nPosso te ajudar com instalação, manutenção, higienização, PMOC e qualquer dúvida técnica sobre ar-condicionado em SP.\n\n**Como posso te ajudar hoje?**`);
     appendQuickReplies(['🚨 Meu aparelho parou!', '🔧 Instalação de Split', '✨ Higienização', '🔍 Manutenção Preventiva', '💨 Problema de gás', '❓ Calcular BTU', '📋 PMOC Empresarial', '💰 Tabela de preços']);
 }
 
@@ -998,12 +1077,13 @@ function sendChatMessage() {
 window.toggleChat = toggleChat;
 window.closeChat = closeChat;
 window.sendChatMessage = sendChatMessage;
-window.LucasChat = {
+window.RonniChat = {
     clearHistory: clearHistoryFromSession,
     open: () => {
         if (!isOpen) toggleChat();
     },
 };
+window.LucasChat = window.RonniChat;
 
 /* ═══════════════════════════════════════════════════════════
    🚀  DOMContentLoaded
