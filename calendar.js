@@ -6,14 +6,61 @@
 
 const BUSINESS_EMAIL = 'comercial.renostter@gmail.com';
 const WHATSAPP_NUM = '5511952730593';
-const RENOSTTER_CAL_URL = 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true';
+const RENOSTTER_CAL_URL = 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90';
+const RENOSTTER_CAL_EMBED_URL = 'https://cal.com/renostter-hbubv8/comercial-renostter?embed=true&layout=mobile';
+
+function getConfiguredCalUrl() {
+    return window.RENOSTTER_CONFIG?.calUrl || RENOSTTER_CAL_URL;
+}
+
+function getConfiguredCalEmbedUrl() {
+    return window.RENOSTTER_CONFIG?.calEmbedUrl || RENOSTTER_CAL_EMBED_URL;
+}
+
+function showCalComConfirmation() {
+    const message = document.getElementById('calcom-confirmation-message');
+    if (!message) return;
+
+    message.hidden = false;
+    message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closeCalComModal() {
+    const modal = document.getElementById('calcom-booking-modal');
+    const frame = document.getElementById('calcom-booking-frame');
+    if (!modal) return;
+
+    modal.hidden = true;
+    modal.classList.remove('is-open');
+    document.body.classList.remove('calcom-modal-open');
+    if (frame) frame.src = 'about:blank';
+}
 
 function abrirCalCom() {
-    const configuredUrl = window.RENOSTTER_CONFIG?.calUrl || RENOSTTER_CAL_URL;
-    const opened = window.open(configuredUrl, '_blank', 'noopener,noreferrer');
+    const modal = document.getElementById('calcom-booking-modal');
+    const frame = document.getElementById('calcom-booking-frame');
+    const directLink = document.getElementById('calcom-direct-link');
+    const confirmation = document.getElementById('calcom-confirmation-message');
+    const configuredUrl = getConfiguredCalUrl();
+    const embedUrl = getConfiguredCalEmbedUrl();
 
-    if (!opened) {
-        window.location.href = configuredUrl;
+    if (!modal || !frame) {
+        const opened = window.open(configuredUrl, '_blank', 'noopener,noreferrer');
+        if (!opened) window.location.href = configuredUrl;
+        return;
+    }
+
+    if (directLink) directLink.href = configuredUrl;
+    if (confirmation) confirmation.hidden = true;
+
+    frame.src = embedUrl;
+    modal.hidden = false;
+    modal.classList.add('is-open');
+    document.body.classList.add('calcom-modal-open');
+
+    const closeButton = modal.querySelector('[data-close-calcom-modal]');
+    if (closeButton && typeof closeButton.focus === 'function') {
+        closeButton.focus();
     }
 }
 
@@ -25,8 +72,43 @@ document.addEventListener('click', event => {
     abrirCalCom();
 });
 
+document.addEventListener('click', event => {
+    if (event.target.closest('[data-close-calcom-modal]')) {
+        event.preventDefault();
+        closeCalComModal();
+    }
+
+    if (event.target.closest('[data-calcom-confirmed]')) {
+        event.preventDefault();
+        showCalComConfirmation();
+    }
+});
+
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeCalComModal();
+});
+
+window.addEventListener('message', event => {
+    if (!String(event.origin || '').includes('cal.com')) return;
+
+    const eventName = typeof event.data === 'string'
+        ? event.data
+        : event.data?.type || event.data?.event || event.data?.name || '';
+
+    if (/booking.*(success|created|confirmed)|success.*booking/i.test(String(eventName))) {
+        showCalComConfirmation();
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'renostter_calcom_booking_success' });
+    }
+});
+
+window.addEventListener('cal.com.booking.success', () => {
+    showCalComConfirmation();
+});
+
 window.abrirCalCom = abrirCalCom;
 window.abrirCalComModal = abrirCalCom;
+window.fecharCalComModal = closeCalComModal;
 
 function escapeHtml(value) {
     return String(value ?? '')

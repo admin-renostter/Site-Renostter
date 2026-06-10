@@ -3474,6 +3474,21 @@ textarea.field-input {
 .yc3-thumb-wrap:hover .yt-lite-play {
     transform: translate(-50%, -50%) scale(1.18);
 }
+.yc3-thumb-wrap.is-playing {
+    cursor: default;
+}
+.yc3-thumb-wrap.is-playing iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #000;
+}
+.yc3-thumb-wrap.is-playing:hover .yt-lite-thumb {
+    filter: none;
+    transform: none;
+}
 
 /* Painel de info */
 .yc3-info {
@@ -3543,107 +3558,215 @@ textarea.field-input {
     .yc3-title { font-size: 0.85rem; }
 }
 
-/* Modal leve para reproducao sob demanda */
-.yt-modal[hidden] {
-    display: none;
+/* =========================================
+   CAL.COM BOOKING MODAL
+   ========================================= */
+body.calcom-modal-open {
+    overflow: hidden;
 }
-.yt-modal {
+
+.calcom-modal[hidden] {
+    display: none !important;
+}
+
+.calcom-modal {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 10050;
     display: grid;
     place-items: center;
-    padding: clamp(16px, 4vw, 40px);
+    padding: 24px;
 }
-.yt-modal__backdrop {
+
+.calcom-modal__backdrop {
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(circle at 70% 20%, rgba(0, 174, 239, 0.18), transparent 28%),
-        rgba(2, 7, 18, 0.84);
-    backdrop-filter: blur(10px);
+    background: rgba(3, 7, 18, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
-.yt-modal__dialog {
+
+.calcom-modal__dialog {
     position: relative;
-    width: min(1080px, 100%);
-    max-height: min(86vh, 760px);
+    width: min(1120px, calc(100vw - 32px));
+    max-height: min(92vh, 920px);
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: linear-gradient(145deg, #07101f 0%, #0f1a2e 70%, rgba(255, 140, 0, 0.14) 100%);
-    box-shadow: 0 32px 90px rgba(0, 0, 0, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(255, 107, 0, 0.14), transparent 34%),
+        linear-gradient(135deg, #0b1220 0%, #101827 58%, #17100d 100%);
+    box-shadow: 0 34px 110px rgba(0, 0, 0, 0.55);
+    color: #fff;
 }
-.yt-modal__header {
+
+.calcom-modal__header,
+.calcom-modal__footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    padding: 18px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 22px 26px;
 }
-.yt-modal__eyebrow {
+
+.calcom-modal__header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.calcom-modal__footer {
+    border-top: 1px solid rgba(15, 23, 42, 0.12);
+    background: #fff;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.calcom-modal__eyebrow {
     margin: 0 0 4px;
-    color: var(--blue, #00AEEF);
-    font-size: 0.74rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    color: var(--blue, #00aeef);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 }
-.yt-modal__title {
+
+.calcom-modal__header h2 {
     margin: 0;
     color: #fff;
-    font-size: clamp(1rem, 2.4vw, 1.35rem);
-    line-height: 1.25;
+    font-size: clamp(1.55rem, 3vw, 2.35rem);
+    line-height: 1.1;
 }
-.yt-modal__close {
+
+.calcom-modal__header p:not(.calcom-modal__eyebrow) {
+    margin: 8px 0 0;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.96rem;
+}
+
+.calcom-modal__close {
+    width: 56px;
+    height: 56px;
     flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
     background: rgba(255, 255, 255, 0.08);
     color: #fff;
     font-size: 2rem;
     line-height: 1;
     cursor: pointer;
-    transition: transform 0.2s, background 0.2s, border-color 0.2s;
-}
-.yt-modal__close:hover,
-.yt-modal__close:focus-visible {
-    background: var(--orange, #ff8c00);
-    border-color: transparent;
-    transform: translateY(-1px);
-    outline: none;
-}
-.yt-modal__player {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #000;
-}
-.yt-modal__player iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-body.yt-modal-open {
-    overflow: hidden;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
-@media (max-width: 639px) {
-    .yt-modal {
+.calcom-modal__close:hover,
+.calcom-modal__close:focus-visible {
+    transform: translateY(-1px);
+    background: rgba(255, 107, 0, 0.18);
+    border-color: rgba(255, 107, 0, 0.5);
+    outline: none;
+}
+
+.calcom-modal__body {
+    padding: 20px 22px;
+    overflow: auto;
+    background: #f8fafc;
+}
+
+.calcom-modal__body iframe {
+    display: block;
+    width: 100%;
+    height: clamp(560px, 72vh, 760px);
+    border: 0;
+    border-radius: 22px;
+    background: #0b0b0b;
+}
+
+.calcom-confirmation-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 18px;
+    padding: 16px;
+    border: 1px solid rgba(34, 197, 94, 0.26);
+    border-radius: 16px;
+    background: #dcfce7;
+    color: #052e16;
+    text-align: center;
+}
+
+.calcom-confirmation-message[hidden] {
+    display: none !important;
+}
+
+.calcom-confirmation-message strong {
+    font-size: 1.05rem;
+}
+
+.calcom-modal__footer .btn-primary,
+.calcom-modal__footer .btn-secondary {
+    width: auto;
+    min-width: 210px;
+    min-height: 54px;
+    margin: 0;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+}
+
+.calcom-modal__footer .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 174, 239, 0.34);
+    background: #fff;
+    color: #07111f;
+}
+
+@media (max-width: 720px) {
+    .calcom-modal {
+        padding: 10px;
+    }
+
+    .calcom-modal__dialog {
+        width: calc(100vw - 20px);
+        max-height: 94vh;
+        border-radius: 22px;
+    }
+
+    .calcom-modal__header,
+    .calcom-modal__footer {
+        padding: 16px;
+    }
+
+    .calcom-modal__header {
+        align-items: flex-start;
+    }
+
+    .calcom-modal__close {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+    }
+
+    .calcom-modal__body {
         padding: 12px;
     }
-    .yt-modal__dialog {
-        border-radius: 14px;
+
+    .calcom-modal__body iframe {
+        height: 72vh;
+        min-height: 520px;
+        border-radius: 16px;
     }
-    .yt-modal__header {
-        padding: 14px;
-    }
-    .yt-modal__close {
-        width: 42px;
-        height: 42px;
+
+    .calcom-modal__footer .btn-primary,
+    .calcom-modal__footer .btn-secondary {
+        width: 100%;
+        min-width: 0;
     }
 }

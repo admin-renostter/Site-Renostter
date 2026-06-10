@@ -143,6 +143,8 @@ function renderCarousel(videos) {
             <div class="yc3-thumb-wrap"
                  data-videoid="${id}"
                  data-title="${title}"
+                 data-thumb="${thumb}"
+                 data-thumbfb="${thumbFb}"
                  role="button"
                  tabindex="0"
                  aria-label="Reproduzir: ${title}">
@@ -254,85 +256,62 @@ function initSwiper() {
    LITE-EMBED — thumbnail → iframe ao clicar/Enter
    Evita carregar 9 iframes de uma vez (performance)
    ════════════════════════════════════════════════ */
-let lastVideoTrigger = null;
+function closeInlineVideo(activeWrap) {
+    if (!activeWrap) return;
 
-function getVideoModal() {
-    let modal = document.getElementById('renostter-video-modal');
-    if (modal) return modal;
+    const id = safeYoutubeId(activeWrap.dataset.videoid);
+    const title = escapeHtml(activeWrap.dataset.title || 'Video Renostter');
+    const thumb = escapeHtml(activeWrap.dataset.thumb || `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`);
+    const thumbFb = escapeHtml(activeWrap.dataset.thumbfb || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
 
-    modal = document.createElement('div');
-    modal.id = 'renostter-video-modal';
-    modal.className = 'yt-modal';
-    modal.hidden = true;
-    modal.innerHTML = `
-        <div class="yt-modal__backdrop" data-close-video-modal></div>
-        <div class="yt-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="yt-modal-title">
-            <div class="yt-modal__header">
-                <div>
-                    <p class="yt-modal__eyebrow">Canal Renostter</p>
-                    <h3 id="yt-modal-title" class="yt-modal__title">Video Renostter</h3>
-                </div>
-                <button type="button" class="yt-modal__close" data-close-video-modal aria-label="Fechar video">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="yt-modal__player" id="yt-modal-player"></div>
-        </div>`;
-
-    document.body.appendChild(modal);
-    modal.addEventListener('click', event => {
-        if (event.target.closest('[data-close-video-modal]')) closeVideoModal();
-    });
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' && !modal.hidden) closeVideoModal();
-    });
-
-    return modal;
+    activeWrap.classList.remove('is-playing');
+    activeWrap.setAttribute('role', 'button');
+    activeWrap.setAttribute('tabindex', '0');
+    activeWrap.setAttribute('aria-label', `Reproduzir: ${title}`);
+    activeWrap.innerHTML = `
+        <img src="${thumb}"
+             alt="${title}"
+             loading="lazy"
+             class="yt-lite-thumb"
+             width="480" height="854"
+             onerror="this.onerror=null;this.src='${thumbFb}'">
+        <button class="yt-lite-play" aria-label="Reproduzir video" tabindex="-1">
+            <svg viewBox="0 0 68 48" width="56" height="40" aria-hidden="true">
+                <path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#f00"/>
+                <path d="M45 24 27 14v20" fill="#fff"/>
+            </svg>
+        </button>`;
 }
 
-function openVideoModal(id, title, trigger) {
+function playInlineVideo(wrap) {
+    if (!wrap) return;
+    const id = safeYoutubeId(wrap.dataset.videoid);
     const safeId = safeYoutubeId(id);
     if (!safeId) return;
 
-    lastVideoTrigger = trigger || null;
-    const modal = getVideoModal();
-    const titleEl = modal.querySelector('#yt-modal-title');
-    const player = modal.querySelector('#yt-modal-player');
+    document.querySelectorAll('.yc3-thumb-wrap.is-playing').forEach(closeInlineVideo);
 
-    titleEl.textContent = title || 'Video Renostter';
-    player.innerHTML = `<iframe
+    const title = wrap.dataset.title || 'Video Renostter';
+    wrap.classList.add('is-playing');
+    wrap.removeAttribute('role');
+    wrap.removeAttribute('tabindex');
+    wrap.setAttribute('aria-label', `Reproduzindo: ${title}`);
+    wrap.innerHTML = `
+        <iframe
         src="https://www.youtube-nocookie.com/embed/${safeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1"
         title="${escapeHtml(title || 'Video Renostter')}"
         referrerpolicy="strict-origin-when-cross-origin"
         loading="eager"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen>
-    </iframe>`;
-
-    modal.hidden = false;
-    document.body.classList.add('yt-modal-open');
-    modal.querySelector('.yt-modal__close')?.focus();
-}
-
-function closeVideoModal() {
-    const modal = document.getElementById('renostter-video-modal');
-    if (!modal) return;
-
-    const player = modal.querySelector('#yt-modal-player');
-    if (player) player.innerHTML = '';
-    modal.hidden = true;
-    document.body.classList.remove('yt-modal-open');
-
-    if (lastVideoTrigger && typeof lastVideoTrigger.focus === 'function') lastVideoTrigger.focus();
-    lastVideoTrigger = null;
+        </iframe>`;
 }
 
 function attachLiteEmbed() {
     document.querySelectorAll('.yc3-thumb-wrap').forEach(wrap => {
         const activate = () => {
-            const id = safeYoutubeId(wrap.dataset.videoid);
-            if (!id) return;
-            openVideoModal(id, wrap.dataset.title || 'Video Renostter', wrap);
+            if (wrap.classList.contains('is-playing')) return;
+            playInlineVideo(wrap);
         };
 
         wrap.addEventListener('click', activate);

@@ -37,7 +37,7 @@
         crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=20260528" />
+    <link rel="stylesheet" href="styles.css?v=20260609-youtube-inline" />
     <link rel="stylesheet" href="chatbot.css" />
     <!-- Swiper.js — carrossel de vídeos -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"
@@ -1113,14 +1113,16 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
         integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
         crossorigin="anonymous"></script>
-    <script src="js/portfolio.js"></script>
+    <script src="js/portfolio.js?v=20260609-youtube-inline"></script>
     <script src="js/reviews.js"></script>
     <script src="js/carousel.js"></script>
-    <script src="calendar.js?v=20260608-calcom-direct"></script>
+    <script src="calendar.js?v=20260609-calcom-modal"></script>
     <script>
         window.RENOSTTER_CONFIG = {
-            calUrl: 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true',
+            calUrl: 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90',
+            calEmbedUrl: 'https://cal.com/renostter-hbubv8/comercial-renostter?embed=true&layout=mobile',
             calLink: 'renostter-hbubv8/comercial-renostter',
+            calConfirmationUrl: 'https://renostter.com/confirmacao-agendamento.html',
         };
     </script>
     <script src="chatbot.js?v=20260609-ronni-prices-calcom"></script>
@@ -1641,6 +1643,40 @@
         });
     </script>
     <!-- Spinner de carregamento da galeria de vídeos (controlado por js/portfolio.js) -->
+    <!-- ========== MODAL CAL.COM (AGENDAMENTO) ========== -->
+    <div class="calcom-modal" id="calcom-booking-modal" hidden>
+        <div class="calcom-modal__backdrop" data-close-calcom-modal></div>
+        <section class="calcom-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="calcom-modal-title">
+            <header class="calcom-modal__header">
+                <div>
+                    <p class="calcom-modal__eyebrow">Agenda Renostter</p>
+                    <h2 id="calcom-modal-title">Escolha o melhor hor&aacute;rio</h2>
+                    <p>Agende pelo Cal.com sem sair do site. Se preferir, abra em uma nova aba.</p>
+                </div>
+                <button class="calcom-modal__close" type="button" data-close-calcom-modal aria-label="Fechar agendamento">&times;</button>
+            </header>
+            <div class="calcom-modal__body">
+                <div class="calcom-confirmation-message" id="calcom-confirmation-message" hidden>
+                    <strong>Agendamento recebido!</strong>
+                    <span>Obrigado. A Renostter entrar&aacute; em contato se precisar ajustar alguma informa&ccedil;&atilde;o.</span>
+                </div>
+                <iframe id="calcom-booking-frame"
+                        title="Agenda Renostter no Cal.com"
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allow="clipboard-write; fullscreen"></iframe>
+            </div>
+            <footer class="calcom-modal__footer">
+                <button class="btn-primary" type="button" data-calcom-confirmed>J&aacute; finalizei meu agendamento</button>
+                <a class="btn-secondary"
+                   id="calcom-direct-link"
+                   href="https://cal.com/renostter-hbubv8/comercial-renostter?duration=90"
+                   target="_blank"
+                   rel="noopener noreferrer">Abrir no Cal.com</a>
+            </footer>
+        </section>
+    </div>
+
     <div id="video-loading-spinner" class="spinner hidden"></div>
 
 </body>

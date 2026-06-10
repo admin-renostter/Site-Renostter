@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NKMTQP6S');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agendamento confirmado - Renostter</title>
+    <meta name="description"
+        content="Confirmação de agendamento Renostter. Revise os dados da sua visita técnica e fale com a equipe pelo WhatsApp." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://renostter.com/confirmacao-agendamento.html" />
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=20260609-youtube-inline" />
+    <style>
+        body.confirm-page {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 18% 10%, rgba(0, 174, 239, 0.2), transparent 28%),
+                radial-gradient(circle at 85% 20%, rgba(255, 107, 0, 0.16), transparent 26%),
+                linear-gradient(145deg, #050915 0%, #0a0e1a 55%, #0f172a 100%);
+            color: #fff;
+        }
+
+        .confirm-shell {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 34px 0 56px;
+        }
+
+        .confirm-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: clamp(34px, 8vw, 82px);
+        }
+
+        .confirm-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.05rem;
+        }
+
+        .confirm-logo img {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: 0 0 28px rgba(0, 174, 239, 0.24);
+        }
+
+        .confirm-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(15, 26, 46, 0.88);
+            box-shadow: 0 34px 100px rgba(0, 0, 0, 0.45);
+        }
+
+        .confirm-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(135deg, rgba(0, 174, 239, 0.12), transparent 38%),
+                linear-gradient(315deg, rgba(255, 107, 0, 0.14), transparent 38%);
+        }
+
+        .confirm-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.75fr);
+            gap: clamp(24px, 5vw, 54px);
+            padding: clamp(26px, 5vw, 58px);
+        }
+
+        .confirm-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--blue, #00AEEF);
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-bottom: 18px;
+        }
+
+        .confirm-title {
+            font-size: clamp(2.2rem, 6vw, 5.1rem);
+            line-height: 0.98;
+            letter-spacing: -0.04em;
+            margin: 0 0 24px;
+        }
+
+        .confirm-copy {
+            max-width: 680px;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .confirm-summary {
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 22px;
+        }
+
+        .confirm-summary h2 {
+            font-size: 1.15rem;
+            margin: 0 0 18px;
+        }
+
+        .confirm-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .confirm-item {
+            display: grid;
+            gap: 4px;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .confirm-item:last-child {
+            border-bottom: 0;
+        }
+
+        .confirm-label {
+            color: rgba(255, 255, 255, 0.56);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        .confirm-value {
+            color: #fff;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .confirm-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .confirm-actions .btn-secondary {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .confirm-next {
+            position: relative;
+            padding: 20px clamp(24px, 5vw, 58px) clamp(26px, 5vw, 44px);
+            color: rgba(255, 255, 255, 0.66);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .confirm-next strong {
+            color: #fff;
+        }
+
+        .confirm-toast {
+            position: fixed;
+            right: clamp(14px, 4vw, 34px);
+            bottom: clamp(14px, 4vw, 34px);
+            z-index: 20;
+            width: min(420px, calc(100% - 28px));
+            border-radius: 20px;
+            border: 1px solid rgba(0, 174, 239, 0.28);
+            background: rgba(255, 255, 255, 0.96);
+            color: #0a0e1a;
+            box-shadow: 0 26px 80px rgba(0, 0, 0, 0.34);
+            padding: 18px 18px 16px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: confirmToastIn 0.45s ease forwards 0.25s;
+        }
+
+        .confirm-toast h3 {
+            margin: 0 0 6px;
+            font-size: 1rem;
+        }
+
+        .confirm-toast p {
+            margin: 0;
+            color: #4b5563;
+            line-height: 1.55;
+        }
+
+        .confirm-toast button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 999px;
+            background: #eef2f7;
+            color: #111827;
+            cursor: pointer;
+            font-weight: 900;
+        }
+
+        @keyframes confirmToastIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .confirm-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .confirm-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body class="confirm-page">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKMTQP6S"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <main class="confirm-shell">
+        <header class="confirm-header">
+            <a class="confirm-logo" href="/">
+                <img src="assets/logo.png" alt="Renostter">
+                <span>renostter</span>
+            </a>
+            <a class="btn-secondary" href="/">Voltar ao site</a>
+        </header>
+
+        <section class="confirm-card" aria-labelledby="confirm-title">
+            <div class="confirm-grid">
+                <div>
+                    <p class="confirm-kicker">Agenda Renostter</p>
+                    <h1 class="confirm-title" id="confirm-title">Agendamento recebido.</h1>
+                    <p class="confirm-copy">
+                        Obrigado por escolher a Renostter. Sua solicitação foi registrada pelo Cal.com e nossa equipe
+                        comercial receberá os dados para acompanhar o atendimento. Se precisar complementar alguma
+                        informação, confirme pelo WhatsApp.
+                    </p>
+
+                    <div class="confirm-actions">
+                        <a class="btn-primary" id="confirm-whatsapp" href="#" target="_blank" rel="noopener">
+                            Confirmar pelo WhatsApp
+                        </a>
+                        <a class="btn-secondary" href="/">Ir para o início</a>
+                    </div>
+                </div>
+
+                <aside class="confirm-summary" aria-label="Resumo do agendamento">
+                    <h2>Resumo do agendamento</h2>
+                    <div class="confirm-list">
+                        <div class="confirm-item">
+                            <span class="confirm-label">Nome</span>
+                            <span class="confirm-value" id="confirm-name">A confirmar</span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label">E-mail</span>
+                            <span class="confirm-value" id="confirm-email">A confirmar</span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label">Telefone</span>
+                            <span class="confirm-value" id="confirm-phone">A confirmar</span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label">Data e horário</span>
+                            <span class="confirm-value" id="confirm-date">A confirmar</span>
+                        </div>
+                        <div class="confirm-item">
+                            <span class="confirm-label">Serviço</span>
+                            <span class="confirm-value" id="confirm-service">Agendamento Renostter</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="confirm-next">
+                <strong>Próximo passo:</strong> a Renostter avaliará os dados do agendamento e entrará em contato em caso
+                de necessidade de ajuste técnico, endereço, escopo ou horário.
+            </div>
+        </section>
+    </main>
+
+    <div class="confirm-toast" id="confirm-toast" role="status" aria-live="polite">
+        <button type="button" aria-label="Fechar confirmação" id="confirm-toast-close">×</button>
+        <h3>Confirmação visual ativada</h3>
+        <p id="confirm-toast-text">Seu agendamento foi recebido e será encaminhado para o comercial Renostter.</p>
+    </div>
+
+    <script src="confirmacao-agendamento.js?v=20260609-calcom-confirmation"></script>
+</body>
+
+</html>

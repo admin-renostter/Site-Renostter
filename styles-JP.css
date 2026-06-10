@@ -3677,6 +3677,21 @@ textarea.field-input {
 .yc3-thumb-wrap:hover .yt-lite-play {
     transform: translate(-50%, -50%) scale(1.18);
 }
+.yc3-thumb-wrap.is-playing {
+    cursor: default;
+}
+.yc3-thumb-wrap.is-playing iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #000;
+}
+.yc3-thumb-wrap.is-playing:hover .yt-lite-thumb {
+    filter: none;
+    transform: none;
+}
 
 /* Painel de info */
 .yc3-info {
