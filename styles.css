@@ -3705,6 +3705,132 @@ body.calcom-modal-open {
     font-size: 1.05rem;
 }
 
+.calcom-thankyou[hidden] {
+    display: none !important;
+}
+
+.calcom-thankyou {
+    position: fixed;
+    inset: 0;
+    z-index: 10080;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.calcom-thankyou__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.calcom-thankyou__card {
+    position: relative;
+    width: min(520px, calc(100vw - 32px));
+    padding: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 26px;
+    background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.24), transparent 30%),
+        linear-gradient(145deg, #08111f 0%, #111827 62%, #190f08 100%);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
+    color: #fff;
+    text-align: center;
+}
+
+.calcom-thankyou__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.calcom-thankyou__close:hover,
+.calcom-thankyou__close:focus-visible {
+    background: rgba(255, 107, 0, 0.18);
+    outline: none;
+}
+
+.calcom-thankyou__icon {
+    width: 74px;
+    height: 74px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #22c55e, #86efac);
+    color: #052e16;
+    font-size: 2.45rem;
+    font-weight: 900;
+    box-shadow: 0 18px 44px rgba(34, 197, 94, 0.34);
+}
+
+.calcom-thankyou__eyebrow {
+    margin: 0 0 8px;
+    color: var(--blue, #00aeef);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.calcom-thankyou__card h2 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    line-height: 1.08;
+}
+
+.calcom-thankyou__card > p:not(.calcom-thankyou__eyebrow) {
+    margin: 14px auto 0;
+    max-width: 420px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.calcom-thankyou__actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 26px;
+}
+
+.calcom-thankyou__actions .btn-primary,
+.calcom-thankyou__actions .btn-secondary {
+    width: auto;
+    min-width: 190px;
+    min-height: 52px;
+    margin: 0;
+    padding: 14px 20px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.calcom-thankyou__actions .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
 .calcom-modal__footer .btn-primary,
 .calcom-modal__footer .btn-secondary {
     width: auto;
@@ -3766,6 +3892,22 @@ body.calcom-modal-open {
 
     .calcom-modal__footer .btn-primary,
     .calcom-modal__footer .btn-secondary {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .calcom-thankyou {
+        padding: 14px;
+    }
+
+    .calcom-thankyou__card {
+        width: calc(100vw - 28px);
+        padding: 30px 20px 22px;
+        border-radius: 22px;
+    }
+
+    .calcom-thankyou__actions .btn-primary,
+    .calcom-thankyou__actions .btn-secondary {
         width: 100%;
         min-width: 0;
     }

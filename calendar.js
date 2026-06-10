@@ -25,11 +25,61 @@ function showCalComConfirmation() {
     message.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+function buildCalThankYouWhatsAppUrl() {
+    const message = [
+        'Ola, Renostter!',
+        'Acabei de finalizar um agendamento pelo site.',
+        'Pode confirmar se esta tudo certo?',
+    ].join('\n');
+
+    return `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(message)}`;
+}
+
+function showCalComThankYou(source = 'manual') {
+    const popup = document.getElementById('calcom-thankyou-popup');
+    const whatsappLink = document.getElementById('calcom-thankyou-whatsapp');
+
+    showCalComConfirmation();
+
+    if (whatsappLink) {
+        whatsappLink.href = buildCalThankYouWhatsAppUrl();
+    }
+
+    if (popup) {
+        popup.hidden = false;
+        popup.classList.add('is-open');
+
+        const closeButton = popup.querySelector('[data-close-calcom-thankyou]');
+        if (closeButton && typeof closeButton.focus === 'function') {
+            closeButton.focus();
+        }
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event: 'renostter_calcom_thankyou_popup',
+        source,
+    });
+}
+
+function closeCalComThankYou(options = {}) {
+    const popup = document.getElementById('calcom-thankyou-popup');
+    if (popup) {
+        popup.hidden = true;
+        popup.classList.remove('is-open');
+    }
+
+    if (options.closeBooking) {
+        closeCalComModal();
+    }
+}
+
 function closeCalComModal() {
     const modal = document.getElementById('calcom-booking-modal');
     const frame = document.getElementById('calcom-booking-frame');
     if (!modal) return;
 
+    closeCalComThankYou();
     modal.hidden = true;
     modal.classList.remove('is-open');
     document.body.classList.remove('calcom-modal-open');
@@ -80,12 +130,30 @@ document.addEventListener('click', event => {
 
     if (event.target.closest('[data-calcom-confirmed]')) {
         event.preventDefault();
-        showCalComConfirmation();
+        showCalComThankYou('manual');
+    }
+
+    if (event.target.closest('[data-close-calcom-thankyou]')) {
+        event.preventDefault();
+        closeCalComThankYou();
+    }
+
+    if (event.target.closest('[data-finish-calcom-thankyou]')) {
+        event.preventDefault();
+        closeCalComThankYou({ closeBooking: true });
     }
 });
 
 document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeCalComModal();
+    if (event.key !== 'Escape') return;
+
+    const thankYou = document.getElementById('calcom-thankyou-popup');
+    if (thankYou && !thankYou.hidden) {
+        closeCalComThankYou();
+        return;
+    }
+
+    closeCalComModal();
 });
 
 window.addEventListener('message', event => {
@@ -96,14 +164,14 @@ window.addEventListener('message', event => {
         : event.data?.type || event.data?.event || event.data?.name || '';
 
     if (/booking.*(success|created|confirmed)|success.*booking/i.test(String(eventName))) {
-        showCalComConfirmation();
+        showCalComThankYou('calcom-message');
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({ event: 'renostter_calcom_booking_success' });
     }
 });
 
 window.addEventListener('cal.com.booking.success', () => {
-    showCalComConfirmation();
+    showCalComThankYou('calcom-event');
 });
 
 window.abrirCalCom = abrirCalCom;

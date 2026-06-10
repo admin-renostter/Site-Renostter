@@ -1116,7 +1116,7 @@
     <script src="js/portfolio.js?v=20260609-youtube-inline"></script>
     <script src="js/reviews.js"></script>
     <script src="js/carousel.js"></script>
-    <script src="calendar.js?v=20260609-calcom-modal"></script>
+    <script src="calendar.js?v=20260610-calcom-thankyou"></script>
     <script>
         window.RENOSTTER_CONFIG = {
             calUrl: 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90',
@@ -1674,6 +1674,21 @@
                    target="_blank"
                    rel="noopener noreferrer">Abrir no Cal.com</a>
             </footer>
+        </section>
+    </div>
+
+    <div class="calcom-thankyou" id="calcom-thankyou-popup" hidden>
+        <div class="calcom-thankyou__backdrop" data-close-calcom-thankyou></div>
+        <section class="calcom-thankyou__card" role="dialog" aria-modal="true" aria-labelledby="calcom-thankyou-title">
+            <button class="calcom-thankyou__close" type="button" data-close-calcom-thankyou aria-label="Fechar agradecimento">&times;</button>
+            <div class="calcom-thankyou__icon">✓</div>
+            <p class="calcom-thankyou__eyebrow">Agendamento recebido</p>
+            <h2 id="calcom-thankyou-title">Obrigado por agendar com a Renostter!</h2>
+            <p>Seu hor&aacute;rio foi registrado. Nossa equipe vai acompanhar a solicita&ccedil;&atilde;o e, se precisar de algum ajuste, entraremos em contato.</p>
+            <div class="calcom-thankyou__actions">
+                <a class="btn-primary" id="calcom-thankyou-whatsapp" href="https://wa.me/5511952730593" target="_blank" rel="noopener noreferrer">Confirmar pelo WhatsApp</a>
+                <button class="btn-secondary" type="button" data-finish-calcom-thankyou>Concluir</button>
+            </div>
         </section>
     </div>
 
