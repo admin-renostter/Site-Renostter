@@ -9,7 +9,26 @@
 const PROXY_BASE_URL  = 'https://renostter-gemini-proxy.adminrenostter.workers.dev';
 const YT_FALLBACK_KEY = ''; /* chave removida — configure YOUTUBE_API_KEY no Worker: wrangler secret put YOUTUBE_API_KEY */
 const CHANNEL_ID      = 'UCPdh_nMh4XLdkVRH1jn7LuA';  /* canal @renostter */
-const MAX_RESULTS     = 9;   /* multiplos de 3/4 funcionam bem no carrossel */
+const MAX_RESULTS     = 12;  /* mais videos = mais variedade na rotacao */
+
+/* ─── Rotação por tempo ───
+   AUTOPLAY_DELAY_MS  : de quanto em quanto tempo o carrossel avanca sozinho.
+   RESHUFFLE_MS       : de quanto em quanto tempo a ORDEM e sorteada de novo,
+                        sem recarregar a pagina. Quem fica muito tempo no site
+                        ve combinacoes diferentes.
+   Ambos pausam enquanto um video esta tocando ou o mouse esta sobre o
+   carrossel - trocar o slide debaixo de quem esta assistindo seria hostil. */
+const AUTOPLAY_DELAY_MS = 6000;        /* 6 segundos por slide */
+const RESHUFFLE_MS      = 3 * 60000;   /* re-sorteia a cada 3 minutos */
+
+/* Respeita quem pediu menos movimento no sistema operacional. */
+const PREFERS_REDUCED_MOTION =
+    window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+
+/* Estado do modulo */
+let swiperInstance = null;
+let cachedVideos   = [];
+let reshuffleTimer = null;
 
 /* ─── Utilitários ─── */
 function shuffle(arr) {
@@ -122,7 +141,17 @@ function renderCarousel(videos) {
     const container = document.getElementById('youtube-carousel-3cols');
     if (!container) return;
 
-    /* Embaralha ordem a cada carregamento */
+    /* Guarda a lista original para os re-sorteios seguintes */
+    if (videos !== cachedVideos) cachedVideos = [...videos];
+
+    /* Destroi a instancia anterior antes de trocar o HTML, senao o Swiper
+       deixa listeners orfaos e o autoplay duplica a cada re-sorteio. */
+    if (swiperInstance) {
+        swiperInstance.destroy(true, true);
+        swiperInstance = null;
+    }
+
+    /* Embaralha a ordem */
     const vids = shuffle([...videos]);
 
     /* Gera os slides */
@@ -214,7 +243,15 @@ function initSwiper() {
         return;
     }
 
-    new Swiper('#youtube-carousel-3cols .yc3-swiper', {
+    swiperInstance = new Swiper('#youtube-carousel-3cols .yc3-swiper', {
+        /* Avanco automatico. false quando o usuario pediu menos movimento. */
+        autoplay: PREFERS_REDUCED_MOTION ? false : {
+            delay: AUTOPLAY_DELAY_MS,
+            disableOnInteraction: false,  /* volta a girar depois do swipe */
+            pauseOnMouseEnter: true,      /* para enquanto o mouse esta em cima */
+        },
+        loop: false,
+
         /* Layout */
         slidesPerView: 1,
         spaceBetween:  16,
@@ -264,6 +301,9 @@ function closeInlineVideo(activeWrap) {
     const thumb = escapeHtml(activeWrap.dataset.thumb || `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`);
     const thumbFb = escapeHtml(activeWrap.dataset.thumbfb || `https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
 
+    /* Video fechado: o carrossel pode voltar a girar. */
+    if (swiperInstance?.autoplay && !PREFERS_REDUCED_MOTION) swiperInstance.autoplay.start();
+
     activeWrap.classList.remove('is-playing');
     activeWrap.setAttribute('role', 'button');
     activeWrap.setAttribute('tabindex', '0');
@@ -290,6 +330,9 @@ function playInlineVideo(wrap) {
     if (!safeId) return;
 
     document.querySelectorAll('.yc3-thumb-wrap.is-playing').forEach(closeInlineVideo);
+
+    /* Ninguem quer que o slide troque no meio do video. */
+    if (swiperInstance?.autoplay) swiperInstance.autoplay.stop();
 
     const title = wrap.dataset.title || 'Video Renostter';
     wrap.classList.add('is-playing');
@@ -322,6 +365,24 @@ function attachLiteEmbed() {
 }
 
 /* ════════════════════════════════════════════════
+   RE-SORTEIO PERIODICO
+   Troca a ordem sem recarregar a pagina. Pula a rodada se houver video
+   tocando ou se a aba estiver em segundo plano - re-renderizar ali seria
+   trabalho jogado fora, e mataria a reproducao em andamento.
+   ════════════════════════════════════════════════ */
+function startReshuffleTimer() {
+    if (reshuffleTimer) clearInterval(reshuffleTimer);
+    if (PREFERS_REDUCED_MOTION) return;
+
+    reshuffleTimer = setInterval(() => {
+        if (document.hidden) return;
+        if (document.querySelector('.yc3-thumb-wrap.is-playing')) return;
+        if (cachedVideos.length < 2) return;
+        renderCarousel(cachedVideos);
+    }, RESHUFFLE_MS);
+}
+
+/* ════════════════════════════════════════════════
    ESTADO DE ERRO AMIGÁVEL
    ════════════════════════════════════════════════ */
 function renderError() {
@@ -349,10 +410,12 @@ async function initVideoGallery() {
     try {
         const videos = await fetchChannelVideos();
         renderCarousel(videos);
+        startReshuffleTimer();
     } catch (err) {
         console.warn('[Portfolio] APIs falharam, usando fallback estático:', err.message);
         if (STATIC_FALLBACK.length) {
             renderCarousel(STATIC_FALLBACK);
+            startReshuffleTimer();
         } else {
             renderError();
         }

@@ -1,0 +1,27 @@
+# ============================================================
+# Renostter Careers - Dependências PESADAS (opcional, build-arg INSTALL_ML=true)
+# ============================================================
+# Estas libs adicionam ~2-3 GB à imagem Docker. Use APENAS se
+# quiser triagem automática de currículos com IA local.
+# Sem elas, o app faz fallback para triagem por regras (regex/keywords).
+#
+# Habilitar com:
+#   docker build --build-arg INSTALL_ML=true -t renostter-careers:ml .
+# ============================================================
+
+# --- Extração de texto de PDFs / DOCX (Docling da IBM) ---
+docling>=2.0
+
+# --- OCR para PDFs escaneados (imagens) ---
+rapidocr-onnxruntime>=1.4
+
+# --- Banco vetorial local para indexação de currículos ---
+lancedb>=0.4
+pyarrow>=15.0
+
+# --- Triagem semântica (embeddings + classificação) ---
+# torch sozinho é ~800 MB. CPU-only basta.
+# --extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.2 --index-url https://download.pytorch.org/whl/cpu
+transformers>=4.40
+sentence-transformers>=2.7

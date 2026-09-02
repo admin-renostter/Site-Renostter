@@ -3,7 +3,7 @@
    Cache estratégico para performance offline
    ================================================ */
 
-const RELEASE_VERSION = '2026.06.08';
+const RELEASE_VERSION = '2026.09.02';
 const CACHE_NAME = `renostter-v${RELEASE_VERSION}`;
 const STATIC_ASSETS = [
     '/',
@@ -14,6 +14,8 @@ const STATIC_ASSETS = [
     '/calendar.js',
     '/chatbot.js',
     '/js/portfolio.js',
+    '/js/pintura-3d.js',
+    '/pintura-3d.css',
     '/js/reviews.js',
     '/js/carousel.js',
     '/assets/logo.png',

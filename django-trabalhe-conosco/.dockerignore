@@ -1,0 +1,52 @@
+# Venv e cache Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Banco local
+db.sqlite3
+*.db
+
+# Ambiente e segredos
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Media privada (currículos)
+private_media/
+lancedb/
+audit/
+logs/
+
+# Git
+.git/
+.gitignore
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (se houver)
+node_modules/
+package-lock.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Migrações só nao-essenciais? Não, Django PRECISA das migrations.
+# Mantemos migrations/ intencionalmente.

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "comment": "Monitors prontos para importar no Uptime Kuma. Acesse https://status.renostter.com -> Settings -> Backup -> Importar este JSON. Os IDs (1, 2, 3...) serao regenerados na importacao.",
+    "importInstructions": [
+      "1. Acesse https://status.renostter.com (primeiro acesso: criar admin)",
+      "2. Va em Settings -> Backup -> Restore",
+      "3. Cole o conteudo deste arquivo",
+      "4. Ajuste os IDs de notification (telegram, discord, email) conforme suas configuracoes"
+    ]
+  },
+  "monitorList": [
+    {
+      "id": 1,
+      "type": "http",
+      "name": "Site institucional (renostter.com)",
+      "url": "https://renostter.com/",
+      "method": "GET",
+      "interval": 60,
+      "retryInterval": 60,
+      "maxretries": 3,
+      "accepted_statuscodes": ["200", "301", "302"],
+      "followRedirect": true,
+      "tags": [{ "name": "site", "color": "#0d8a4f" }, { "name": "externo", "color": "#3b82f6" }]
+    },
+    {
+      "id": 2,
+      "type": "http",
+      "name": "Site institucional (www)",
+      "url": "https://www.renostter.com/",
+      "method": "GET",
+      "interval": 60,
+      "retryInterval": 60,
+      "maxretries": 3,
+      "accepted_statuscodes": ["200", "301", "302"],
+      "followRedirect": true,
+      "tags": [{ "name": "site", "color": "#0d8a4f" }]
+    },
+    {
+      "id": 3,
+      "type": "http",
+      "name": "Carreiras (carreiras.renostter.com)",
+      "url": "https://carreiras.renostter.com/healthz/",
+      "method": "GET",
+      "interval": 30,
+      "retryInterval": 30,
+      "maxretries": 3,
+      "expectedValue": "ok",
+      "tags": [{ "name": "django", "color": "#10b981" }, { "name": "vps", "color": "#f59e0b" }]
+    },
+    {
+      "id": 4,
+      "type": "http",
+      "name": "Carreiras - Lista de vagas",
+      "url": "https://carreiras.renostter.com/trabalhe-conosco/",
+      "method": "GET",
+      "interval": 300,
+      "tags": [{ "name": "django", "color": "#10b981" }]
+    },
+    {
+      "id": 5,
+      "type": "http",
+      "name": "Worker de IA (Cloudflare)",
+      "url": "https://renostter-gemini-proxy.adminrenostter.workers.dev/",
+      "method": "POST",
+      "body": "{\"message\":\"healthcheck\"}",
+      "headers": "{\"Content-Type\":\"application/json\"}",
+      "interval": 60,
+      "accepted_statuscodes": ["200", "400", "405"],
+      "tags": [{ "name": "worker", "color": "#8b5cf6" }, { "name": "ia", "color": "#ec4899" }]
+    },
+    {
+      "id": 6,
+      "type": "port",
+      "name": "Postgres (interno)",
+      "hostname": "postgres",
+      "port": 5432,
+      "interval": 60,
+      "tags": [{ "name": "db", "color": "#3b82f6" }, { "name": "vps", "color": "#f59e0b" }]
+    },
+    {
+      "id": 7,
+      "type": "port",
+      "name": "Redis (interno)",
+      "hostname": "redis",
+      "port": 6379,
+      "interval": 60,
+      "tags": [{ "name": "cache", "color": "#dc2626" }, { "name": "vps", "color": "#f59e0b" }]
+    },
+    {
+      "id": 8,
+      "type": "ping",
+      "name": "VPS (ping)",
+      "hostname": "renostter-vps",
+      "interval": 60,
+      "tags": [{ "name": "vps", "color": "#f59e0b" }]
+    },
+    {
+      "id": 9,
+      "type": "keyword",
+      "name": "Backup diario executou",
+      "url": "http://localhost:8000/healthz/",
+      "keyword": "ok",
+      "interval": 86400,
+      "tags": [{ "name": "backup", "color": "#a3a3a3" }]
+    },
+    {
+      "id": 10,
+      "type": "dns",
+      "name": "DNS renostter.com",
+      "hostname": "renostter.com",
+      "dnsServer": "1.1.1.1",
+      "recordType": "A",
+      "interval": 300,
+      "tags": [{ "name": "dns", "color": "#a855f7" }]
+    },
+    {
+      "id": 11,
+      "type": "dns",
+      "name": "DNS carreiras.renostter.com",
+      "hostname": "carreiras.renostter.com",
+      "dnsServer": "1.1.1.1",
+      "recordType": "CNAME",
+      "interval": 300,
+      "tags": [{ "name": "dns", "color": "#a855f7" }]
+    }
+  ],
+  "notificationList": [
+    {
+      "id": 1,
+      "name": "Telegram - Pessoal",
+      "type": "telegram",
+      "active": true,
+      "isDefault": true,
+      "tgBotToken": "COLOQUE-SEU-BOT-TOKEN-AQUI",
+      "tgChatID": "COLOQUE-SEU-CHAT-ID-AQUI"
+    },
+    {
+      "id": 2,
+      "name": "Discord - Webhook",
+      "type": "discord",
+      "active": false,
+      "discordWebhookUrl": "https://discord.com/api/webhooks/...",
+      "discordUsername": "Uptime Kuma Renostter"
+    },
+    {
+      "id": 3,
+      "name": "Email - Resend",
+      "type": "smtp",
+      "active": false,
+      "smtpHost": "smtp.resend.com",
+      "smtpPort": 465,
+      "smtpSecure": true,
+      "smtpUsername": "resend",
+      "smtpPassword": "COLOQUE-RESEND-API-KEY",
+      "smtpFrom": "status@renostter.com.br",
+      "smtpTo": "admin@renostter.com.br"
+    }
+  ]
+}

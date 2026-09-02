@@ -23,3 +23,9 @@ django-trabalhe-conosco/**/__pycache__/
 
 nextjs-trabalhe-conosco/.next/
 nextjs-trabalhe-conosco/node_modules/
+
+# Credenciais do Cloudflare Tunnel (geradas na VPS)
+deploy/cloudflared/*.json
+deploy/.env
+deploy/_backup-pre-fix/
+deploy/logs/

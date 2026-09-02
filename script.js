@@ -173,12 +173,40 @@ window.addEventListener('scroll', () => {
 });
 
 // ─── PINTURA DE EQUIPAMENTO (SIMULADOR 3D/SVG) ───────────
+/* Cor escolhida no visualizador 3D. Entra na mensagem do WhatsApp:
+   um lead que ja diz a cor vale mais do que "quero um orcamento". */
+let pinturaCorAtual = null;
+
+/* Ponte chamada pelo modulo js/pintura-3d.js a cada cor selecionada. */
+window.__pinturaCorEscolhida = function (nome, hex) {
+    pinturaCorAtual = { nome, hex };
+    document.getElementById('pmPromoBox')?.classList.remove('hidden');
+    if (typeof gtag === 'function') {
+        gtag('event', 'select_color', {
+            'event_category': 'Pintura',
+            'event_label': `${nome} ${hex}`
+        });
+    }
+};
+
 function openPinturaModal() {
     const modal = document.getElementById('pinturaModal');
     if (modal) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
+
+    /* O three.js (~700 KB) so e baixado aqui, na primeira abertura.
+       Se o import falhar, o proprio modulo revela o simulador 2D. */
+    import('./js/pintura-3d.js?v=20260902-visualizador3d')
+        .then(m => m.abrirPintura3D())
+        .catch(err => {
+            console.warn('[Pintura] visualizador 3D indisponivel:', err);
+            document.getElementById('p3dStage')?.classList.add('p3d-oculto');
+            document.getElementById('p3dPanel')?.classList.add('p3d-oculto');
+            document.getElementById('p3dFallback')?.classList.remove('p3d-oculto');
+            document.getElementById('pmSwatches')?.classList.remove('p3d-oculto');
+        });
     
     // Disparar evento de visualização caso exista GTM/Analytics
     if (typeof gtag === 'function') {
@@ -195,6 +223,11 @@ function closePinturaModal() {
         modal.classList.remove('active');
         document.body.style.overflow = '';
     }
+    /* Para o loop de render: com o modal fechado a GPU ficaria
+       desenhando um objeto invisivel e esquentando o celular. */
+    import('./js/pintura-3d.js?v=20260902-visualizador3d')
+        .then(m => m.fecharPintura3D())
+        .catch(() => { /* nunca chegou a carregar */ });
 }
 
 // Global exposure for onClick handlers
@@ -237,6 +270,10 @@ window.solicitarOrcamentoPintura = function() {
     
     // Rola para a seção de contato ou abre o whatsapp direto com texto pré-preenchido
     const _waNum = (typeof CONFIG !== 'undefined' && CONFIG.WHATSAPP_NUM) ? CONFIG.WHATSAPP_NUM : '5511952730593';
-    const waUrl = `https://wa.me/${_waNum}?text=Olá!%20Gostaria%20de%20usar%20meu%20desconto%20CORES15%20para%20pintura%20de%20ar-condicionado.`;
+    const _cor = pinturaCorAtual
+        ? ` Escolhi a cor ${pinturaCorAtual.nome} (${pinturaCorAtual.hex.toUpperCase()}).`
+        : '';
+    const _msg = `Olá! Gostaria de usar meu desconto CORES15 para pintura de ar-condicionado.${_cor}`;
+    const waUrl = `https://wa.me/${_waNum}?text=${encodeURIComponent(_msg)}`;
     window.open(waUrl, '_blank');
 };

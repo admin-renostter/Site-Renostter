@@ -1,13 +1,22 @@
 # Deploy do Painel RH Django
 
+> ⚠️ **ATENÇÃO**: Este documento descreve o deploy **legado no Render**.
+> O deploy ativo é feito na **VPS Integrator** com Docker.
+> Veja: [`DEPLOY_VPS_INTEGRATOR.md`](./DEPLOY_VPS_INTEGRATOR.md)
+
 Este guia publica o modulo `django-trabalhe-conosco` separado do site estatico.
 
 ## Arquitetura
 
-- `https://www.renostter.com`: site estatico no Netlify.
+- `https://www.renostter.com`: site estatico (Cloudflare Pages).
 - `https://carreiras.renostter.com`: Django RH com PostgreSQL.
+  - **Deploy ativo**: VPS Integrator (Docker Compose) — ver `DEPLOY_VPS_INTEGRATOR.md`
+  - **Deploy legado**: Render (ainda funciona, com cold start)
 
-## Render
+## Render (legado)
+
+> O Render ainda pode ser usado como contingência ou ambiente de homologação
+> rápido. Para produção, prefira a VPS.
 
 1. Suba o repositorio para o GitHub.
 2. Acesse o Render.

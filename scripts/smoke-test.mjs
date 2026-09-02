@@ -8,6 +8,8 @@ const requiredFiles = [
     'calendar.js',
     'chatbot.js',
     'js/portfolio.js',
+    'js/pintura-3d.js',
+    'pintura-3d.css',
     'js/reviews.js',
     'js/carousel.js',
     'sw.js',

@@ -1,0 +1,278 @@
+# ============================================================
+# Renostter — Stack de produção na VPS Integrator
+# ============================================================
+# Subir:    docker compose -f deploy/docker-compose.yml up -d
+# Derrubar: docker compose -f deploy/docker-compose.yml down
+# Logs:     docker compose -f deploy/docker-compose.yml logs -f web
+# ============================================================
+
+name: renostter
+
+services:
+
+  # -------------------------------------------------------------
+  # PostgreSQL
+  # -------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: renostter-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-renostter_careers}
+      POSTGRES_USER: ${POSTGRES_USER:-renostter_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d:ro,z
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-renostter_app} -d ${POSTGRES_DB:-renostter_careers}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # No PRIMEIRO boot o postgres roda initdb e os scripts de
+      # docker-entrypoint-initdb.d. Durante essa janela o servidor so escuta no
+      # socket unix e o pg_isready falha - sem start_period essas falhas contam
+      # como retries, o container e marcado "unhealthy" e o compose derruba
+      # web/worker/nginx por dependencia. Com start_period elas sao ignoradas.
+      start_period: 90s
+    networks:
+      - renostter-net
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # -------------------------------------------------------------
+  # Redis (cache + filas django-q2)
+  # -------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: renostter-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - renostter-net
+    deploy:
+      resources:
+        limits:
+          memory: 320M
+
+  # -------------------------------------------------------------
+  # Django (web) — Gunicorn
+  # -------------------------------------------------------------
+  web:
+    build:
+      context: ../django-trabalhe-conosco
+      dockerfile: Dockerfile
+      args:
+        INSTALL_ML: ${INSTALL_ML:-false}
+    image: renostter-careers:${IMAGE_TAG:-latest}
+    container_name: renostter-web
+    restart: unless-stopped
+    env_file:
+      - path: ${ENV_FILE:-.env}
+        required: false
+    environment:
+      # Sobrescreve o DB_HOST para apontar pro container
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      REDIS_URL: redis://redis:6379/0
+      # WhiteNoise / Gunicorn
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-3}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-60}
+    volumes:
+      - django_static:/app/staticfiles
+      - django_private_media:/app/private_media
+      - django_lancedb:/app/lancedb
+      - django_audit:/app/audit
+      - django_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - renostter-net
+    # Não expor porta - o nginx interno é quem fala com o gunicorn via socket
+    expose:
+      - "8000"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  # -------------------------------------------------------------
+  # Django (worker) — django-q2 (processa currículos, envia e-mails)
+  # -------------------------------------------------------------
+  worker:
+    build:
+      context: ../django-trabalhe-conosco
+      dockerfile: Dockerfile
+      args:
+        INSTALL_ML: ${INSTALL_ML:-false}
+    image: renostter-careers:${IMAGE_TAG:-latest}
+    container_name: renostter-worker
+    restart: unless-stopped
+    command: ["python", "manage.py", "qcluster"]
+    # O worker herda o HEALTHCHECK do Dockerfile, que faz curl na porta 8000.
+    # Mas o qcluster nao sobe servidor HTTP: ele ficaria "unhealthy" para sempre.
+    healthcheck:
+      disable: true
+    env_file:
+      - path: ${ENV_FILE:-.env}
+        required: false
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      REDIS_URL: redis://redis:6379/0
+      Q_CLUSTER_WORKERS: ${Q_CLUSTER_WORKERS:-2}
+    volumes:
+      - django_private_media:/app/private_media
+      - django_lancedb:/app/lancedb
+      - django_audit:/app/audit
+      - django_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      # Quem roda as migrations e o start.sh do web. Sem esperar por ele, o
+      # qcluster consulta django_q_ormq antes da tabela existir e morre em
+      # loop ate o web terminar. Foi o ProgrammingError visto nos logs.
+      web:
+        condition: service_healthy
+    networks:
+      - renostter-net
+    deploy:
+      resources:
+        limits:
+          memory: 2G  # worker pode usar ML pesado (Docling)
+
+  # -------------------------------------------------------------
+  # Nginx (reverse proxy + arquivos estáticos)
+  # -------------------------------------------------------------
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: renostter-nginx
+    restart: unless-stopped
+    ports:
+      # A porta 80 e a 443 do host ja sao do nginx do painel ICP
+      # (container ic-nginx, icontainer/nginx). Nao disputamos com ele.
+      #
+      # Nao precisamos: o cloudflared roda na MESMA rede docker e alcanca este
+      # servico como http://nginx:80 diretamente, sem passar pelo host.
+      # A publicacao abaixo existe so para healthcheck e debug local.
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro,z
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro,z
+      - django_static:/app/staticfiles:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - web
+    networks:
+      - renostter-net
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  # -------------------------------------------------------------
+  # Portainer (painel Docker via web) - opcional
+  # Acesse via https://portainer.renostter.com (via Cloudflare Tunnel)
+  # -------------------------------------------------------------
+  portainer:
+    image: portainer/portainer-ce:2.21.5
+    container_name: renostter-portainer
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9443:9443"  # UI HTTPS somente local / via tunnel
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    # SELinux: nao usar :z no docker.sock (relabelar o socket derruba o daemon).
+    # label:disable isenta apenas este container.
+    security_opt:
+      - label:disable
+    networks:
+      - renostter-net
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # -------------------------------------------------------------
+  # Uptime Kuma (monitoramento) - opcional
+  # Acesse via https://status.renostter.com (via Cloudflare Tunnel)
+  # -------------------------------------------------------------
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: renostter-uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - uptime_kuma_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    security_opt:
+      - label:disable
+    networks:
+      - renostter-net
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  # -------------------------------------------------------------
+  # Cloudflare Tunnel (cloudflared) - expõe serviços sem abrir porta
+  # -------------------------------------------------------------
+  cloudflared:
+    image: cloudflare/cloudflared:2024.8.3
+    container_name: renostter-cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--config", "/etc/cloudflared/config.yml", "run"]
+    volumes:
+      # Monta a pasta inteira: o config.yml E o <tunnel>.json de credenciais
+      # precisam estar visiveis dentro do container. Montar so o config.yml
+      # (e deixar as credenciais num volume nomeado vazio) fazia o cloudflared
+      # morrer com "credentials file not found".
+      - ./cloudflared:/etc/cloudflared:ro,z
+    # NAO definir TUNNEL_TOKEN aqui: com o token o cloudflared roda em modo
+    # "remotely-managed" e IGNORA o ingress do config.yml, derrubando todas
+    # as rotas. O modo usado aqui e o local (config.yml + credentials-file).
+    networks:
+      - renostter-net
+    depends_on:
+      - web
+      - nginx
+      - portainer
+      - uptime-kuma
+
+# ============================================================
+# Volumes persistentes
+# ============================================================
+volumes:
+  postgres_data:
+  redis_data:
+  django_static:
+  django_private_media:
+  django_lancedb:
+  django_audit:
+  django_logs:
+  nginx_logs:
+  portainer_data:
+  uptime_kuma_data:
+
+# ============================================================
+# Rede interna
+# ============================================================
+networks:
+  renostter-net:
+    driver: bridge

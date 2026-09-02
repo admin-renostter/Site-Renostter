@@ -1,9 +1,28 @@
+# ============================================================
+# Renostter Careers - Dependências LEVES (sempre instaladas)
+# ============================================================
+# Python 3.12+
+
+# --- Core Django ---
 Django>=5.1,<6.0
 gunicorn>=22.0
 psycopg[binary]>=3.2
 whitenoise>=6.7
+
+# --- Filas assíncronas (django-q2) ---
 django-q2>=1.6
+
+# --- Cache Redis ---
+# O CACHE_BACKEND do .env aponta para django.core.cache.backends.redis.RedisCache,
+# que exige o pacote redis. Sem ele o worker morre em loop com
+# "No module named 'redis'". (O django-q2 NAO precisa: o broker e "orm".)
+redis>=5.0
+
+# --- Config / utilitários ---
 python-decouple>=3.8
 SQLAlchemy>=2.0
 tzlocal>=5.2
 requests>=2.32
+
+# --- Supabase (storage de currículos) ---
+supabase>=2.4

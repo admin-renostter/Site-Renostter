@@ -1,0 +1,160 @@
+/* ================================================================
+   RENOSTTER — estilos do visualizador 3D de pintura
+   Prefixo p3d- para nao colidir com styles.css nem com o modal
+   antigo, que continua no DOM como fallback.
+   ================================================================ */
+
+.p3d-oculto { display: none !important; }
+
+/* ---- palco 3D ---- */
+#p3dStage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 260px;
+  max-height: 60vh;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #171b21;
+  cursor: grab;
+}
+#p3dStage:active { cursor: grabbing; }
+
+#p3dStage.p3d-carregando::after {
+  content: "Carregando visualizador…";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: #8b95a3;
+  background: #171b21;
+}
+
+.p3d-hint {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #7d8794;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+}
+
+/* ---- painel de controles ---- */
+#p3dPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.p3d-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.p3d-nome {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary, #1a202c);
+  line-height: 1.3;
+}
+.p3d-nome em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  color: var(--text-secondary, #718096);
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.p3d-acab-wrap { display: flex; align-items: center; gap: 10px; }
+.p3d-acab-label {
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-secondary, #718096);
+}
+.p3d-finish {
+  display: flex;
+  gap: 4px;
+  background: rgba(127, 140, 160, .14);
+  padding: 3px;
+  border-radius: 30px;
+}
+.p3d-finish button {
+  background: transparent;
+  border: 0;
+  color: var(--text-secondary, #718096);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.p3d-finish button[aria-pressed="true"] {
+  background: #fff;
+  color: #14171d;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+}
+
+/* ---- paleta ---- */
+#p3dPalette { display: flex; flex-direction: column; gap: 12px; }
+
+.p3d-fam {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.p3d-fam-label {
+  font-size: 11px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-secondary, #718096);
+}
+.p3d-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.p3d-sw {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  outline: 1px solid rgba(0, 0, 0, .16);
+  outline-offset: -1px;
+  cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.p3d-sw:hover { transform: scale(1.14); }
+.p3d-sw[aria-pressed="true"] {
+  border-color: var(--primary, #1a8fe3);
+  transform: scale(1.14);
+}
+.p3d-sw:focus-visible {
+  outline: 2px solid var(--primary, #1a8fe3);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .p3d-fam { grid-template-columns: 1fr; gap: 6px; }
+  #p3dStage { aspect-ratio: 1 / 1; max-height: 46vh; }
+  .p3d-topo { flex-direction: column; align-items: flex-start; }
+}
+
+/* Quem pediu menos movimento nao leva turntable na cara. */
+@media (prefers-reduced-motion: reduce) {
+  .p3d-sw { transition: none; }
+  .p3d-sw:hover, .p3d-sw[aria-pressed="true"] { transform: none; }
+}

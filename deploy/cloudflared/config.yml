@@ -1,0 +1,51 @@
+# ============================================================
+# Cloudflare Tunnel - Renostter
+# ============================================================
+# Este config é montado DENTRO do container cloudflared.
+# O credentials e gerado pelo cloudflared-setup.sh e fica ao lado deste
+# arquivo (deploy/cloudflared/renostter.json), montado em /etc/cloudflared.
+#
+# O Cloudflare Tunnel substitui a necessidade de:
+#   - Abrir porta 80/443 no firewall
+#   - Configurar SSL (Cloudflare já faz terminação TLS)
+#   - Expor IP real da VPS
+# ============================================================
+
+tunnel: renostter
+credentials-file: /etc/cloudflared/renostter.json
+
+# Logs estruturados (stdout -> `docker compose logs cloudflared`).
+# NAO usar `logfile:`: o container roda como nonroot e nao escreve em /var/log.
+loglevel: info
+
+# Metricas (opcional, útil pra debug)
+metrics: localhost:2000
+
+# Rotas - mapeia subdomios para servicos internos
+ingress:
+  # Site institucional - proxied via Pages (externo, não passa pela VPS)
+  # (Configurar diretamente no painel Cloudflare como CNAME para renostter-pages.pages.dev)
+
+  # Painel de Carreiras (Django)
+  - hostname: carreiras.renostter.com
+    service: http://nginx:80
+    originRequest:
+      noTLSVerify: true  # nginx interno usa HTTP puro
+
+  # Portainer (painel Docker)
+  - hostname: portainer.renostter.com
+    service: https://portainer:9443
+    originRequest:
+      noTLSVerify: true
+      # Portainer usa self-signed, então desabilita verificação
+
+  # Uptime Kuma (monitoramento)
+  - hostname: status.renostter.com
+    service: http://uptime-kuma:3001
+
+  # N8N (automação) - opcional, descomente se subir
+  # - hostname: n8n.renostter.com
+  #   service: http://n8n:5678
+
+  # Catch-all: obrigatório
+  - service: http_status:404

@@ -39,6 +39,27 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=20260609-youtube-inline" />
     <link rel="stylesheet" href="chatbot.css" />
+    <link rel="stylesheet" href="pintura-3d.css?v=20260902-visualizador3d" />
+
+    <!-- Import map do three.js para o visualizador 3D de pintura.
+         Um import map e inerte ate um modulo usar um destes especificadores:
+         nao baixa nada e nao custa nada no carregamento da home. O three.js
+         so e buscado quando o cliente abre o modal de personalizacao.
+         Versoes fixadas de proposito - "latest" quebra sem aviso. -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+        "three/addons/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+        "three/addons/environments/RoomEnvironment.js": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/environments/RoomEnvironment.js"
+      },
+      "integrity": {
+        "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+        "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+        "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9"
+      }
+    }
+    </script>
     <!-- Swiper.js — carrossel de vídeos -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.css"
         integrity="sha384-gAPqlBuTCdtVcYt9ocMOYWrnBZ4XSL6q+4eXqwNycOr4iFczhNKtnYhF3NEXJM51"
@@ -1017,7 +1038,14 @@
             <div class="pm-layout">
                 <!-- Área de Visualização 3D/SVG simulada -->
                 <div class="pm-visualizer">
-                    <div class="pm-stage">
+                    <!-- Visualizador 3D (padrao) -->
+                    <div id="p3dStage">
+                        <span class="p3d-hint">arraste para girar · role para aproximar</span>
+                    </div>
+                    <!-- Simulador 2D: fica oculto e so reaparece se o 3D
+                         falhar (sem WebGL, CDN fora do ar). O modal nunca
+                         pode ficar vazio - e um canal de captacao. -->
+                    <div class="pm-stage p3d-oculto" id="p3dFallback">
                         <svg viewBox="0 0 800 300" class="ac-svg" id="acSvgUnit">
                             <defs>
                                 <filter id="ac-shadow">
@@ -1050,9 +1078,27 @@
                 <!-- Controles -->
                 <div class="pm-controls">
                     <h3>Simulador de Cores</h3>
-                    <p>Toque em uma cor para personalizar sua unidade.</p>
+                    <p>Gire o equipamento e toque numa cor para ver o acabamento real.</p>
 
-                    <div class="pm-swatches" id="pmSwatches">
+                    <!-- Painel do visualizador 3D: 34 cores em 4 familias -->
+                    <div id="p3dPanel">
+                        <div class="p3d-topo">
+                            <span class="p3d-nome">
+                                <span id="p3dColorName">Branco Pérola</span>
+                                <em id="p3dColorHex">#ECEFF2</em>
+                            </span>
+                            <div class="p3d-acab-wrap">
+                                <span class="p3d-acab-label">Acabamento</span>
+                                <div class="p3d-finish" id="p3dFinish">
+                                    <button type="button" data-finish="gloss" aria-pressed="false">Brilhante</button>
+                                    <button type="button" data-finish="satin" aria-pressed="true">Acetinado</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="p3dPalette"></div>
+                    </div>
+
+                    <div class="pm-swatches p3d-oculto" id="pmSwatches">
                         <!-- Swatches rendered via JS or prepopulated here -->
                         <button class="swatch active" style="--sw-color: #E5E7EB" onclick="applAcColor('#E5E7EB', this)"
                             aria-label="Cor Cinza Claro"></button>
@@ -1108,12 +1154,12 @@
         </svg>
     </a>
 
-    <script src="script.js?v=20260528"></script>
+    <script src="script.js?v=20260902-visualizador3d"></script>
     <!-- Swiper.js deve vir antes de portfolio.js -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
         integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
         crossorigin="anonymous"></script>
-    <script src="js/portfolio.js?v=20260609-youtube-inline"></script>
+    <script src="js/portfolio.js?v=20260902-rotacao-videos"></script>
     <script src="js/reviews.js"></script>
     <script src="js/carousel.js"></script>
     <script src="calendar.js?v=20260610-calcom-thankyou"></script>
