@@ -112,6 +112,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Contadores
+/* ════════════════════════════════════════════════════════════════════
+   CONTEUDO QUE SE DATA SOZINHO
+   Nada aqui e escrito a mao: ano e tempo de casa saem da data atual,
+   entao nunca envelhecem esperando alguem lembrar de atualizar.
+   ════════════════════════════════════════════════════════════════════ */
+const ANO_FUNDACAO = 2018;
+
+(function datarConteudo() {
+    const anoAtual = new Date().getFullYear();
+
+    const anoEl = document.getElementById('ano-atual');
+    if (anoEl) anoEl.textContent = anoAtual;
+
+    /* O contador de experiencia vinha com data-target="0" e exibia
+       "0+ Anos de Experiencia" ao lado de "desde 2018". Agora e calculado. */
+    const anos = Math.max(0, anoAtual - ANO_FUNDACAO);
+    document.querySelectorAll('#exp-counter, #exp-card').forEach(el => {
+        el.setAttribute('data-target', String(anos));
+    });
+})();
+
+/* ════════════════════════════════════════════════════════════════════
+   VIDEO DO TOPO — nao gastar dados de quem nao pediu
+   Quem esta com economia de dados ligada, em conexao lenta ou pediu
+   menos movimento fica so com o poster, que ja cobre a area inteira.
+   ════════════════════════════════════════════════════════════════════ */
+(function videoDeFundoLeve() {
+    const video = document.querySelector('.hero-video');
+    if (!video) return;
+
+    const con = navigator.connection || {};
+    const economizar = con.saveData === true
+        || /(^|-)2g$/.test(con.effectiveType || '')
+        || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!economizar) return;
+
+    video.removeAttribute('autoplay');
+    video.pause();
+    video.querySelectorAll('source').forEach(s => s.remove());
+    video.load(); /* aborta o download que ja possa ter comecado */
+})();
+
 const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {

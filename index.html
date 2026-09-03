@@ -31,7 +31,6 @@
     <meta name="theme-color" content="#00AEEF" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="video" href="assets/hero-background.mp4" type="video/mp4">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
         crossorigin="anonymous" />
@@ -313,7 +312,7 @@
         <!-- Vídeo de fundo -->
         <video class="hero-video" autoplay muted loop playsinline
             poster="assets/residencial/residencia-alto-da-lapa.jpg">
-            <source src="assets/hero-background.mp4" type="video/mp4">
+            <source src="assets/hero-background.mp4?v=20260903-hero-leve" type="video/mp4">
             <img src="assets/residencial/residencia-alto-da-lapa.jpg" alt="Fundo da seção hero">
         </video>
 
@@ -1013,7 +1012,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Renostter Climatização. Todos os direitos reservados. CNPJ: 31.535.191/0001-10</p>
+            <p>© <span id="ano-atual">2026</span> Renostter Climatização. Todos os direitos reservados. CNPJ: 31.535.191/0001-10</p>
             <div class="footer-bottom-buttons" style="margin-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
                 <button id="openTermosModal" class="btn-open" aria-label="Abrir Termos de Uso">📜 Termos de Uso</button>
                 <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" 
@@ -1154,7 +1153,7 @@
         </svg>
     </a>
 
-    <script src="script.js?v=20260902-visualizador3d"></script>
+    <script src="script.js?v=20260903-conteudo-datado"></script>
     <!-- Swiper.js deve vir antes de portfolio.js -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
         integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
