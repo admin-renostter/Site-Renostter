@@ -117,7 +117,17 @@ document.addEventListener('DOMContentLoaded', () => {
    Nada aqui e escrito a mao: ano e tempo de casa saem da data atual,
    entao nunca envelhecem esperando alguem lembrar de atualizar.
    ════════════════════════════════════════════════════════════════════ */
-const ANO_FUNDACAO = 2018;
+/* Abertura da empresa: 18 de setembro de 2018 (mes 8 = setembro no JS) */
+const DATA_FUNDACAO = new Date(2018, 8, 18);
+
+/* Anos COMPLETOS, nao a diferenca de anos: antes de 18/09 o aniversario
+   ainda nao aconteceu no ano corrente e o numero seria um a mais. */
+function anosCompletosDesde(inicio, agora = new Date()) {
+    let anos = agora.getFullYear() - inicio.getFullYear();
+    const aniversario = new Date(agora.getFullYear(), inicio.getMonth(), inicio.getDate());
+    if (agora < aniversario) anos -= 1;
+    return Math.max(0, anos);
+}
 
 (function datarConteudo() {
     const anoAtual = new Date().getFullYear();
@@ -127,7 +137,7 @@ const ANO_FUNDACAO = 2018;
 
     /* O contador de experiencia vinha com data-target="0" e exibia
        "0+ Anos de Experiencia" ao lado de "desde 2018". Agora e calculado. */
-    const anos = Math.max(0, anoAtual - ANO_FUNDACAO);
+    const anos = anosCompletosDesde(DATA_FUNDACAO);
     document.querySelectorAll('#exp-counter, #exp-card').forEach(el => {
         el.setAttribute('data-target', String(anos));
     });
