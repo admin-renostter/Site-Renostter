@@ -11,7 +11,7 @@
  *   AIMLAPI_API_KEY       Backup                 aimlapi.com
  *   ZAI_API_KEY           Backup                 together.xyz (verificar endpoint)
  *   GEMINI_API_KEY        Legado / fallback      Google Gemini
- *   YOUTUBE_API_KEY       Vídeos YouTube
+ *   YOUTUBE_API_KEY       Vídeos YouTube (playlistItems: 1 unidade/chamada)
  *   GOOGLE_PLACES_API_KEY Avaliações Google
  * ─────────────────────────────────────────────────────────────────────────
  *
@@ -25,6 +25,9 @@
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
 const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 const YOUTUBE_SEARCH_ENDPOINT  = 'https://www.googleapis.com/youtube/v3/search';
+const YOUTUBE_PLAYLIST_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
+const YOUTUBE_CACHE_TTL        = 1800; /* 30 min de cache na borda da Cloudflare */
+const DEFAULT_YOUTUBE_CHANNEL  = 'UCPdh_nMh4XLdkVRH1jn7LuA'; /* canal @renostter */
 const PLACES_DETAILS_ENDPOINT  = 'https://maps.googleapis.com/maps/api/place/details/json';
 const PLACES_FIND_ENDPOINT     = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
 const RENOSTTER_QUERY          = 'Renostter Rua do Pombo Correio 428 São Paulo';
@@ -63,6 +66,70 @@ function youtubeFallbackResponse(origin, reason = 'static-fallback') {
             ...corsHeaders(origin),
         },
     });
+}
+
+/* ── YouTube: playlist de uploads do canal ───────────────────────────────
+   playlistItems.list custa 1 unidade de cota por chamada, contra 100 do
+   search.list. Com a cota gratuita de 10.000/dia isso deixa de ser um
+   limite pratico — e o cache de borda abaixo reduz ainda mais as chamadas.
+   O ID da playlist de uploads e o ID do canal com "UC" trocado por "UU". */
+/* A YouTube Data API devolve titulos com entidades HTML ("&amp;", "&#39;").
+   Como o front-end aplica o proprio escape, elas precisam ser decodificadas
+   aqui — caso contrario aparecem literalmente na tela. */
+function decodeHtmlEntities(value) {
+    return String(value ?? '')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'")
+        .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+        .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+        .replace(/&amp;/g, '&');
+}
+
+function uploadsPlaylistId(channelId) {
+    return /^UC[\w-]{10,30}$/.test(channelId) ? `UU${channelId.slice(2)}` : '';
+}
+
+/* Normaliza a resposta de playlistItems para o mesmo formato de search.list,
+   para que o front-end (js/portfolio.js) nao precise de nenhuma alteracao. */
+function normalizePlaylistItems(data, maxResults) {
+    return (data.items || [])
+        .map(item => {
+            const id = item?.snippet?.resourceId?.videoId;
+            if (!id || !/^[\w-]{6,20}$/.test(id)) return null;
+            const thumbs = item.snippet.thumbnails || {};
+            return {
+                id: { videoId: id },
+                snippet: {
+                    title: sanitizeString(decodeHtmlEntities(item.snippet.title), 200),
+                    thumbnails: {
+                        high:    { url: thumbs.maxres?.url || thumbs.standard?.url || thumbs.high?.url || `https://i.ytimg.com/vi/${id}/maxresdefault.jpg` },
+                        default: { url: thumbs.high?.url || thumbs.medium?.url || `https://i.ytimg.com/vi/${id}/hqdefault.jpg` },
+                    },
+                    publishedAt: item.snippet.publishedAt || '',
+                },
+            };
+        })
+        .filter(Boolean)
+        .slice(0, maxResults);
+}
+
+async function fetchYoutubeUploads(channelId, maxResults, apiKey) {
+    const playlistId = uploadsPlaylistId(channelId);
+    if (!playlistId) throw new Error('channelId sem playlist de uploads');
+
+    const params = new URLSearchParams({
+        key: apiKey, playlistId, part: 'snippet',
+        maxResults: String(Math.min(maxResults * 2, 50)),
+    });
+    const res  = await fetchWithTimeout(`${YOUTUBE_PLAYLIST_ENDPOINT}?${params}`, {}, 8000);
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error?.message || `playlistItems HTTP ${res.status}`);
+
+    const items = normalizePlaylistItems(data, maxResults);
+    if (!items.length) throw new Error('Playlist de uploads vazia');
+    return items;
 }
 
 /* ── Rate limiting (por IP, em memória) ─────────────────────────────────── */
@@ -383,7 +450,7 @@ async function callAI(geminiBody, env) {
    HANDLER PRINCIPAL
    ══════════════════════════════════════════════════════════════════════════ */
 export default {
-    async fetch(request, env) {
+    async fetch(request, env, ctx) {
         const origin = request.headers.get('Origin') || '';
         const url    = new URL(request.url);
 
@@ -436,36 +503,82 @@ export default {
             });
         }
 
-        /* ══ GET /youtube ══════════════════════════════════════════════════ */
+        /* ══ GET /youtube ══════════════════════════════════════════════════
+           Primaria: playlistItems na playlist de uploads (1 unidade de cota).
+           Reforco:  search.list (100 unidades), so se a primaria falhar.
+           Ultimo recurso: lista estatica.
+           Cache de borda de 30 min: uma leitura serve todos os visitantes
+           daquele data center. */
         if (request.method === 'GET' && url.pathname === '/youtube') {
-            if (!env.YOUTUBE_API_KEY) {
-                return youtubeFallbackResponse(origin, 'static-no-api-key');
-            }
+            const channelId  = url.searchParams.get('channelId') || DEFAULT_YOUTUBE_CHANNEL;
+            const maxResults = Math.floor(clampNumber(url.searchParams.get('maxResults') ?? 9, 9, 1, 24));
 
-            const channelId  = url.searchParams.get('channelId') || '';
-            const maxResults = url.searchParams.get('maxResults') || '9';
-
-            if (!channelId) {
+            if (!/^UC[\w-]{10,30}$/.test(channelId)) {
                 return new Response(
-                    JSON.stringify({ error: 'channelId é obrigatório' }),
+                    JSON.stringify({ error: 'channelId inválido' }),
                     { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } },
                 );
             }
 
-            try {
-                const params  = new URLSearchParams({ key: env.YOUTUBE_API_KEY, channelId, part: 'snippet', order: 'date', maxResults, type: 'video' });
-                const ytRes   = await fetch(`${YOUTUBE_SEARCH_ENDPOINT}?${params}`);
-                const data    = await ytRes.json();
-                if (!ytRes.ok || data.error || !data.items?.length) {
-                    return youtubeFallbackResponse(origin, 'static-youtube-unavailable');
-                }
-                return new Response(JSON.stringify(data), {
+            const jsonHeaders = (extra = {}) => ({
+                'Content-Type': 'application/json',
+                'Cache-Control': `public, max-age=${YOUTUBE_CACHE_TTL}`,
+                ...extra,
+                ...corsHeaders(origin),
+            });
+
+            const cache    = caches.default;
+            const cacheKey = new Request(`https://cache.renostter.internal/youtube/${channelId}/${maxResults}`);
+            const cached   = await cache.match(cacheKey);
+
+            if (cached) {
+                return new Response(await cached.text(), {
                     status: 200,
-                    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600', ...corsHeaders(origin) },
+                    headers: jsonHeaders({ 'X-Renostter-Cache': 'hit' }),
                 });
-            } catch {
-                return youtubeFallbackResponse(origin, 'static-fetch-error');
             }
+
+            if (!env.YOUTUBE_API_KEY) {
+                return youtubeFallbackResponse(origin, 'static-no-api-key');
+            }
+
+            let payload = null;
+
+            try {
+                payload = { items: await fetchYoutubeUploads(channelId, maxResults, env.YOUTUBE_API_KEY), source: 'uploads' };
+            } catch {
+                /* A playlist falhou: recorre ao search.list, mais caro. */
+                try {
+                    const params = new URLSearchParams({
+                        key: env.YOUTUBE_API_KEY, channelId, part: 'snippet',
+                        order: 'date', maxResults: String(maxResults), type: 'video',
+                    });
+                    const ytRes = await fetchWithTimeout(`${YOUTUBE_SEARCH_ENDPOINT}?${params}`, {}, 8000);
+                    const data  = await ytRes.json();
+                    if (ytRes.ok && !data.error && data.items?.length) {
+                        const items = data.items.map(item => ({
+                            ...item,
+                            snippet: { ...item.snippet, title: sanitizeString(decodeHtmlEntities(item.snippet?.title), 200) },
+                        }));
+                        payload = { items, source: 'search' };
+                    }
+                } catch { /* segue para o fallback estatico */ }
+            }
+
+            if (!payload) {
+                return youtubeFallbackResponse(origin, 'static-youtube-unavailable');
+            }
+
+            const body      = JSON.stringify(payload);
+            const cacheable = new Response(body, {
+                status: 200,
+                headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${YOUTUBE_CACHE_TTL}` },
+            });
+
+            if (ctx?.waitUntil) ctx.waitUntil(cache.put(cacheKey, cacheable));
+            else await cache.put(cacheKey, cacheable);
+
+            return new Response(body, { status: 200, headers: jsonHeaders({ 'X-Renostter-Cache': 'miss' }) });
         }
 
         /* ══ GET /places/find ═════════════════════════════════════════════ */

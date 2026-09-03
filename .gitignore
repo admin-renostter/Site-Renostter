@@ -29,3 +29,9 @@ deploy/cloudflared/*.json
 deploy/.env
 deploy/_backup-pre-fix/
 deploy/logs/
+
+# Configuracao local do Claude Code — ja conteve uma chave de API em texto claro
+.claude/settings.local.json
+
+# Copia antiga do repositorio dentro do proprio repositorio (17 MB, tem .git proprio)
+GITHUB-SITE/
