@@ -7,8 +7,10 @@
 
 /* ─── Configuração ─── */
 const PROXY_BASE_URL  = 'https://renostter-gemini-proxy.adminrenostter.workers.dev';
-const YT_FALLBACK_KEY = ''; /* chave removida — configure YOUTUBE_API_KEY no Worker: wrangler secret put YOUTUBE_API_KEY */
 const CHANNEL_ID      = 'UCPdh_nMh4XLdkVRH1jn7LuA';  /* canal @renostter */
+/* Playlist automatica de uploads do canal: o ID do canal com UC -> UU.
+   Usada pelo caminho sem chave (ver fetchSemChave). */
+const UPLOADS_PLAYLIST_ID = `UU${CHANNEL_ID.slice(2)}`;
 const MAX_RESULTS     = 12;  /* mais videos = mais variedade na rotacao */
 
 /* ─── Rotação por tempo ───
@@ -89,41 +91,129 @@ async function fetchViaProxy() {
     }));
 }
 
-/* ─── Busca direta via YouTube Data API v3 (fallback) ─── */
-async function fetchDirect() {
-    const params = new URLSearchParams({
-        key:        YT_FALLBACK_KEY,
-        channelId:  CHANNEL_ID,
-        part:       'snippet',
-        order:      'date',
-        maxResults: MAX_RESULTS,
-        type:       'video',
-    });
-    const res  = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
-    if (!res.ok) throw new Error(`YouTube API HTTP ${res.status}`);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    if (!data.items?.length) throw new Error('Canal sem vídeos ou chave inválida');
-    return data.items.map(item => ({
-        id:          item.id.videoId,
-        title:       item.snippet.title,
-        thumbnail:   item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.default?.url || '',
-        publishedAt: item.snippet.publishedAt,
-    }));
+/* ─── Busca SEM CHAVE (2o degrau) ──────────────────────────────────────────
+   Nao usa a YouTube Data API, portanto nao depende de chave nem de cota.
+
+   Passo 1: a IFrame Player API do YouTube carrega a playlist de uploads do
+            canal e getPlaylist() devolve os IDs dos videos.
+   Passo 2: o endpoint publico oEmbed devolve titulo e miniatura de cada ID.
+
+   Entra em acao quando o proxy falha (chave revogada, cota estourada, Worker
+   fora do ar). Como so roda nesse caso, o script do player nao pesa no
+   carregamento normal da pagina. */
+
+const IFRAME_API_SRC = 'https://www.youtube.com/iframe_api';
+const OEMBED_URL     = 'https://www.youtube.com/oembed';
+const SEM_CHAVE_TIMEOUT_MS = 12000;
+
+let iframeApiPromise = null;
+
+function carregarIframeApi() {
+    if (window.YT?.Player) return Promise.resolve();
+    if (iframeApiPromise) return iframeApiPromise;
+
+    iframeApiPromise = new Promise((resolve, reject) => {
+        /* Encadeia o callback global para nao atropelar outro uso na pagina */
+        const anterior = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => {
+            if (typeof anterior === 'function') { try { anterior(); } catch { /* ignora */ } }
+            resolve();
+        };
+
+        const script = document.createElement('script');
+        script.src   = IFRAME_API_SRC;
+        script.async = true;
+        script.onerror = () => reject(new Error('Falha ao carregar a IFrame Player API'));
+        document.head.appendChild(script);
+
+        setTimeout(() => reject(new Error('Timeout na IFrame Player API')), SEM_CHAVE_TIMEOUT_MS);
+    }).catch(err => { iframeApiPromise = null; throw err; });
+
+    return iframeApiPromise;
 }
 
+/* Le os IDs da playlist de uploads usando um player invisivel. */
+async function lerIdsDaPlaylist() {
+    await carregarIframeApi();
+
+    const host = document.createElement('div');
+    host.setAttribute('aria-hidden', 'true');
+    host.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px';
+    document.body.appendChild(host);
+
+    let player = null;
+    try {
+        return await new Promise((resolve, reject) => {
+            let terminou = false;
+            const encerrar = (fn, valor) => { if (!terminou) { terminou = true; fn(valor); } };
+
+            player = new window.YT.Player(host, {
+                width: '1', height: '1',
+                playerVars: {
+                    listType: 'playlist',
+                    list:     UPLOADS_PLAYLIST_ID,
+                    origin:   window.location.origin,
+                },
+                events: {
+                    onReady: e => {
+                        const ids = e.target.getPlaylist();
+                        if (Array.isArray(ids) && ids.length) encerrar(resolve, ids);
+                        else encerrar(reject, new Error('Playlist de uploads vazia'));
+                    },
+                    onError: e => encerrar(reject, new Error(`Player YouTube erro ${e.data}`)),
+                },
+            });
+
+            setTimeout(() => encerrar(reject, new Error('Timeout ao ler a playlist')), SEM_CHAVE_TIMEOUT_MS);
+        });
+    } finally {
+        try { player?.destroy?.(); } catch { /* ignora */ }
+        host.remove();
+    }
+}
+
+/* Titulo e miniatura via oEmbed — publico, sem chave, com CORS liberado. */
+async function buscarMetadados(id) {
+    const alvo = `${OEMBED_URL}?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id}`)}`;
+    const base = {
+        id,
+        title:       'Vídeo do canal Renostter',
+        thumbnail:   `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
+        publishedAt: '',
+    };
+    try {
+        const res = await fetch(alvo);
+        if (!res.ok) return base;
+        const data = await res.json();
+        return { ...base, title: data.title || base.title };
+    } catch {
+        return base; /* um metadado que falha nao derruba a galeria inteira */
+    }
+}
+
+async function fetchSemChave() {
+    const ids    = (await lerIdsDaPlaylist()).slice(0, MAX_RESULTS);
+    const videos = await Promise.all(ids.map(buscarMetadados));
+    if (!videos.length) throw new Error('Nenhum vídeo recuperado sem chave');
+    return videos;
+}
+
+/* Cascata de fontes, da mais rapida para a mais resiliente:
+   1. Worker (playlistItems + cache de borda) — 1 requisicao, ja em cache
+   2. Sem chave (IFrame API + oEmbed)         — nao depende de chave nem cota
+   3. Lista estatica                          — tratada em initVideoGallery */
 async function fetchChannelVideos() {
     const proxyReady = PROXY_BASE_URL && !PROXY_BASE_URL.includes('SEU_USUARIO');
-    try {
-        return proxyReady ? await fetchViaProxy() : await fetchDirect();
-    } catch (proxyErr) {
-        /* Se o proxy falhar, tenta direto */
-        if (proxyReady) {
-            console.warn('[Portfolio] Proxy falhou, tentando API direta:', proxyErr.message);
-            return fetchDirect();
+
+    if (proxyReady) {
+        try {
+            return await fetchViaProxy();
+        } catch (proxyErr) {
+            console.warn('[Portfolio] Proxy falhou, tentando sem chave:', proxyErr.message);
         }
-        throw proxyErr;
     }
+
+    return fetchSemChave();
 }
 
 /* ─── Fallback estático (se ambas as APIs falharem) ─── */

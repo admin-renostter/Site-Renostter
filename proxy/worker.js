@@ -53,6 +53,9 @@ function corsHeaders(origin) {
         'Access-Control-Allow-Origin': allowed,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
+        /* Sem isto o navegador nao consegue ler o cabecalho de diagnostico,
+           mesmo com o Worker enviando-o. */
+        'Access-Control-Expose-Headers': 'X-Renostter-Cache',
         'Access-Control-Max-Age': '86400',
     };
 }
