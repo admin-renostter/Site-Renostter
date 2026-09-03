@@ -141,6 +141,11 @@ function anosCompletosDesde(inicio, agora = new Date()) {
     document.querySelectorAll('#exp-counter, #exp-card').forEach(el => {
         el.setAttribute('data-target', String(anos));
     });
+
+    /* O mesmo numero aparece no topo da pagina, em outro formato.
+       Vinha fixo em "5 Anos" e contradizia a secao de numeros. */
+    const heroEl = document.getElementById('exp-hero');
+    if (heroEl) heroEl.textContent = `${anos} ${anos === 1 ? 'Ano' : 'Anos'}`;
 })();
 
 /* ════════════════════════════════════════════════════════════════════
