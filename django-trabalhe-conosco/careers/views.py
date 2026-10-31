@@ -1,5 +1,8 @@
 import logging
 import mimetypes
+from uuid import uuid4
+
+from django.conf import settings
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -20,7 +23,6 @@ from django_q.tasks import async_task
 
 from .forms import ApplicationForm, JobAdminForm, JobFilterForm, MasterJobAdminForm, RecruiterAuthenticationForm, RecruiterPasswordResetForm, UserProfileForm
 from .models import Application, Job, UserProfile
-from .tasks import send_application_emails
 from .services.storage import StorageNotConfigured, download_resume_from_supabase
 from .services.storage import upload_resume_to_supabase
 
@@ -34,31 +36,44 @@ def health_check(request):
     return JsonResponse({"status": "ok"})
 
 
+def _erp():
+    from .services.erp_client import ErpClient
+    return ErpClient()
+
+
+def _filtrar_vagas(vagas, data):
+    """Filtros da página pública aplicados sobre a lista que veio do ERP."""
+    q = (data.get("q") or "").strip().lower()
+    out = []
+    for v in vagas:
+        if q and q not in v.title.lower() and q not in v.description.lower():
+            continue
+        if data.get("area") and v.area.lower() != data["area"].strip().lower():
+            continue
+        if data.get("modality") and v.modality != data["modality"]:
+            continue
+        if data.get("contract_type") and v.contract_type != data["contract_type"]:
+            continue
+        out.append(v)
+    return out
+
+
 class JobListView(ListView):
-    model = Job
+    """Vagas abertas e não vencidas do ERP (cache de 60 s; última lista conhecida se o ERP cair)."""
+
     template_name = "careers/job_list.html"
     context_object_name = "jobs"
     paginate_by = 20
 
     def get_queryset(self):
+        self.todas = [v for v in _erp().vagas_publicas() if v.is_open]
         form = JobFilterForm(self.request.GET)
-        qs = Job.objects.filter(status=Job.Status.PUBLICADA, approval_status=Job.ApprovalStatus.APROVADA).filter(Q(expires_at__isnull=True) | Q(expires_at__gte=timezone.localdate()))
-        if form.is_valid():
-            data = form.cleaned_data
-            if data["q"]:
-                qs = qs.filter(Q(title__icontains=data["q"]) | Q(description__icontains=data["q"]))
-            if data["area"]:
-                qs = qs.filter(area__iexact=data["area"])
-            if data["modality"]:
-                qs = qs.filter(modality=data["modality"])
-            if data["contract_type"]:
-                qs = qs.filter(contract_type=data["contract_type"])
-        return qs.only("id", "title", "description", "location", "modality", "contract_type", "compensation_type", "compensation_value", "area", "created_at")
+        return _filtrar_vagas(self.todas, form.cleaned_data) if form.is_valid() else self.todas
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["filter_form"] = JobFilterForm(self.request.GET)
-        ctx["areas"] = Job.objects.exclude(area="").values_list("area", flat=True).distinct().order_by("area")
+        ctx["areas"] = sorted({v.area for v in self.todas if v.area})
         return ctx
 
 
@@ -77,14 +92,20 @@ class ApplicationCreateView(CreateView):
         if not job_id:
             messages.error(request, "Escolha uma vaga antes de enviar sua candidatura.")
             return redirect("careers:job_list")
-        self.job = get_object_or_404(Job, pk=job_id, status=Job.Status.PUBLICADA, approval_status=Job.ApprovalStatus.APROVADA)
-        if not self.job.is_open:
+        self.job = _erp().vaga_publica(job_id)
+        if not self.job or not self.job.is_open:
             messages.error(request, "Esta vaga nao esta mais aberta.")
             return redirect("careers:job_list")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.instance.job = self.job
+        # Grava localmente e entrega ao ERP por tarefa (com retentativa). O e-mail de
+        # confirmação ao candidato sai do ERP; depois de entregue, a cópia local é apagada.
+        form.instance.job = None
+        form.instance.erp_vaga_id = self.job.pk
+        form.instance.erp_vaga_titulo = self.job.title[:150]
+        form.instance.erp_status = Application.ErpStatus.PENDENTE
+        form.instance.erp_chave = uuid4()
         if form.instance.resume:
             form.instance.resume_original_name = form.instance.resume.name
         response = super().form_valid(form)
@@ -92,21 +113,9 @@ class ApplicationCreateView(CreateView):
             self.object.retention_until = self.object.lgpd_retention_deadline
             Application.objects.filter(pk=self.object.pk).update(retention_until=self.object.retention_until)
         try:
-            stored_file = upload_resume_to_supabase(self.object)
-            Application.objects.filter(pk=self.object.pk).update(resume_storage_key=stored_file.key)
-            self.object.resume_storage_key = stored_file.key
-        except StorageNotConfigured:
-            pass
+            async_task("careers.tasks.entregar_ao_erp", self.object.pk)
         except Exception:
-            logger.exception("Falha ao enviar curriculo da candidatura %s para Supabase.", self.object.pk)
-        try:
-            send_application_emails(self.object)
-        except Exception:
-            logger.exception("Falha ao enviar e-mails da candidatura %s.", self.object.pk)
-        try:
-            async_task("careers.tasks.process_application", self.object.pk)
-        except Exception:
-            logger.exception("Falha ao agendar processamento da candidatura %s", self.object.pk)
+            logger.exception("Falha ao agendar a entrega da candidatura %s ao ERP", self.object.pk)
         messages.success(
             self.request,
             "Seu curriculo foi recebido com sucesso. Nossa equipe avaliara suas informacoes e, caso haja aderencia com a vaga, a Renostter entrara em contato para as proximas etapas.",
@@ -117,6 +126,7 @@ class ApplicationCreateView(CreateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["job"] = self.job
+        ctx["erp_public_url"] = settings.ERP_PUBLIC_URL
         return ctx
 
 

@@ -120,11 +120,27 @@ class Job(models.Model):
 
 def resume_upload_path(instance, filename: str) -> str:
     suffix = Path(filename).suffix.lower()
-    return f"curriculos/vaga-{instance.job_id}/{timezone.now():%Y/%m}/{uuid4().hex}{suffix}"
+    vaga = instance.erp_vaga_id or instance.job_id
+    return f"curriculos/vaga-{vaga}/{timezone.now():%Y/%m}/{uuid4().hex}{suffix}"
 
 
 class Application(models.Model):
-    job = models.ForeignKey(Job, verbose_name="Vaga", on_delete=models.CASCADE, related_name="applications")
+    class ErpStatus(models.TextChoices):
+        PENDENTE = "pendente", "Aguardando envio ao ERP"
+        ENTREGUE = "entregue", "Entregue ao ERP"
+        RECUSADA = "recusada", "Recusada (vaga fechada)"
+        FALHOU = "falhou", "Falhou"
+
+    # RH Fase 2: a vaga vive no ERP; `job` fica só para candidaturas antigas
+    job = models.ForeignKey(Job, verbose_name="Vaga", on_delete=models.CASCADE, related_name="applications", null=True, blank=True)
+    erp_vaga_id = models.CharField("Vaga no ERP", max_length=40, blank=True, db_index=True)
+    erp_vaga_titulo = models.CharField("Titulo da vaga", max_length=150, blank=True)
+    erp_status = models.CharField("Entrega ao ERP", max_length=20, choices=ErpStatus.choices, blank=True, db_index=True)
+    erp_id = models.CharField("Candidatura no ERP", max_length=40, blank=True)
+    erp_chave = models.UUIDField("Chave de envio", null=True, blank=True, unique=True)
+    erp_tentativas = models.PositiveIntegerField("Tentativas de envio", default=0)
+    erp_erro = models.CharField("Ultimo erro de envio", max_length=300, blank=True)
+    banco_talentos = models.BooleanField("Aceito ficar no banco de talentos da Renostter por 6 meses", default=False)
     name = models.CharField("Nome", max_length=100)
     email = models.EmailField("E-mail", db_index=True)
     phone = models.CharField("Telefone", max_length=20, blank=True)
@@ -153,7 +169,11 @@ class Application(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"{self.name} - {self.job}"
+        return f"{self.name} - {self.vaga_titulo}"
+
+    @property
+    def vaga_titulo(self) -> str:
+        return self.erp_vaga_titulo or (self.job.title if self.job_id else "")
 
     @property
     def resume_url(self) -> str:

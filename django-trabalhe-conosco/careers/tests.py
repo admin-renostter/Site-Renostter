@@ -170,47 +170,7 @@ class StorageMonitorCommandTests(SimpleTestCase):
         mock_call_command.assert_not_called()
 
 
-class PublicApplicationFlowTests(TestCase):
-    def setUp(self):
-        self.job = Job.objects.create(
-            title="Tecnico em Climatizacao",
-            description="Atendimento tecnico em campo.",
-            location="Sao Paulo",
-            contract_type=Job.ContractType.PJ,
-            status=Job.Status.PUBLICADA,
-            approval_status=Job.ApprovalStatus.APROVADA,
-            published_at=timezone.now(),
-        )
-
-    @patch("careers.views.async_task")
-    @patch("careers.views.send_application_emails")
-    @patch("careers.views.upload_resume_to_supabase")
-    def test_public_application_post_does_not_require_csrf_cookie(self, mock_upload, mock_send_email, mock_async_task):
-        mock_upload.return_value.key = "curriculos/vaga-1/teste.pdf"
-        client = Client(enforce_csrf_checks=True)
-        resume = SimpleUploadedFile("curriculo.pdf", b"%PDF-1.4\n%%EOF", content_type="application/pdf")
-
-        response = client.post(
-            f"{reverse('careers:apply')}?vaga={self.job.pk}",
-            {
-                "vaga": str(self.job.pk),
-                "name": "Joao Candidato",
-                "email": "joao@example.com",
-                "phone": "11999999999",
-                "message": "Tenho experiencia tecnica.",
-                "resume": resume,
-            },
-            follow=True,
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Recebemos seu curriculo")
-        self.assertContains(response, "Nossa equipe avaliara suas informacoes")
-        self.assertContains(response, 'data-careers-success-modal')
-        self.assertEqual(Application.objects.count(), 1)
-        self.assertEqual(Application.objects.first().resume_storage_key, "curriculos/vaga-1/teste.pdf")
-        mock_send_email.assert_called_once()
-        mock_async_task.assert_called_once()
+# Fluxo público de candidatura: careers/tests_entrega.py (vagas vêm do ERP desde a Fase 2 do RH)
 
 
 class HealthCheckTests(TestCase):

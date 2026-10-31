@@ -115,3 +115,150 @@ def _send_email(subject: str, html: str, recipients: list[str], text: str = "") 
         timeout=20,
     )
     response.raise_for_status()
+
+
+# ───────────────────────── RH Fase 2: entrega ao ERP ─────────────────────────
+# Retentativas: 1, 5, 15 e 60 min; depois de 6 em 6 h até 3 dias da candidatura.
+ATRASOS_MIN = [1, 5, 15, 60]
+ATRASO_LONGO_MIN = 360
+PRAZO_ENTREGA_DIAS = 3
+CONSENTIMENTO_VERSAO = "2026-10"
+
+
+def _proximo_atraso(tentativas: int) -> int:
+    return ATRASOS_MIN[tentativas - 1] if tentativas <= len(ATRASOS_MIN) else ATRASO_LONGO_MIN
+
+
+def _ler_curriculo(application: Application) -> bytes | None:
+    if application.resume:
+        try:
+            with application.resume.open("rb") as f:
+                return f.read()
+        except OSError:
+            logger.warning("Curriculo local indisponivel para a candidatura %s.", application.pk)
+    if application.resume_storage_key:
+        from .services.storage import download_resume_from_supabase
+        return download_resume_from_supabase(application.resume_storage_key).content
+    return None
+
+
+def _apagar_copia_local(application: Application, motivo: str) -> None:
+    """Depois que o ERP tem a candidatura (ou ela foi recusada), o site não guarda cópia."""
+    from django.utils import timezone
+    from .services.storage import StorageNotConfigured, delete_resume_from_supabase
+
+    if application.resume_storage_key:
+        try:
+            delete_resume_from_supabase(application.resume_storage_key)
+        except StorageNotConfigured:
+            pass
+        except Exception:
+            logger.exception("Falha ao apagar o curriculo da candidatura %s no storage.", application.pk)
+    if application.resume:
+        try:
+            application.resume.delete(save=False)
+        except OSError:
+            pass
+    agora = timezone.now()
+    Application.objects.filter(pk=application.pk).update(
+        name=f"Candidatura #{application.pk}", email=f"deleted+{application.pk}@lgpd.local", phone="",
+        message="", resume="", resume_text="", resume_storage_key="", resume_original_name="", qa_score=0,
+        deleted_at=agora, resume_deleted_at=agora, deletion_reason=motivo,
+    )
+
+
+def _reagendar(application: Application, erro: str) -> None:
+    from datetime import timedelta
+    from django.utils import timezone
+    from django_q.models import Schedule
+    from django_q.tasks import schedule
+
+    tentativas = application.erp_tentativas + 1
+    limite = application.created_at + timedelta(days=PRAZO_ENTREGA_DIAS)
+    proxima = timezone.now() + timedelta(minutes=_proximo_atraso(tentativas))
+    if proxima > limite:
+        Application.objects.filter(pk=application.pk).update(erp_status=Application.ErpStatus.FALHOU, erp_tentativas=tentativas, erp_erro=erro[:300])
+        _avisar_responsavel(application, erro)
+        return
+    Application.objects.filter(pk=application.pk).update(erp_tentativas=tentativas, erp_erro=erro[:300])
+    schedule("careers.tasks.entregar_ao_erp", application.pk, schedule_type=Schedule.ONCE, next_run=proxima,
+             name=f"entregar-erp-{application.pk}-{tentativas}")
+
+
+def _avisar_responsavel(application: Application, erro: str) -> None:
+    try:
+        _send_email(
+            subject=f"Candidatura #{application.pk} nao chegou ao ERP",
+            html=(f"<p>A candidatura #{application.pk} para <strong>{application.vaga_titulo}</strong> nao pode ser entregue ao ERP.</p>"
+                  f"<p>Ultimo erro: {erro}</p><p>Os dados continuam no Painel RH do site ate o prazo de retencao.</p>"),
+            recipients=[settings.RH_EMAIL],
+            text=f"A candidatura #{application.pk} nao pode ser entregue ao ERP. Ultimo erro: {erro}",
+        )
+    except Exception:
+        logger.exception("Falha ao avisar o responsavel sobre a candidatura %s.", application.pk)
+
+
+def _avisar_vaga_fechada(application: Application) -> None:
+    try:
+        _send_email(
+            subject="Sobre sua candidatura - Renostter",
+            html=(f"<p>Ola, {application.name}.</p><p>A vaga <strong>{application.vaga_titulo}</strong> foi encerrada antes de "
+                  "recebermos sua candidatura, por isso ela nao seguiu no processo. Fique de olho em novas vagas em "
+                  "<a href='https://carreiras.renostter.com/trabalhe-conosco/'>carreiras.renostter.com</a>.</p>"),
+            recipients=[application.email],
+            text=f"A vaga {application.vaga_titulo} foi encerrada antes de recebermos sua candidatura.",
+        )
+    except Exception:
+        logger.exception("Falha ao avisar o candidato da candidatura %s.", application.pk)
+
+
+def entregar_ao_erp(application_id: int) -> str:
+    """Envia a candidatura ao ERP. Idempotente: o ERP reconhece reenvios pela `erp_chave`."""
+    from .services.erp_client import ErpClient, ErpErro, ErpIndisponivel
+
+    application = Application.objects.filter(pk=application_id).first()
+    if not application or application.erp_status != Application.ErpStatus.PENDENTE:
+        return "ignorada"
+    try:
+        arquivo = _ler_curriculo(application)
+        texto = ""
+        if application.resume:
+            try:
+                texto = extract_resume_text(application.resume.path)
+            except (OSError, ValueError, NotImplementedError):
+                texto = ""
+            if texto.startswith("[docling_unavailable]"):
+                texto = ""
+        dados = {
+            "vaga_id": application.erp_vaga_id, "nome": application.name, "email": application.email,
+            "telefone": application.phone, "mensagem": application.message,
+            "banco_talentos": application.banco_talentos,
+            "consentimento_versao": CONSENTIMENTO_VERSAO if application.banco_talentos else None,
+            "curriculo_texto": (texto or "")[:20000], "origem_ref": f"site:app:{application.pk}",
+        }
+        erp_id = ErpClient().enviar_candidatura(dados, arquivo, application.resume_original_name or "curriculo", str(application.erp_chave))
+    except ErpIndisponivel as e:
+        _reagendar(application, str(e))
+        return "reagendada"
+    except ErpErro as e:
+        if e.code == "RH_CANDIDATURA_DUPLICADA":
+            # a pessoa já está nessa vaga no ERP: nada a entregar
+            Application.objects.filter(pk=application.pk).update(erp_status=Application.ErpStatus.ENTREGUE, erp_erro="Ja estava na vaga")
+            _apagar_copia_local(application, "entregue_ao_erp")
+            return "entregue"
+        if e.code in ("RH_VAGA_FECHADA", "RH_VAGA_NAO_ENCONTRADA"):
+            Application.objects.filter(pk=application.pk).update(erp_status=Application.ErpStatus.RECUSADA, erp_erro=e.mensagem[:300])
+            _avisar_vaga_fechada(application)
+            _apagar_copia_local(application, "vaga_fechada")
+            return "recusada"
+        Application.objects.filter(pk=application.pk).update(erp_status=Application.ErpStatus.FALHOU, erp_erro=f"{e.code}: {e.mensagem}"[:300])
+        _avisar_responsavel(application, f"{e.code}: {e.mensagem}")
+        return "falhou"
+    except Exception as e:  # erro inesperado (ex.: storage): tenta de novo mais tarde
+        logger.exception("Falha ao entregar a candidatura %s ao ERP.", application.pk)
+        _reagendar(application, f"{type(e).__name__}: {e}")
+        return "reagendada"
+    Application.objects.filter(pk=application.pk).update(erp_status=Application.ErpStatus.ENTREGUE, erp_id=erp_id, erp_erro="")
+    _apagar_copia_local(application, "entregue_ao_erp")
+    audit_event("application_delivered_to_erp", {"application_id": application.pk, "erp_id": erp_id})
+    return "entregue"

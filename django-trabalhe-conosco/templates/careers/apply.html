@@ -30,14 +30,18 @@
         {% csrf_token %}
         <input type="hidden" name="vaga" value="{{ job.pk }}">
         {{ form.non_field_errors }}
-        {% for field in form %}
+        {% for field in form %}{% if field.name != "banco_talentos" %}
           <label>
             <span>{{ field.label }}{% if field.field.required %} *{% endif %}</span>
             {{ field }}
             {% for error in field.errors %}<strong class="careers-error">{{ error }}</strong>{% endfor %}
           </label>
-        {% endfor %}
-        <p class="careers-consent">Ao enviar, voce autoriza a Renostter a usar seus dados somente para processos seletivos e contato profissional.</p>
+        {% endif %}{% endfor %}
+        <label class="careers-check">
+          {{ form.banco_talentos }}
+          <span>{{ form.banco_talentos.label }} (opcional)</span>
+        </label>
+        <p class="careers-consent">Ao enviar, voce autoriza a Renostter a usar seus dados somente para este processo seletivo. Eles ficam guardados enquanto o processo estiver em andamento e, se voce marcar a opcao acima, por ate 6 meses no banco de talentos para outras vagas. Voce pode pedir a exclusao a qualquer momento. <a href="{{ erp_public_url }}/crm/privacidade.html" target="_blank" rel="noopener">Politica de privacidade</a>.</p>
         <button class="careers-button" type="submit">Enviar candidatura</button>
       </form>
     </aside>

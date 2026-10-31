@@ -57,9 +57,10 @@ class RecruiterPasswordResetForm(PasswordResetForm):
 class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ["name", "email", "phone", "message", "resume"]
+        fields = ["name", "email", "phone", "message", "resume", "banco_talentos"]
         widgets = {
             "message": forms.Textarea(attrs={"rows": 4, "placeholder": "Mensagem opcional"}),
+            "banco_talentos": forms.CheckboxInput(attrs={"class": "careers-check-input"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -69,7 +70,8 @@ class ApplicationForm(forms.ModelForm):
             "email": "email@exemplo.com",
             "phone": "(11) 99999-9999",
         }
-        apply_field_class(self.fields)
+        apply_field_class({k: v for k, v in self.fields.items() if k != "banco_talentos"})
+        self.fields["banco_talentos"].required = False
         for name, placeholder in placeholders.items():
             self.fields[name].widget.attrs.setdefault("placeholder", placeholder)
 
