@@ -127,6 +127,7 @@ def resume_upload_path(instance, filename: str) -> str:
 class Application(models.Model):
     class ErpStatus(models.TextChoices):
         PENDENTE = "pendente", "Aguardando envio ao ERP"
+        ENVIANDO = "enviando", "Enviando ao ERP"
         ENTREGUE = "entregue", "Entregue ao ERP"
         RECUSADA = "recusada", "Recusada (vaga fechada)"
         FALHOU = "falhou", "Falhou"
@@ -140,6 +141,7 @@ class Application(models.Model):
     erp_chave = models.UUIDField("Chave de envio", null=True, blank=True, unique=True)
     erp_tentativas = models.PositiveIntegerField("Tentativas de envio", default=0)
     erp_erro = models.CharField("Ultimo erro de envio", max_length=300, blank=True)
+    erp_ultima_tentativa = models.DateTimeField("Ultima tentativa de envio", null=True, blank=True)
     banco_talentos = models.BooleanField("Aceito ficar no banco de talentos da Renostter por 6 meses", default=False)
     name = models.CharField("Nome", max_length=100)
     email = models.EmailField("E-mail", db_index=True)

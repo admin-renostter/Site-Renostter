@@ -129,6 +129,8 @@ class ApplicationCreateView(CreateView):
             async_task("careers.tasks.entregar_ao_erp", self.object.pk)
         except Exception:
             logger.exception("Falha ao agendar a entrega da candidatura %s ao ERP", self.object.pk)
+        from .tasks import garantir_reenfileiramento
+        garantir_reenfileiramento()  # rede de segurança: reenvia o que ficar parado
         messages.success(
             self.request,
             "Seu curriculo foi recebido com sucesso. Nossa equipe avaliara suas informacoes e, caso haja aderencia com a vaga, a Renostter entrara em contato para as proximas etapas.",

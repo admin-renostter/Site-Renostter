@@ -25,6 +25,8 @@ ACOES = {
     Job.Status.REJEITADA: ["enviar", "rejeitar"],
 }
 COM_MOTIVO = {"pedir_ajustes", "rejeitar"}
+RESULTADO = {"enviar": "em_aprovacao", "aprovar": "aberta", "pedir_ajustes": "ajustes_solicitados", "rejeitar": "rejeitada",
+             "pausar": "pausada", "marcar_preenchida": "preenchida", "encerrar": "encerrada"}
 
 
 class Command(BaseCommand):
@@ -56,13 +58,13 @@ class Command(BaseCommand):
                 continue
             try:
                 vaga, existente = client.importar_vaga(dados, ator)
-                if existente:
-                    self.stdout.write(f"  já estava no ERP: {vaga.pk} ({vaga.status})")
-                else:
-                    for acao in acoes:
-                        motivo = (job.rejection_reason or "Migrado do site de Carreiras.") if acao in COM_MOTIVO else None
-                        vaga = client.acao_vaga(vaga.pk, acao, ator, motivo=motivo)
-                    self.stdout.write(f"  criada no ERP: {vaga.pk} ({vaga.status})")
+                # rodar de novo depois de uma falha: continua a partir da situação em que a vaga ficou
+                estados = ["rascunho"] + [RESULTADO[a] for a in acoes]
+                faltam = acoes[estados.index(vaga.status):] if vaga.status in estados else []
+                for acao in faltam:
+                    motivo = (job.rejection_reason or "Migrado do site de Carreiras.") if acao in COM_MOTIVO else None
+                    vaga = client.acao_vaga(vaga.pk, acao, ator, motivo=motivo)
+                self.stdout.write(f"  {'já estava' if existente else 'criada'} no ERP: {vaga.pk} ({vaga.status})")
                 mapa[job.pk] = (vaga.pk, vaga.status)
             except (ErpErro, ErpIndisponivel) as e:
                 raise CommandError(f"Vaga #{job.pk}: {e}") from e

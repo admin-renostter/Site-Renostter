@@ -80,6 +80,7 @@ class ExportarTests(TestCase):
     @patch("careers.services.erp_client.ErpClient.importar_vaga")
     def test_rodar_de_novo_nao_repete_acoes(self, mock_imp, mock_acao):
         mock_imp.return_value = (E.erp_para_job({"id": "vag_1", "titulo": "t", "situacao": "aberta"}), True)
+        Job.objects.filter(pk=self.rascunho.pk).delete()
         with patch("careers.tasks.entregar_ao_erp", return_value="entregue"):
             call_command("exportar_para_erp", "--ator", "adm@renostter.com", "--apply", stdout=StringIO())
         mock_acao.assert_not_called()
@@ -95,3 +96,14 @@ class EntregaMigracaoTests(TestCase):
                                        name="Ana", email="ana@x.com", resume="", created_at=timezone.now())
         tasks.entregar_ao_erp(a.pk, enviar_email=False)
         self.assertIs(mock_env.call_args.args[0]["enviar_email"], False)
+
+
+class ExportarRetomadaTests(TestCase):
+    @patch("careers.services.erp_client.ErpClient.acao_vaga")
+    @patch("careers.services.erp_client.ErpClient.importar_vaga")
+    def test_rodar_de_novo_continua_de_onde_parou(self, mock_imp, mock_acao):
+        Job.objects.create(title="Pausada", status="pausada", description="D", location="SP", contract_type="CLT")
+        mock_imp.return_value = (E.erp_para_job({"id": "vag_1", "titulo": "t", "situacao": "em_aprovacao"}), True)
+        mock_acao.side_effect = lambda vid, acao, ator, motivo=None: E.erp_para_job({"id": vid, "titulo": "t", "situacao": {"aprovar": "aberta", "pausar": "pausada"}[acao]})
+        call_command("exportar_para_erp", "--ator", "adm@renostter.com", "--apply", stdout=StringIO())
+        self.assertEqual([c.args[1] for c in mock_acao.call_args_list], ["aprovar", "pausar"])

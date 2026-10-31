@@ -25,7 +25,9 @@ class AssinaturaTests(SimpleTestCase):
         h = E.sha256hex('{"a":1}')
         self.assertEqual(h, "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862")
         self.assertEqual(E.assinar(SEGREDO, 1793500000, "post", "/api/rh/integracao/vagas", h),
-                         "981918089b59f65145045721db390581549cd466b54d9f76b0f31e20ab7bb9b3")
+                         "8db6a77accd9b7373257c271177a5c8d171b428fa0746d9a292119d4d0affe1b")
+        self.assertEqual(E.assinar(SEGREDO, 1793500000, "POST", "/api/rh/integracao/vagas", h, " Ana@Renostter.com ", "k-1"),
+                         "23f6cdf9c1f4dd46e01ebeae0f82b0121459e1bb235f008637e5ace2c0d9e3f4")
 
     def test_verificar_assinatura(self):
         sig = E.assinar(SEGREDO, 1000, "POST", "/x", E.sha256hex(""))
@@ -51,7 +53,7 @@ class ClienteTests(SimpleTestCase):
         self.assertEqual((metodo, url), ("POST", "http://erp:3000/api/rh/integracao/vagas"))
         h = kw["headers"]
         self.assertEqual(h["X-RH-Ator"], "ana@renostter.com")
-        esperado = E.assinar(SEGREDO, int(h["X-RH-Timestamp"]), "POST", "/api/rh/integracao/vagas", hashlib.sha256(kw["data"]).hexdigest())
+        esperado = E.assinar(SEGREDO, int(h["X-RH-Timestamp"]), "POST", "/api/rh/integracao/vagas", hashlib.sha256(kw["data"]).hexdigest(), "ana@renostter.com")
         self.assertEqual(h["X-RH-Signature"], esperado)
         self.assertIn("Técnico".encode(), kw["data"])
 
@@ -91,7 +93,7 @@ class ClienteTests(SimpleTestCase):
         kw = req.call_args.kwargs
         dados = kw["files"]["dados"][1].decode()
         hash_corpo = E.sha256hex(dados + "\n" + E.sha256hex(b"%PDF-1.4"))
-        self.assertEqual(kw["headers"]["X-RH-Signature"], E.assinar(SEGREDO, int(kw["headers"]["X-RH-Timestamp"]), "POST", "/api/rh/integracao/candidaturas", hash_corpo))
+        self.assertEqual(kw["headers"]["X-RH-Signature"], E.assinar(SEGREDO, int(kw["headers"]["X-RH-Timestamp"]), "POST", "/api/rh/integracao/candidaturas", hash_corpo, "", "chave-1"))
         self.assertEqual(kw["headers"]["X-Idempotency-Key"], "chave-1")
         self.assertEqual(kw["files"]["curriculo"][0], "cv.pdf")
 

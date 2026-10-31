@@ -77,8 +77,9 @@ class ListaEFormularioTests(TestCase):
                    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 class EntregaTests(TestCase):
     def criar(self, **kw):
+        kw.setdefault("erp_chave", "11111111-1111-1111-1111-111111111111")
         a = Application.objects.create(
-            erp_vaga_id="vag_a", erp_vaga_titulo="Tecnico", erp_status="pendente", erp_chave="11111111-1111-1111-1111-111111111111",
+            erp_vaga_id="vag_a", erp_vaga_titulo="Tecnico", erp_status="pendente",
             name="Joao", email="joao@example.com", phone="11", message="m", banco_talentos=True,
             resume=SimpleUploadedFile("cv.pdf", b"%PDF-1.4 conteudo", content_type="application/pdf"), resume_original_name="cv.pdf", **kw)
         return a
@@ -139,3 +140,65 @@ class EntregaTests(TestCase):
 
     def test_atrasos(self):
         self.assertEqual([tasks._proximo_atraso(n) for n in range(1, 7)], [1, 5, 15, 60, 360, 360])
+
+
+@override_settings(PRIVATE_MEDIA_ROOT=MEDIA, MEDIA_ROOT=MEDIA, RH_EMAIL="rh@teste.com", RESEND_API_KEY="",
+                   EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+class EntregaRobustezTests(TestCase):
+    criar = EntregaTests.criar
+
+    @patch("django_q.tasks.schedule")
+    @patch("careers.tasks.extract_resume_text", return_value="")
+    @patch("careers.services.erp_client.ErpClient.enviar_candidatura", side_effect=ErpErro("RH_ASSINATURA_EXPIRADA", "Assinatura expirada.", 401))
+    def test_401_tenta_de_novo(self, *_):
+        a = self.criar()
+        self.assertEqual(tasks.entregar_ao_erp(a.pk), "reagendada")
+        a.refresh_from_db()
+        self.assertEqual(a.erp_status, "pendente")
+        self.assertTrue(a.resume)
+
+    @patch("careers.tasks.extract_resume_text", return_value="")
+    @patch("careers.services.erp_client.ErpClient.enviar_candidatura", side_effect=ErpErro("RH_VAGA_NAO_ENCONTRADA", "Vaga não encontrada.", 404))
+    def test_vaga_nao_encontrada_guarda_dados_e_avisa_rh(self, *_):
+        from django.core import mail
+        a = self.criar()
+        self.assertEqual(tasks.entregar_ao_erp(a.pk), "falhou")
+        a.refresh_from_db()
+        self.assertEqual(a.email, "joao@example.com")
+        self.assertTrue(a.resume)
+        self.assertEqual(mail.outbox[0].to, ["rh@teste.com"])
+
+    @patch("django_q.tasks.schedule")
+    @patch("careers.services.erp_client.ErpClient.enviar_candidatura")
+    def test_curriculo_ilegivel_nao_entrega_sem_arquivo(self, mock_env, _):
+        a = self.criar()
+        import os
+        os.remove(a.resume.path)
+        self.assertEqual(tasks.entregar_ao_erp(a.pk), "reagendada")
+        mock_env.assert_not_called()
+
+    @patch("careers.services.erp_client.ErpClient.enviar_candidatura")
+    def test_outra_execucao_ja_enviando_e_ignorada(self, mock_env):
+        a = self.criar()
+        Application.objects.filter(pk=a.pk).update(erp_status="enviando")
+        self.assertEqual(tasks.entregar_ao_erp(a.pk), "ignorada")
+        mock_env.assert_not_called()
+
+    @patch("django_q.tasks.async_task")
+    def test_reenfileira_paradas(self, mock_async):
+        parada = self.criar()
+        Application.objects.filter(pk=parada.pk).update(created_at=timezone.now() - timedelta(minutes=20))
+        travada = self.criar(erp_chave="33333333-3333-3333-3333-333333333333")
+        Application.objects.filter(pk=travada.pk).update(erp_status="enviando", erp_ultima_tentativa=timezone.now() - timedelta(hours=1))
+        recente = self.criar(erp_chave="44444444-4444-4444-4444-444444444444")
+        self.assertEqual(tasks.reenfileirar_pendentes(), 2)
+        self.assertEqual(sorted(c.args[1] for c in mock_async.call_args_list), sorted([parada.pk, travada.pk]))
+        travada.refresh_from_db()
+        self.assertEqual(travada.erp_status, "pendente")
+        self.assertNotIn(recente.pk, [c.args[1] for c in mock_async.call_args_list])
+
+    def test_agendamento_criado_uma_vez(self):
+        from django_q.models import Schedule
+        tasks.garantir_reenfileiramento()
+        tasks.garantir_reenfileiramento()
+        self.assertEqual(Schedule.objects.filter(name="rh-reenfileirar-pendentes").count(), 1)

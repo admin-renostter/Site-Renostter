@@ -2,7 +2,8 @@
 
 Toda chamada é assinada com HMAC-SHA256 (RH_INTEGRATION_SECRET), no mesmo formato
 de cora-api/services/rh/integracao.js:
-    X-RH-Signature = hex HMAC(segredo, f"{ts}\\n{MÉTODO}\\n{caminho?query}\\n{hash_corpo}")
+    X-RH-Signature = hex HMAC(segredo, f"{ts}\\n{MÉTODO}\\n{caminho?query}\\n{hash_corpo}\\n{ator}\\n{chave}")
+(ator = X-RH-Ator em minúsculas ou "", chave = X-Idempotency-Key ou "")
 JSON: hash_corpo = sha256(corpo enviado). Candidatura (multipart):
 hash_corpo = sha256(dados + "\\n" + sha256(arquivo ou b"")).
 """
@@ -51,8 +52,8 @@ def sha256hex(dado: bytes | str | None) -> str:
     return hashlib.sha256(dado).hexdigest()
 
 
-def assinar(segredo: str, ts: int, metodo: str, caminho: str, hash_corpo: str) -> str:
-    base = f"{ts}\n{metodo.upper()}\n{caminho}\n{hash_corpo}"
+def assinar(segredo: str, ts: int, metodo: str, caminho: str, hash_corpo: str, ator: str = "", chave: str = "") -> str:
+    base = f"{ts}\n{metodo.upper()}\n{caminho}\n{hash_corpo}\n{(ator or '').strip().lower()}\n{chave or ''}"
     return hmac.new(segredo.encode("utf-8"), base.encode("utf-8"), hashlib.sha256).hexdigest()
 
 
@@ -184,11 +185,14 @@ class ErpClient:
         self.secret = secret if secret is not None else getattr(settings, "RH_INTEGRATION_SECRET", "")
         self.timeout = timeout
 
-    def _cabecalhos(self, metodo: str, caminho: str, hash_corpo: str, ator: str | None = None) -> dict:
+    def _cabecalhos(self, metodo: str, caminho: str, hash_corpo: str, ator: str | None = None, chave: str | None = None) -> dict:
         ts = int(time.time())
-        h = {"X-RH-Timestamp": str(ts), "X-RH-Signature": assinar(self.secret, ts, metodo, caminho, hash_corpo)}
+        ator = (ator or "").strip().lower()
+        h = {"X-RH-Timestamp": str(ts), "X-RH-Signature": assinar(self.secret, ts, metodo, caminho, hash_corpo, ator, chave or "")}
         if ator:
-            h["X-RH-Ator"] = ator.strip().lower()
+            h["X-RH-Ator"] = ator
+        if chave:
+            h["X-Idempotency-Key"] = chave
         return h
 
     def _enviar(self, metodo: str, caminho: str, *, corpo: bytes = b"", headers: dict, files=None):
@@ -267,8 +271,7 @@ class ErpClient:
     def enviar_candidatura(self, dados: dict, arquivo: bytes | None, nome: str, chave: str) -> str:
         caminho = "/api/rh/integracao/candidaturas"
         dados_json = json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
-        headers = self._cabecalhos("POST", caminho, sha256hex(dados_json + "\n" + sha256hex(arquivo or b"")))
-        headers["X-Idempotency-Key"] = chave
+        headers = self._cabecalhos("POST", caminho, sha256hex(dados_json + "\n" + sha256hex(arquivo or b"")), chave=chave)
         # sempre multipart (o ERP lê com multer), mesmo sem arquivo
         files = {"dados": (None, dados_json.encode("utf-8"))}
         if arquivo:
