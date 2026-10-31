@@ -198,9 +198,9 @@ function checkOpenStatus() {
     const mins = now.getMinutes();
     const time = hours * 60 + mins;
 
-    // Seg–Sex: 09:00–18:00 | Sáb: 09:00–13:00
+    // Seg–Sáb: 09:00–18:00 (540 a 1080 minutos). Domingo fechado.
     const isWeekday = day >= 1 && day <= 5 && time >= 540 && time < 1080;
-    const isSaturday = day === 6 && time >= 540 && time < 780;
+    const isSaturday = day === 6 && time >= 540 && time < 1080;
     const isOpen = isWeekday || isSaturday;
 
     badge.textContent = isOpen ? '🟢 Aberto agora' : '🔴 Fechado no momento';
