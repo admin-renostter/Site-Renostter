@@ -167,7 +167,7 @@ def _apagar_copia_local(application: Application, motivo: str) -> None:
     )
 
 
-def _reagendar(application: Application, erro: str) -> None:
+def _reagendar(application: Application, erro: str, enviar_email: bool = True) -> None:
     from datetime import timedelta
     from django.utils import timezone
     from django_q.models import Schedule
@@ -182,7 +182,7 @@ def _reagendar(application: Application, erro: str) -> None:
         return
     Application.objects.filter(pk=application.pk).update(erp_tentativas=tentativas, erp_erro=erro[:300])
     schedule("careers.tasks.entregar_ao_erp", application.pk, schedule_type=Schedule.ONCE, next_run=proxima,
-             name=f"entregar-erp-{application.pk}-{tentativas}")
+             name=f"entregar-erp-{application.pk}-{tentativas}", **({} if enviar_email else {"enviar_email": False}))
 
 
 def _avisar_responsavel(application: Application, erro: str) -> None:
@@ -212,7 +212,7 @@ def _avisar_vaga_fechada(application: Application) -> None:
         logger.exception("Falha ao avisar o candidato da candidatura %s.", application.pk)
 
 
-def entregar_ao_erp(application_id: int) -> str:
+def entregar_ao_erp(application_id: int, enviar_email: bool = True) -> str:
     """Envia a candidatura ao ERP. Idempotente: o ERP reconhece reenvios pela `erp_chave`."""
     from .services.erp_client import ErpClient, ErpErro, ErpIndisponivel
 
@@ -236,9 +236,11 @@ def entregar_ao_erp(application_id: int) -> str:
             "consentimento_versao": CONSENTIMENTO_VERSAO if application.banco_talentos else None,
             "curriculo_texto": (texto or "")[:20000], "origem_ref": f"site:app:{application.pk}",
         }
+        if not enviar_email:
+            dados["enviar_email"] = False
         erp_id = ErpClient().enviar_candidatura(dados, arquivo, application.resume_original_name or "curriculo", str(application.erp_chave))
     except ErpIndisponivel as e:
-        _reagendar(application, str(e))
+        _reagendar(application, str(e), enviar_email)
         return "reagendada"
     except ErpErro as e:
         if e.code == "RH_CANDIDATURA_DUPLICADA":
@@ -256,7 +258,7 @@ def entregar_ao_erp(application_id: int) -> str:
         return "falhou"
     except Exception as e:  # erro inesperado (ex.: storage): tenta de novo mais tarde
         logger.exception("Falha ao entregar a candidatura %s ao ERP.", application.pk)
-        _reagendar(application, f"{type(e).__name__}: {e}")
+        _reagendar(application, f"{type(e).__name__}: {e}", enviar_email)
         return "reagendada"
     Application.objects.filter(pk=application.pk).update(erp_status=Application.ErpStatus.ENTREGUE, erp_id=erp_id, erp_erro="")
     _apagar_copia_local(application, "entregue_ao_erp")

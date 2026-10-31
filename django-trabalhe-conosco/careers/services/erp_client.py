@@ -211,12 +211,13 @@ class ErpClient:
             raise ErpErro(body.get("code") or "ERP_ERRO", body.get("error") or "O ERP recusou o pedido.", r.status_code)
         return body
 
-    def _json(self, metodo: str, caminho: str, corpo: dict | None = None, ator: str | None = None):
+    def _json(self, metodo: str, caminho: str, corpo: dict | None = None, ator: str | None = None, corpo_inteiro: bool = False):
         raw = json.dumps(corpo, ensure_ascii=False, separators=(",", ":")).encode("utf-8") if corpo is not None else b""
         headers = self._cabecalhos(metodo, caminho, sha256hex(raw), ator)
         if corpo is not None:
             headers["Content-Type"] = "application/json"
-        return self._enviar(metodo, caminho, corpo=raw, headers=headers).get("data")
+        body = self._enviar(metodo, caminho, corpo=raw, headers=headers)
+        return body if corpo_inteiro else body.get("data")
 
     # lista pública (com cache e "última lista conhecida")
     def vagas_publicas(self) -> list[ErpVaga]:
@@ -243,7 +244,12 @@ class ErpClient:
         return erp_para_job(self._json("GET", f"/api/rh/integracao/vagas/{vaga_id}", ator=ator))
 
     def criar_vaga(self, dados: dict, ator: str) -> ErpVaga:
-        return erp_para_job(self._json("POST", "/api/rh/integracao/vagas", dados, ator=ator))
+        return self.importar_vaga(dados, ator)[0]
+
+    def importar_vaga(self, dados: dict, ator: str) -> tuple[ErpVaga, bool]:
+        """Cria a vaga; com `origem_ref` já existente o ERP devolve a mesma vaga (existente=True)."""
+        body = self._json("POST", "/api/rh/integracao/vagas", dados, ator=ator, corpo_inteiro=True)
+        return erp_para_job(body.get("data")), bool(body.get("existente"))
 
     def editar_vaga(self, vaga_id: str, dados: dict, ator: str) -> ErpVaga:
         return erp_para_job(self._json("PATCH", f"/api/rh/integracao/vagas/{vaga_id}", dados, ator=ator))

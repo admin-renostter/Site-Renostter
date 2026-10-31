@@ -6,6 +6,8 @@ app_name = "careers"
 
 urlpatterns = [
     path("trabalhe-conosco/", views.JobListView.as_view(), name="job_list"),
+    # chamado só pelo ERP, pela rede Docker interna (assinado)
+    path("integracao/erp/vagas-mudaram", views.erp_vagas_mudaram, name="erp_vagas_mudaram"),
     path("candidatar/", views.ApplicationCreateView.as_view(), name="apply"),
     path("admin/vagas/", views.RecruiterJobListView.as_view(), name="admin_jobs"),
     path("admin/vagas/nova/", views.RecruiterJobCreateView.as_view(), name="admin_job_create"),

@@ -29,6 +29,19 @@ from .services.storage import upload_resume_to_supabase
 logger = logging.getLogger(__name__)
 
 
+@csrf_exempt
+@require_POST
+def erp_vagas_mudaram(request):
+    """O ERP avisa (assinado) que as vagas mudaram: limpa o cache da lista pública."""
+    from .services.erp_client import limpar_cache_vagas, sha256hex, verificar_assinatura
+    ok = verificar_assinatura(settings.RH_INTEGRATION_SECRET, request.headers.get("X-RH-Timestamp", ""),
+                              request.headers.get("X-RH-Signature", ""), "POST", request.get_full_path(), sha256hex(request.body))
+    if not ok:
+        return JsonResponse({"success": False, "code": "RH_ASSINATURA_INVALIDA"}, status=401)
+    limpar_cache_vagas()
+    return HttpResponse(status=204)
+
+
 def health_check(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT 1")
