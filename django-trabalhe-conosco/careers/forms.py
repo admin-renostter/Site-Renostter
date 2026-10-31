@@ -128,6 +128,13 @@ class JobAdminForm(forms.ModelForm):
         return cleaned_data
 
 
+class ErpJobForm(JobAdminForm):
+    """Formulário do Painel RH do site para vagas do ERP (só valida; quem grava é o ERP)."""
+
+    class Meta(JobAdminForm.Meta):
+        fields = [f for f in JobAdminForm.Meta.fields if f != "internal_notes"]
+
+
 class MasterJobAdminForm(JobAdminForm):
     class Meta(JobAdminForm.Meta):
         fields = [*JobAdminForm.Meta.fields, "status", "approval_status", "rejection_reason"]

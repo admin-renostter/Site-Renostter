@@ -5,8 +5,9 @@
 {% block content %}
   <section class="careers-admin-head">
     <div>
-      <p class="careers-kicker">Usuario master</p>
+      <p class="careers-kicker">Aprovacao de vagas</p>
       <h1>Vagas aguardando aprovacao</h1>
+      <p class="careers-login-note">Quem aprova segue as regras do ERP: o perfil RH nao aprova a propria vaga.</p>
     </div>
     <a class="careers-button careers-button-ghost" href="{% url 'careers:admin_jobs' %}">Voltar as vagas</a>
   </section>
@@ -15,36 +16,40 @@
     {% for job in jobs %}
       <article class="careers-job-card careers-approval-card">
         <div>
-          <p class="careers-kicker">{{ job.area_owner|default:job.area|default:"Sem area" }}</p>
+          <p class="careers-kicker">{{ job.area|default:"Sem area" }}</p>
           <h2>{{ job.title }}</h2>
           <p>{{ job.description|truncatewords:34 }}</p>
           <div class="careers-tags">
-            <span>{{ job.location }}</span>
+            <span>{{ job.location|default:"-" }}</span>
             <span>{{ job.contract_type }}</span>
-            <span>Criada por {{ job.created_by|default:"-" }}</span>
+            <span>{{ job.compensation_label }}</span>
           </div>
         </div>
-        <div class="careers-approval-actions">
-          <form method="post" action="{% url 'careers:admin_job_approve' job.pk %}">
-            {% csrf_token %}
-            <button class="careers-button" type="submit">Aprovar e publicar</button>
-          </form>
-          <form method="post" action="{% url 'careers:admin_job_adjustments' job.pk %}">
-            {% csrf_token %}
-            <textarea class="careers-field" name="rejection_reason" rows="2" placeholder="Ajustes solicitados"></textarea>
-            <button class="careers-button careers-button-ghost" type="submit">Solicitar ajustes</button>
-          </form>
-          <form method="post" action="{% url 'careers:admin_job_reject' job.pk %}">
-            {% csrf_token %}
-            <textarea class="careers-field" name="rejection_reason" rows="2" placeholder="Motivo da rejeicao"></textarea>
-            <button class="careers-button careers-button-ghost" type="submit">Rejeitar</button>
-          </form>
-        </div>
+        {% if job.permissoes.aprovar %}
+          <div class="careers-approval-actions">
+            <form method="post" action="{% url 'careers:admin_job_action' job.pk 'aprovar' %}">
+              {% csrf_token %}<input type="hidden" name="next" value="approvals">
+              <button class="careers-button" type="submit">Aprovar e publicar</button>
+            </form>
+            <form method="post" action="{% url 'careers:admin_job_action' job.pk 'pedir_ajustes' %}">
+              {% csrf_token %}<input type="hidden" name="next" value="approvals">
+              <textarea class="careers-field" name="motivo" rows="2" placeholder="Ajustes solicitados" required></textarea>
+              <button class="careers-button careers-button-ghost" type="submit">Solicitar ajustes</button>
+            </form>
+            <form method="post" action="{% url 'careers:admin_job_action' job.pk 'rejeitar' %}">
+              {% csrf_token %}<input type="hidden" name="next" value="approvals">
+              <textarea class="careers-field" name="motivo" rows="2" placeholder="Motivo da rejeicao" required></textarea>
+              <button class="careers-button careers-button-ghost" type="submit">Rejeitar</button>
+            </form>
+          </div>
+        {% else %}
+          <p class="careers-consent">Aguardando outra pessoa aprovar.</p>
+        {% endif %}
       </article>
     {% empty %}
       <div class="careers-empty">
         <h2>Nenhuma vaga pendente.</h2>
-        <p>Quando uma area enviar uma vaga para aprovacao, ela aparecera aqui.</p>
+        <p>Quando uma vaga for enviada para aprovacao (aqui ou no ERP), ela aparecera aqui.</p>
       </div>
     {% endfor %}
   </section>
