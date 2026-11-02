@@ -61,6 +61,7 @@ class ApplicationForm(forms.ModelForm):
         widgets = {
             "message": forms.Textarea(attrs={"rows": 4, "placeholder": "Mensagem opcional"}),
             "banco_talentos": forms.CheckboxInput(attrs={"class": "careers-check-input"}),
+            "resume": forms.ClearableFileInput(attrs={"accept": ".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"}),
         }
 
     def __init__(self, *args, **kwargs):
