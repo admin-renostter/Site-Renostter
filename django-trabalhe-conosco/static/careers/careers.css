@@ -702,3 +702,33 @@
     overflow-x: auto;
   }
 }
+
+/* Caixa "banco de talentos" na candidatura: o rótulo geral do formulário é grid;
+   aqui é caixa + texto lado a lado, com o texto quebrando normalmente. */
+.careers-form-panel label.careers-check-talentos {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.careers-form-panel label.careers-check-talentos span {
+  flex: 0 0 22px;
+  margin-top: 1px;
+}
+
+.careers-form-panel label.careers-check-talentos strong {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #e5e7eb;
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.careers-check-input:focus-visible + span {
+  outline: 2px solid var(--career-orange);
+  outline-offset: 2px;
+}
+

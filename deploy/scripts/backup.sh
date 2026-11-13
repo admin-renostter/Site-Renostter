@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:$PATH"
 # ============================================================
 # Renostter - Backup automatizado
 # ============================================================
@@ -76,7 +77,7 @@ cat > "$MANIFEST" <<EOF
   "date": "$DATE",
   "hostname": "$(hostname)",
   "services": {
-    "postgres": "$(docker compose -f $COMPOSE_FILE exec -T postgres pg_isready | head -1 | xargs)",
+    "postgres": "$(docker compose -f $COMPOSE_FILE exec -T postgres pg_isready -U "${POSTGRES_USER:-renostter_app}" | head -1 | xargs)",
     "web":      "$(docker inspect -f '{{.State.Health.Status}}' renostter-web 2>/dev/null || echo "unknown")",
     "worker":   "$(docker inspect -f '{{.State.Health.Status}}' renostter-worker 2>/dev/null || echo "unknown")"
   },
@@ -101,7 +102,7 @@ log "Arquivo unico: $ARCHIVE ($ARCHIVE_SIZE)"
 # ---------- 5. Espelhamento (daily / weekly / monthly) ----------
 cp "$ARCHIVE" "$BACKUP_ROOT/daily/"
 [[ "$DAY_OF_WEEK" == "7" ]] && cp "$ARCHIVE" "$BACKUP_ROOT/weekly/"
-[[ "$DAY_OF_MONTH" == "01" ]] && cp "$ARCHIVE" "$BACKUP_ROOT/monthly/"
+[[ -z "$(find "$BACKUP_ROOT/monthly" -name "backup-*.tar.gz" -mtime -25 2>/dev/null)" ]] && cp "$ARCHIVE" "$BACKUP_ROOT/monthly/"
 
 # ---------- 6. Retencao local ----------
 log "Aplicando retencao local..."
@@ -112,23 +113,24 @@ find "$BACKUP_ROOT/weekly" -name "backup-*.tar.gz" -mtime +$((LOCAL_KEEP_WEEKLY*
 # Monthly: manter 3
 find "$BACKUP_ROOT/monthly" -name "backup-*.tar.gz" -mtime +$((LOCAL_KEEP_MONTHLY*30)) -delete 2>/dev/null
 
-# ---------- 7. Upload pro Backblaze B2 (se configurado) ----------
-if [[ -n "${B2_APPLICATION_KEY_ID:-}" ]] && [[ -n "${B2_APPLICATION_KEY:-}" ]]; then
-    log "Enviando para Backblaze B2..."
-    command -v b2 >/dev/null || {
-        # Instala o cliente b2 via pip
-        pip install --quiet b2 2>/dev/null || pip3 install --quiet b2 2>/dev/null || {
-            warn "b2 nao instalado - pulando upload. Instale com: pip install b2"
+# ---------- 7. Upload pra Cloudflare R2 (se configurado) ----------
+if [[ -n "${R2_ACCESS_KEY_ID:-}" ]] && [[ -n "${R2_SECRET_ACCESS_KEY:-}" ]] && [[ -n "${R2_ENDPOINT_URL:-}" ]]; then
+    log "Enviando para Cloudflare R2..."
+    command -v aws >/dev/null || {
+        pip install --quiet awscli 2>/dev/null || pip3 install --quiet awscli 2>/dev/null || {
+            log "AVISO: aws-cli nao instalado - pulando upload. Instale com: pip3 install awscli"
         }
     }
-    if command -v b2 >/dev/null; then
-        # Authorize (cache 24h)
-        b2 account authorize "$B2_APPLICATION_KEY_ID" "$B2_APPLICATION_KEY" >/dev/null 2>&1 || true
-        b2 upload-file --no-progress "$B2_BUCKET_NAME" "$ARCHIVE" "renostter/$(basename $ARCHIVE)" 2>&1 | tail -3
-        log "Upload B2 concluido"
+    if command -v aws >/dev/null; then
+        AWS_ACCESS_KEY_ID="$R2_ACCESS_KEY_ID" \
+        AWS_SECRET_ACCESS_KEY="$R2_SECRET_ACCESS_KEY" \
+        aws s3 cp "$ARCHIVE" "s3://$R2_BUCKET_NAME/renostter/$(basename "$ARCHIVE")" \
+            --endpoint-url "$R2_ENDPOINT_URL" \
+            --only-show-errors
+        log "Upload R2 concluido"
     fi
 else
-    log "B2 nao configurado - backup apenas local em $BACKUP_ROOT"
+    log "R2 nao configurado - backup apenas local em $BACKUP_ROOT"
 fi
 
 # ---------- 8. Limpa tmp ----------

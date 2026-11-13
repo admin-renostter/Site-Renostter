@@ -17,6 +17,10 @@ ALLOWED_HOSTS = config(
     default="localhost,127.0.0.1,renostter.com,www.renostter.com,carreiras.renostter.com,renostter-careers.onrender.com",
     cast=Csv(),
 )
+# O ERP avisa o site pela rede Docker interna (http://renostter-web:8000/integracao/erp/...)
+for internal_host in ["renostter-web"]:
+    if internal_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(internal_host)
 CSRF_TRUSTED_ORIGINS = list(
     config(
         "CSRF_TRUSTED_ORIGINS",
@@ -136,6 +140,10 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="Renostter RH <rh@renostter.com.br>")
 RH_EMAIL = config("RH_EMAIL", default="rh@renostter.com.br")
 RESEND_API_KEY = config("RESEND_API_KEY", default="")
+# RH Fase 2: vagas e candidaturas ficam no ERP (fonte única)
+ERP_INTERNAL_URL = config("ERP_INTERNAL_URL", default="http://erp-app:3000")
+RH_INTEGRATION_SECRET = config("RH_INTEGRATION_SECRET", default="")
+ERP_PUBLIC_URL = config("ERP_PUBLIC_URL", default="https://erp.renostter.com")
 SUPABASE_URL = config("SUPABASE_URL", default="")
 SUPABASE_SERVICE_ROLE_KEY = config("SUPABASE_SERVICE_ROLE_KEY", default="")
 SUPABASE_STORAGE_BUCKET = config("SUPABASE_STORAGE_BUCKET", default="curriculos")
@@ -156,6 +164,8 @@ SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=not DEBUG, cast=
 CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=not DEBUG, cast=bool)
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=not DEBUG, cast=bool)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# Avisos do ERP chegam em HTTP pela rede interna (assinados); não redirecionar para HTTPS.
+SECURE_REDIRECT_EXEMPT = [r"^integracao/erp/"]
 SECURE_HSTS_SECONDS = config("SECURE_HSTS_SECONDS", default=0 if DEBUG else 31536000, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = config("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=not DEBUG, cast=bool)
 SECURE_HSTS_PRELOAD = config("SECURE_HSTS_PRELOAD", default=not DEBUG, cast=bool)

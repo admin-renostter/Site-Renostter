@@ -12,14 +12,14 @@
   </section>
 
   <section class="careers-table-wrap">
-    <p class="careers-consent">Os dados e curriculos das candidaturas sao mantidos por 30 dias corridos. Apos esse prazo, sao anonimizados e os arquivos sao removidos conforme politica LGPD.</p>
+    <p class="careers-consent">As candidaturas feitas no site sao entregues ao ERP, onde fica o quadro de etapas. Depois de entregue, o site apaga o curriculo e os dados pessoais. Candidaturas que nao chegaram ao ERP sao anonimizadas em 30 dias.</p>
     <table class="careers-table">
       <thead>
         <tr>
           <th>Candidato</th>
           <th>Vaga</th>
           <th>Contato</th>
-          <th>Score QA</th>
+          <th>Entrega ao ERP</th>
           <th>Data</th>
           <th>Retencao</th>
           <th>Acoes</th>
@@ -32,12 +32,17 @@
               <strong>{{ application.name }}</strong>
               <span>{{ application.resume_original_name|default:application.resume.name|default:"Curriculo enviado" }}</span>
             </td>
-            <td>{{ application.job.title }}</td>
+            <td>{{ application.vaga_titulo }}</td>
             <td>
               {{ application.email }}
               {% if application.phone %}<span>{{ application.phone }}</span>{% endif %}
             </td>
-            <td>{{ application.qa_score|floatformat:0 }}</td>
+            <td>
+              {% if application.erp_status %}
+                <span class="careers-status careers-status-{{ application.erp_status }}">{{ application.get_erp_status_display }}</span>
+                {% if application.erp_status == "falhou" or application.erp_status == "pendente" %}{% if application.erp_erro %}<small>{{ application.erp_erro|truncatewords:12 }}</small>{% endif %}{% endif %}
+              {% else %}-{% endif %}
+            </td>
             <td>{{ application.created_at|date:"d/m/Y H:i" }}</td>
             <td>
               {% if application.retention_until %}
@@ -47,7 +52,11 @@
               {% endif %}
             </td>
             <td class="careers-row-actions">
-              <a href="{% url 'careers:application_resume' application.pk %}">Baixar curriculo</a>
+              {% if application.erp_vaga_id and application.erp_status == "entregue" %}
+                <a href="{{ erp_public_url }}/crm/admin/rh-vaga.html?id={{ application.erp_vaga_id }}" target="_blank" rel="noopener">Ver no ERP</a>
+              {% elif not application.deleted_at %}
+                <a href="{% url 'careers:application_resume' application.pk %}">Baixar curriculo</a>
+              {% endif %}
             </td>
           </tr>
         {% empty %}
