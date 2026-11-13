@@ -387,14 +387,14 @@ function buildResumo() {
         : '–';
 
     card.innerHTML = `
-    <div class="resumo-row"><span class="resumo-key">🔧 Serviço</span><span class="resumo-val">${escapeHtml(state.servico || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">📅 Data</span><span class="resumo-val">${escapeHtml(dataFmt)}</span></div>
-    <div class="resumo-row"><span class="resumo-key">🕐 Horário</span><span class="resumo-val">${escapeHtml(state.hora || '–')}h</span></div>
-    <div class="resumo-row"><span class="resumo-key">📍 Endereço</span><span class="resumo-val">${escapeHtml(state.endereco || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">🏠 Ambiente</span><span class="resumo-val">${escapeHtml(state.tipoLocal || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">👤 Nome</span><span class="resumo-val">${escapeHtml(state.nome || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">📱 WhatsApp</span><span class="resumo-val">${escapeHtml(state.telefone || '–')}</span></div>
-    ${state.obs ? `<div class="resumo-row"><span class="resumo-key">💬 Obs.</span><span class="resumo-val">${escapeHtml(state.obs)}</span></div>` : ''}
+    <div class="resumo-row"><span class="resumo-key">Serviço</span><span class="resumo-val">${escapeHtml(state.servico || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Data</span><span class="resumo-val">${escapeHtml(dataFmt)}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Horário</span><span class="resumo-val">${escapeHtml(state.hora || '–')}h</span></div>
+    <div class="resumo-row"><span class="resumo-key">Endereço</span><span class="resumo-val">${escapeHtml(state.endereco || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Ambiente</span><span class="resumo-val">${escapeHtml(state.tipoLocal || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Nome</span><span class="resumo-val">${escapeHtml(state.nome || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">WhatsApp</span><span class="resumo-val">${escapeHtml(state.telefone || '–')}</span></div>
+    ${state.obs ? `<div class="resumo-row"><span class="resumo-key">Obs.</span><span class="resumo-val">${escapeHtml(state.obs)}</span></div>` : ''}
   `;
 }
 

@@ -1,0 +1,2988 @@
+{
+ "url": "index.html",
+ "at": "2026-10-31T06:18:28.003Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    0.75,
+    0.88,
+    0.76,
+    0.58,
+    0.82,
+    0.76,
+    0.97,
+    0.97,
+    0.71,
+    0.48,
+    0.54,
+    0.66
+   ],
+   "motion": {
+    "elements": 65,
+    "css": 7,
+    "transitions": 49,
+    "scripted": 9,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 12997,
+     "screens": 14.4,
+     "words": 1287,
+     "img": 27,
+     "video": 0,
+     "canvas": 0,
+     "svg": 19,
+     "sections": 11,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 23,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "logo.png",
+      "climatizacao-izi-academia.jpeg",
+      "apartamento-vila-nova.jpg",
+      "montagem-de-condensadora.jpeg",
+      "climatizacao-izi-academia.jpeg",
+      "clinica-medica-excellence.jpg",
+      "montagem-de-condensadora.jpeg",
+      "sede-corporativa-tech.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Ar-condicionado com laudo",
+     "words": 3,
+     "chars": 25,
+     "lines": 2,
+     "size": 64,
+     "vw": 4.4,
+     "font": "Besley",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.51,
+     "top": 209,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Ar-condicionado com laudo",
+     "words": 3,
+     "lines": 2,
+     "size": 64,
+     "font": "Besley"
+    },
+    "headings": [
+     {
+      "text": "Ar-condicionado com laudo",
+      "words": 3,
+      "chars": 25,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.51,
+      "top": 209,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Desde 2018, em números",
+      "words": 4,
+      "chars": 22,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.49,
+      "top": 967,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "9.000+",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 168,
+      "vw": 11.7,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.04,
+      "leading": 0.82,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.49,
+      "top": 1373,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Serviços e preços",
+      "words": 3,
+      "chars": 17,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.41,
+      "top": 1794,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "O laudo vai junto",
+      "words": 4,
+      "chars": 17,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.39,
+      "top": 3682,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trabalhos feitos",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.87,
+      "top": 4760,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Canal Renostter",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.87,
+      "top": 7881,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Nosso compromisso",
+      "words": 2,
+      "chars": 17,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.39,
+      "top": 8979,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Atendemos o seu CEP?",
+      "words": 4,
+      "chars": 20,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.33,
+      "top": 10010,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Agende uma visita técnica",
+      "words": 4,
+      "chars": 25,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.35,
+      "top": 10923,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Peça seu orçamento",
+      "words": 3,
+      "chars": 18,
+      "lines": 2,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "right",
+      "widthRatio": 0.41,
+      "top": 12156,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Até a próxima",
+      "words": 3,
+      "chars": 13,
+      "lines": 1,
+      "size": 64,
+      "vw": 4.4,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.37,
+      "top": 12634,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 12,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 2,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Libre Franklin",
+       "share": 0.94,
+       "mono": false
+      },
+      {
+       "family": "Besley",
+       "share": 0.05,
+       "mono": false
+      },
+      {
+       "family": "Helvetica Neue",
+       "share": 0,
+       "mono": false
+      },
+      {
+       "family": "Inter",
+       "share": 0,
+       "mono": false
+      }
+     ],
+     "familyCount": 4,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      19,
+      22,
+      26,
+      64,
+      168
+     ],
+     "sizeCount": 10,
+     "notLoaded": [
+      "Inter"
+     ],
+     "body": {
+      "font": "Libre Franklin",
+      "size": 19,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17
+     },
+     "measureChars": 53,
+     "max": {
+      "size": 168,
+      "vw": 11.7,
+      "font": "Besley",
+      "text": "+"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.06,
+     "smallText": 4
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#0e1216",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.22,
+      "l": 0.07
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#f2f4f5",
+       "top": 169,
+       "hsl": {
+        "h": 200,
+        "s": 0.13,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#00aeef",
+       "top": 900,
+       "hsl": {
+        "h": 196,
+        "s": 1,
+        "l": 0.47
+       }
+      },
+      {
+       "color": "#e9edef",
+       "top": 4863,
+       "hsl": {
+        "h": 200,
+        "s": 0.16,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#1c232b",
+       "top": 7155,
+       "hsl": {
+        "h": 212,
+        "s": 0.21,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#0e1216",
+       "top": 12494,
+       "hsl": {
+        "h": 210,
+        "s": 0.22,
+        "l": 0.07
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#0e1216",
+       "share": 0.64
+      },
+      {
+       "color": "#f2f4f5",
+       "share": 0.17
+      },
+      {
+       "color": "#46525c",
+       "share": 0.13
+      },
+      {
+       "color": "#b9c3cb",
+       "share": 0.03
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ff6b00",
+      "hsl": {
+       "h": 25,
+       "s": 1,
+       "l": 0.5
+      },
+      "fg": "#0e1216"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 10,
+     "inHero": 4,
+     "radius": 0,
+     "height": 52,
+     "withShadow": 2,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Orçamento no WhatsApp",
+      "Pedir orçamento no WhatsApp"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 5,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "div.chat-input-area 321px",
+      "div.chat-footer 321px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 2,
+     "boxRadius": 16,
+     "squareMedia": 21,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 4284
+      },
+      {
+       "count": 5,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 8016
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.96
+     }
+    ],
+    "nav": {
+     "links": 7,
+     "fixed": true,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "besley",
+     "libre franklin",
+     "swiper-icons"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 12997,
+    "margins": {
+     "left": 50,
+     "right": 92
+    },
+    "sections": [
+     {
+      "sel": "section#home.os-hero",
+      "tag": "section",
+      "top": 72,
+      "height": 828,
+      "words": 68,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Ar-condicionado com laudo",
+       "size": 64,
+       "tag": "h1"
+      },
+      "left": 350,
+      "right": 434,
+      "textLeft": 350,
+      "textRight": 434,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#numeros.numeros.os-section",
+      "tag": "section",
+      "top": 900,
+      "height": 769,
+      "words": 75,
+      "media": 0,
+      "middle": 202,
+      "heading": {
+       "text": "9.000",
+       "size": 168,
+       "tag": "span"
+      },
+      "left": 92,
+      "right": 120,
+      "textLeft": 92,
+      "textRight": 120,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-wrap.os-menu__grid",
+      "tag": "div",
+      "top": 1736,
+      "height": 1302,
+      "words": 213,
+      "media": 1,
+      "middle": 114,
+      "heading": {
+       "text": "Serviços e preços",
+       "size": 64,
+       "tag": "h2"
+      },
+      "left": 148,
+      "right": 92,
+      "textLeft": 148,
+      "textRight": 280,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": true
+     },
+     {
+      "sel": "div.os-wrap",
+      "tag": "div",
+      "top": 3125,
+      "height": 315,
+      "words": 49,
+      "media": 0,
+      "middle": 153,
+      "heading": {
+       "text": "Pintura do aparelho, na cor da parede",
+       "size": 26,
+       "tag": "h3"
+      },
+      "left": 148,
+      "right": 210,
+      "textLeft": 148,
+      "textRight": 210,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#laudo.os-section.os-output",
+      "tag": "section",
+      "top": 3574,
+      "height": 1052,
+      "words": 203,
+      "media": 1,
+      "middle": 68,
+      "heading": {
+       "text": "O laudo vai junto",
+       "size": 64,
+       "tag": "h2"
+      },
+      "left": 50,
+      "right": 72,
+      "textLeft": 50,
+      "textRight": 72,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-folders",
+      "tag": "div",
+      "top": 4863,
+      "height": 2928,
+      "words": 206,
+      "media": 4,
+      "middle": 58,
+      "heading": {
+       "text": "Academia Izi",
+       "size": 26,
+       "tag": "h3"
+      },
+      "left": 92,
+      "right": 92,
+      "textLeft": 112,
+      "textRight": 92,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": true
+     },
+     {
+      "sel": "div#video-gallery.os-wrap.os-videos",
+      "tag": "div",
+      "top": 7791,
+      "height": 925,
+      "words": 38,
+      "media": 5,
+      "middle": 52,
+      "heading": {
+       "text": "Canal Renostter",
+       "size": 64,
+       "tag": "h2"
+      },
+      "left": 92,
+      "right": 0,
+      "textLeft": 92,
+      "textRight": 146,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#diferenciais.os-section.os-letter-sec",
+      "tag": "section",
+      "top": 8783,
+      "height": 1111,
+      "words": 133,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Nosso compromisso",
+       "size": 64,
+       "tag": "h2"
+      },
+      "left": 422,
+      "right": 449,
+      "textLeft": 440,
+      "textRight": 449,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#mapa.os-section.os-cover",
+      "tag": "section",
+      "top": 9894,
+      "height": 937,
+      "words": 63,
+      "media": 9,
+      "middle": 0,
+      "heading": {
+       "text": "Atendemos o seu CEP?",
+       "size": 64,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 128,
+      "textLeft": 140,
+      "textRight": 128,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#agendar.os-section.os-book",
+      "tag": "section",
+      "top": 10832,
+      "height": 880,
+      "words": 56,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Qual serviço você precisa?",
+       "size": 26,
+       "tag": "h3"
+      },
+      "left": 697,
+      "right": 188,
+      "textLeft": 697,
+      "textRight": 209,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#contato.os-section.os-reply",
+      "tag": "section",
+      "top": 11779,
+      "height": 715,
+      "words": 0,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.os-footer",
+      "tag": "footer",
+      "top": 12494,
+      "height": 503,
+      "words": 48,
+      "media": 0,
+      "middle": 66,
+      "heading": {
+       "text": "Até a próxima",
+       "size": 64,
+       "tag": "h2"
+      },
+      "left": 156,
+      "right": 153,
+      "textLeft": 156,
+      "textRight": 313,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Ar-condicionado com laudo",
+      "size": 64,
+      "top": 209,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 140,
+      "n": 11
+     },
+     {
+      "x": 108,
+      "n": 5
+     },
+     {
+      "x": 440,
+      "n": 5
+     },
+     {
+      "x": 92,
+      "n": 4
+     },
+     {
+      "x": 849,
+      "n": 4
+     },
+     {
+      "x": 209,
+      "n": 3
+     },
+     {
+      "x": 350,
+      "n": 2
+     },
+     {
+      "x": 745,
+      "n": 2
+     },
+     {
+      "x": 428,
+      "n": 1
+     },
+     {
+      "x": 948,
+      "n": 1
+     },
+     {
+      "x": 1068,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 39,
+    "bodySize": 19,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    0.91,
+    0.96,
+    0.88,
+    0.77,
+    0.81,
+    0.85,
+    0.98,
+    0.98,
+    0.71,
+    0.78,
+    0.76,
+    0.56
+   ],
+   "motion": {
+    "elements": 65,
+    "css": 7,
+    "transitions": 49,
+    "scripted": 9,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 14378,
+     "screens": 14,
+     "words": 1278,
+     "img": 27,
+     "video": 0,
+     "canvas": 0,
+     "svg": 19,
+     "sections": 11,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 22,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "logo.png",
+      "climatizacao-izi-academia.jpeg",
+      "apartamento-vila-nova.jpg",
+      "montagem-de-condensadora.jpeg",
+      "climatizacao-izi-academia.jpeg",
+      "clinica-medica-excellence.jpg",
+      "montagem-de-condensadora.jpeg",
+      "sede-corporativa-tech.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Ar-condicionado com laudo",
+     "words": 3,
+     "chars": 25,
+     "lines": 1,
+     "size": 45.4,
+     "vw": 5.9,
+     "font": "Besley",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.88,
+     "top": 314,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Ar-condicionado com laudo",
+     "words": 3,
+     "lines": 1,
+     "size": 45.4,
+     "font": "Besley"
+    },
+    "headings": [
+     {
+      "text": "Ar-condicionado com laudo",
+      "words": 3,
+      "chars": 25,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 314,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Desde 2018, em números",
+      "words": 4,
+      "chars": 22,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 1071,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "9.000+",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 108.8,
+      "vw": 14.2,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.04,
+      "leading": 0.82,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 1185,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Serviços e preços",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.86,
+      "top": 2150,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "O laudo vai junto",
+      "words": 4,
+      "chars": 17,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 4562,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trabalhos feitos",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 5535,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Canal Renostter",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 8769,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Nosso compromisso",
+      "words": 2,
+      "chars": 17,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 9879,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Atendemos o seu CEP?",
+      "words": 4,
+      "chars": 20,
+      "lines": 2,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.35,
+      "top": 10681,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Agende uma visita técnica",
+      "words": 4,
+      "chars": 25,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 11762,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Peça seu orçamento",
+      "words": 3,
+      "chars": 18,
+      "lines": 1,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.65,
+      "top": 13364,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Até a próxima",
+      "words": 3,
+      "chars": 13,
+      "lines": 2,
+      "size": 45.4,
+      "vw": 5.9,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.4,
+      "top": 13947,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 12,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 2,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Libre Franklin",
+       "share": 0.94,
+       "mono": false
+      },
+      {
+       "family": "Besley",
+       "share": 0.05,
+       "mono": false
+      },
+      {
+       "family": "Helvetica Neue",
+       "share": 0,
+       "mono": false
+      },
+      {
+       "family": "Inter",
+       "share": 0,
+       "mono": false
+      }
+     ],
+     "familyCount": 4,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      18,
+      22,
+      23,
+      45,
+      109
+     ],
+     "sizeCount": 10,
+     "notLoaded": [
+      "Inter"
+     ],
+     "body": {
+      "font": "Libre Franklin",
+      "size": 17.9,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17
+     },
+     "measureChars": 63,
+     "max": {
+      "size": 108.8,
+      "vw": 14.2,
+      "font": "Besley",
+      "text": "+"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.06,
+     "smallText": 4
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#0e1216",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.22,
+      "l": 0.07
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#f2f4f5",
+       "top": 290,
+       "hsl": {
+        "h": 200,
+        "s": 0.13,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#00aeef",
+       "top": 1024,
+       "hsl": {
+        "h": 196,
+        "s": 1,
+        "l": 0.47
+       }
+      },
+      {
+       "color": "#e9edef",
+       "top": 5619,
+       "hsl": {
+        "h": 200,
+        "s": 0.16,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#1c232b",
+       "top": 7935,
+       "hsl": {
+        "h": 212,
+        "s": 0.21,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#111827",
+       "top": 8884,
+       "hsl": {
+        "h": 221,
+        "s": 0.39,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#0e1216",
+       "top": 13852,
+       "hsl": {
+        "h": 210,
+        "s": 0.22,
+        "l": 0.07
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#0e1216",
+       "share": 0.64
+      },
+      {
+       "color": "#f2f4f5",
+       "share": 0.17
+      },
+      {
+       "color": "#46525c",
+       "share": 0.13
+      },
+      {
+       "color": "#b9c3cb",
+       "share": 0.03
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ff6b00",
+      "hsl": {
+       "h": 25,
+       "s": 1,
+       "l": 0.5
+      },
+      "fg": "#0e1216"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 9,
+     "inHero": 3,
+     "radius": 0,
+     "height": 52,
+     "withShadow": 2,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Pedir orçamento no WhatsApp"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 5,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "div.chat-header → linear-gradient(135deg, rgb(10, 14, 26) 0%, rgb(31, 41, 55) 100%)"
+     ],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "div.chat-input-area 321px",
+      "div.chat-footer 321px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 2,
+     "boxRadius": 16,
+     "squareMedia": 21,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 5040
+      },
+      {
+       "count": 5,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 8884
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.97
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "besley",
+     "libre franklin",
+     "swiper-icons"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 14378,
+    "margins": {
+     "left": 23,
+     "right": 23
+    },
+    "sections": [
+     {
+      "sel": "section#home.os-hero",
+      "tag": "section",
+      "top": 72,
+      "height": 952,
+      "words": 68,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Ar-condicionado com laudo",
+       "size": 45,
+       "tag": "h1"
+      },
+      "left": 47,
+      "right": 49,
+      "textLeft": 47,
+      "textRight": 49,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#numeros.numeros.os-section",
+      "tag": "section",
+      "top": 1024,
+      "height": 1039,
+      "words": 75,
+      "media": 0,
+      "middle": 11,
+      "heading": {
+       "text": "9.000",
+       "size": 109,
+       "tag": "span"
+      },
+      "left": 23,
+      "right": 51,
+      "textLeft": 23,
+      "textRight": 51,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-wrap.os-menu__grid",
+      "tag": "div",
+      "top": 2110,
+      "height": 1727,
+      "words": 213,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Serviços e preços",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 23,
+      "right": 23,
+      "textLeft": 23,
+      "textRight": 54,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-wrap",
+      "tag": "div",
+      "top": 3885,
+      "height": 479,
+      "words": 49,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Pintura do aparelho, na cor da parede",
+       "size": 23,
+       "tag": "h3"
+      },
+      "left": 54,
+      "right": 86,
+      "textLeft": 54,
+      "textRight": 86,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#laudo.os-section.os-output",
+      "tag": "section",
+      "top": 4457,
+      "height": 983,
+      "words": 203,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "O laudo vai junto",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 41,
+      "right": 66,
+      "textLeft": 41,
+      "textRight": 66,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-folders",
+      "tag": "div",
+      "top": 5619,
+      "height": 3087,
+      "words": 206,
+      "media": 4,
+      "middle": 0,
+      "heading": {
+       "text": "Academia Izi",
+       "size": 23,
+       "tag": "h3"
+      },
+      "left": 23,
+      "right": 23,
+      "textLeft": 23,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div#video-gallery.os-wrap.os-videos",
+      "tag": "div",
+      "top": 8706,
+      "height": 972,
+      "words": 24,
+      "media": 5,
+      "middle": 887,
+      "heading": {
+       "text": "Canal Renostter",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 23,
+      "right": 0,
+      "textLeft": 23,
+      "textRight": 79,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#diferenciais.os-section.os-letter-sec",
+      "tag": "section",
+      "top": 9725,
+      "height": 878,
+      "words": 133,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Nosso compromisso",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 64,
+      "right": 85,
+      "textLeft": 82,
+      "textRight": 85,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#mapa.os-section.os-cover",
+      "tag": "section",
+      "top": 10603,
+      "height": 1112,
+      "words": 63,
+      "media": 9,
+      "middle": 0,
+      "heading": {
+       "text": "Atendemos o seu CEP?",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 0,
+      "right": 0,
+      "textLeft": 23,
+      "textRight": 29,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#agendar.os-section.os-book",
+      "tag": "section",
+      "top": 11715,
+      "height": 1500,
+      "words": 84,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Agende uma visita técnica",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 23,
+      "right": 23,
+      "textLeft": 23,
+      "textRight": 99,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#contato.os-section.os-reply",
+      "tag": "section",
+      "top": 13262,
+      "height": 590,
+      "words": 0,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.os-footer",
+      "tag": "footer",
+      "top": 13852,
+      "height": 526,
+      "words": 48,
+      "media": 0,
+      "middle": 26,
+      "heading": {
+       "text": "Até a próxima",
+       "size": 45,
+       "tag": "h2"
+      },
+      "left": 61,
+      "right": 58,
+      "textLeft": 61,
+      "textRight": 178,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Ar-condicionado com laudo",
+      "size": 45,
+      "top": 314,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 23,
+      "n": 11
+     },
+     {
+      "x": 39,
+      "n": 7
+     },
+     {
+      "x": 54,
+      "n": 7
+     },
+     {
+      "x": 78,
+      "n": 6
+     },
+     {
+      "x": 115,
+      "n": 3
+     },
+     {
+      "x": 410,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 35,
+    "bodySize": 18,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    0.9,
+    0.97,
+    0.89,
+    0.91,
+    0.77,
+    0.84,
+    0.81,
+    0.97,
+    0.97,
+    0.94,
+    0.86,
+    0.89
+   ],
+   "motion": {
+    "elements": 62,
+    "css": 7,
+    "transitions": 49,
+    "scripted": 6,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 14608,
+     "screens": 17.3,
+     "words": 1278,
+     "img": 25,
+     "video": 0,
+     "canvas": 0,
+     "svg": 19,
+     "sections": 11,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 18,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "logo.png",
+      "climatizacao-izi-academia.jpeg",
+      "apartamento-vila-nova.jpg",
+      "montagem-de-condensadora.jpeg",
+      "climatizacao-izi-academia.jpeg",
+      "clinica-medica-excellence.jpg",
+      "montagem-de-condensadora.jpeg",
+      "sede-corporativa-tech.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Ar-condicionado com laudo",
+     "words": 3,
+     "chars": 25,
+     "lines": 2,
+     "size": 33.3,
+     "vw": 8.5,
+     "font": "Besley",
+     "weight": 800,
+     "tracking": -0.02,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.79,
+     "top": 104,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Ar-condicionado com laudo",
+     "words": 3,
+     "lines": 2,
+     "size": 33.3,
+     "font": "Besley"
+    },
+    "headings": [
+     {
+      "text": "Ar-condicionado com laudo",
+      "words": 3,
+      "chars": 25,
+      "lines": 2,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 104,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Desde 2018, em números",
+      "words": 4,
+      "chars": 22,
+      "lines": 2,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 888,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "9.000+",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 85.8,
+      "vw": 22,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.04,
+      "leading": 0.82,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 1046,
+      "tag": "p",
+      "kind": "statement"
+     },
+     {
+      "text": "Serviços e preços",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 1976,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "O laudo vai junto",
+      "words": 4,
+      "chars": 17,
+      "lines": 1,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 4632,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Trabalhos feitos",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 5735,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Canal Renostter",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 8348,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Nosso compromisso",
+      "words": 2,
+      "chars": 17,
+      "lines": 2,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 9438,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Atendemos o seu CEP?",
+      "words": 4,
+      "chars": 20,
+      "lines": 2,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 10524,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "+",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Libre Franklin",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.36,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.08,
+      "top": 11045,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "−",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22,
+      "vw": 5.6,
+      "font": "Libre Franklin",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.36,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.08,
+      "top": 11075,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Agende uma visita técnica",
+      "words": 4,
+      "chars": 25,
+      "lines": 2,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 11706,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Peça seu orçamento",
+      "words": 3,
+      "chars": 18,
+      "lines": 2,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": -0.02,
+      "leading": 0.98,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.7,
+      "top": 13355,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Até a próxima",
+      "words": 3,
+      "chars": 13,
+      "lines": 1,
+      "size": 33.3,
+      "vw": 8.5,
+      "font": "Besley",
+      "weight": 800,
+      "tracking": 0,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 13995,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 14,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 4,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Libre Franklin",
+       "share": 0.94,
+       "mono": false
+      },
+      {
+       "family": "Besley",
+       "share": 0.05,
+       "mono": false
+      },
+      {
+       "family": "Helvetica Neue",
+       "share": 0,
+       "mono": false
+      },
+      {
+       "family": "Inter",
+       "share": 0,
+       "mono": false
+      }
+     ],
+     "familyCount": 4,
+     "sizes": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      20,
+      22,
+      33,
+      86
+     ],
+     "sizeCount": 10,
+     "notLoaded": [
+      "Inter"
+     ],
+     "body": {
+      "font": "Libre Franklin",
+      "size": 17.1,
+      "leading": 1.5,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 17
+     },
+     "measureChars": 42,
+     "max": {
+      "size": 85.8,
+      "vw": 22,
+      "font": "Besley",
+      "text": "+"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.06,
+     "smallText": 4
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#0e1216",
+     "bodyBgHsl": {
+      "h": 210,
+      "s": 0.22,
+      "l": 0.07
+     },
+     "dark": true,
+     "sectionBgs": [
+      {
+       "color": "#f2f4f5",
+       "top": 80,
+       "hsl": {
+        "h": 200,
+        "s": 0.13,
+        "l": 0.95
+       }
+      },
+      {
+       "color": "#00aeef",
+       "top": 844,
+       "hsl": {
+        "h": 196,
+        "s": 1,
+        "l": 0.47
+       }
+      },
+      {
+       "color": "#e9edef",
+       "top": 5808,
+       "hsl": {
+        "h": 200,
+        "s": 0.16,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#1c232b",
+       "top": 7694,
+       "hsl": {
+        "h": 212,
+        "s": 0.21,
+        "l": 0.14
+       }
+      },
+      {
+       "color": "#111827",
+       "top": 8476,
+       "hsl": {
+        "h": 221,
+        "s": 0.39,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#000000",
+       "top": 8476,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0
+       }
+      },
+      {
+       "color": "#0e1216",
+       "top": 13903,
+       "hsl": {
+        "h": 210,
+        "s": 0.22,
+        "l": 0.07
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#0e1216",
+       "share": 0.64
+      },
+      {
+       "color": "#f2f4f5",
+       "share": 0.17
+      },
+      {
+       "color": "#46525c",
+       "share": 0.13
+      },
+      {
+       "color": "#b9c3cb",
+       "share": 0.03
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.01
+      }
+     ],
+     "button": {
+      "bg": "#ff6b00",
+      "hsl": {
+       "h": 25,
+       "s": 1,
+       "l": 0.5
+      },
+      "fg": "#0e1216"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 9,
+     "inHero": 3,
+     "radius": 0,
+     "height": 52,
+     "withShadow": 2,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Pedir orçamento no WhatsApp"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 5,
+     "shadowSamples": [],
+     "gradients": 1,
+     "scrims": 0,
+     "gradientSamples": [
+      "div.chat-header → linear-gradient(135deg, rgb(10, 14, 26) 0%, rgb(31, 41, 55) 100%)"
+     ],
+     "gradientText": 0,
+     "hairlines": 2,
+     "hairlineSamples": [
+      "div.chat-input-area 309px",
+      "div.chat-footer 309px"
+     ],
+     "outlinedBoxes": 3,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 2,
+     "boxRadius": 16,
+     "squareMedia": 19,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 3,
+       "iconTopped": false,
+       "rounded": false,
+       "top": 4968
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.96
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 64,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "besley",
+     "libre franklin"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 14608,
+    "margins": {
+     "left": 16,
+     "right": 16
+    },
+    "sections": [
+     {
+      "sel": "section#home.os-hero",
+      "tag": "section",
+      "top": 64,
+      "height": 780,
+      "words": 68,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Ar-condicionado com laudo",
+       "size": 33,
+       "tag": "h1"
+      },
+      "left": 40,
+      "right": 41,
+      "textLeft": 40,
+      "textRight": 41,
+      "fullBleed": false,
+      "footer": true,
+      "hero": true,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#numeros.numeros.os-section",
+      "tag": "section",
+      "top": 844,
+      "height": 1048,
+      "words": 75,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "9.000",
+       "size": 86,
+       "tag": "span"
+      },
+      "left": 16,
+      "right": 25,
+      "textLeft": 16,
+      "textRight": 25,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-wrap.os-menu__grid",
+      "tag": "div",
+      "top": 1936,
+      "height": 1780,
+      "words": 213,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Serviços e preços",
+       "size": 33,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 36,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-wrap",
+      "tag": "div",
+      "top": 3763,
+      "height": 737,
+      "words": 49,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Pintura do aparelho, na cor da parede",
+       "size": 20,
+       "tag": "h3"
+      },
+      "left": 44,
+      "right": 55,
+      "textLeft": 44,
+      "textRight": 55,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#laudo.os-section.os-output",
+      "tag": "section",
+      "top": 4588,
+      "height": 1059,
+      "words": 203,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "O laudo vai junto",
+       "size": 33,
+       "tag": "h2"
+      },
+      "left": 34,
+      "right": 35,
+      "textLeft": 34,
+      "textRight": 35,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div.os-folders",
+      "tag": "div",
+      "top": 5808,
+      "height": 2481,
+      "words": 206,
+      "media": 4,
+      "middle": 0,
+      "heading": {
+       "text": "Academia Izi",
+       "size": 20,
+       "tag": "h3"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 19,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "div#video-gallery.os-wrap.os-videos",
+      "tag": "div",
+      "top": 8289,
+      "height": 965,
+      "words": 17,
+      "media": 5,
+      "middle": 1273,
+      "heading": {
+       "text": "Canal Renostter",
+       "size": 33,
+       "tag": "h2"
+      },
+      "left": 16,
+      "right": 0,
+      "textLeft": 16,
+      "textRight": 35,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#diferenciais.os-section.os-letter-sec",
+      "tag": "section",
+      "top": 9298,
+      "height": 1130,
+      "words": 133,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Nosso compromisso",
+       "size": 33,
+       "tag": "h2"
+      },
+      "left": 22,
+      "right": 40,
+      "textLeft": 40,
+      "textRight": 40,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#mapa.os-section.os-cover",
+      "tag": "section",
+      "top": 10428,
+      "height": 1210,
+      "words": 34,
+      "media": 7,
+      "middle": 0,
+      "heading": null,
+      "left": 0,
+      "right": 0,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": true,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#agendar.os-section.os-book",
+      "tag": "section",
+      "top": 11638,
+      "height": 1577,
+      "words": 56,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Qual serviço você precisa?",
+       "size": 20,
+       "tag": "h3"
+      },
+      "left": 40,
+      "right": 51,
+      "textLeft": 40,
+      "textRight": 51,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "section#contato.os-section.os-reply",
+      "tag": "section",
+      "top": 13258,
+      "height": 644,
+      "words": 0,
+      "media": 0,
+      "middle": 0,
+      "heading": null,
+      "left": null,
+      "right": null,
+      "textLeft": null,
+      "textRight": null,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": true,
+      "pinned": false
+     },
+     {
+      "sel": "footer.os-footer",
+      "tag": "footer",
+      "top": 13903,
+      "height": 705,
+      "words": 48,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Até a próxima",
+       "size": 33,
+       "tag": "h2"
+      },
+      "left": 40,
+      "right": 38,
+      "textLeft": 40,
+      "textRight": 51,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Ar-condicionado com laudo",
+      "size": 33,
+      "top": 104,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 30,
+      "n": 18
+     },
+     {
+      "x": 16,
+      "n": 9
+     },
+     {
+      "x": 44,
+      "n": 2
+     },
+     {
+      "x": 64,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 30,
+    "bodySize": 17,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "FAIL",
+   "id": "button-fx",
+   "width": 1440,
+   "message": "Buttons with shadow/glow.",
+   "fix": "Flat fill, one colour.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "hairline",
+   "width": 1440,
+   "message": "2 thin rule(s)/divider line(s): div.chat-input-area 321px | div.chat-footer 321px",
+   "fix": "Delete. Separate with space, a tone change, or scale. Lines are only for real tables and form fields.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "outlined-box",
+   "width": 1440,
+   "message": "3 boxes drawn with a 1px outline.",
+   "fix": "Define a surface by its fill (one tone step from the page) or leave the content unboxed.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "card-rows",
+   "width": 1440,
+   "message": "2 rows of identical boxed cards.",
+   "fix": "Vary the composition; not every section is a card grid.",
+   "alsoAt": [
+    768
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "font-fallback",
+   "width": 1440,
+   "message": "Typeface(s) declared but not loaded, so a fallback is rendering: Inter",
+   "fix": "Fix the font URL / family name, or the screenshots you are judging are not the design.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "10 different font sizes (11, 12, 13, 14, 15, 19, 22, 26, 64, 168).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "FAIL",
+   "id": "small-text",
+   "width": 1440,
+   "message": "4 text blocks under 13px.",
+   "fix": "Nothing meant to be read goes below 13px.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "off-centre",
+   "width": 1440,
+   "message": "The margins differ: 50px on the left, 92px on the right, at 1440px.",
+   "fix": "Put the navigation and the content on one pair of margins; check for padding on one side only, a scrollbar gutter, or a header on another inset than the page."
+  },
+  {
+   "level": "WARN",
+   "id": "ragged-edges",
+   "width": 1440,
+   "message": "Left-aligned text starts at 11 different lines (140px, 108px, 440px, 92px, 849px, 209px, 350px); the three most used hold only 54% of it.",
+   "fix": "Pick two or three anchor lines from the grid and start every heading and paragraph on one of them."
+  },
+  {
+   "level": "FAIL",
+   "id": "gradient",
+   "width": 768,
+   "message": "1 gradient fill(s): div.chat-header → linear-gradient(135deg, rgb(10, 14, 26) 0%, rgb(31, 41, 55) 100%)",
+   "fix": "Use a flat colour or a real image. The only gradient allowed by default is a neutral scrim over a photo for legibility.",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "empty-middle",
+   "width": 768,
+   "message": "1 section(s) have content at both edges and 887px of nothing between: \"Canal Renostter\"",
+   "fix": "Bring the two parts together on the grid, or put the picture or figure of the section in the middle. An empty middle third reads as a hole, the same as an empty half."
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 768,
+   "message": "The h1 is a bare name (\"Ar-condicionado com laudo\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "covered-text",
+   "width": 390,
+   "message": "Large text lies under another element at some scroll position: \"Trabalhos feitos\" (screen 7, 100% hidden); \"Canal Renostter\" (screen 10, 38% hidden)",
+   "fix": "Nothing may sit on top of a headline or statement. Move the picture, shorten the pinned run, or raise the text above it (z-index) and give it a ground."
+  },
+  {
+   "level": "FAIL",
+   "id": "reduced-hidden",
+   "width": 1440,
+   "message": "With reduced motion requested, 17 text block(s) on the first screen stay invisible: \"arraste para girar · role para aproximar\", \"Simulador de Cores\", \"Gire o equipamento e toque numa cor para\", \"Branco Pérola\"",
+   "fix": "Put every hidden starting state inside @media (prefers-reduced-motion: no-preference); the reduced page is the finished page (references/motion.md §8)."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\desktop-page-01.jpg",
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\desktop-page-02.jpg",
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\desktop-page-03.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\tablet-page-01.jpg",
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\tablet-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\mobile-page-01.jpg",
+    "C:\\Users\\joaop\\OneDrive\\Documentos\\ANTGRAVITY\\renostter-site\\Site-Renostter\\Site-Renostter\\.taste-skill\\after\\mobile-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

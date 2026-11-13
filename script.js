@@ -145,7 +145,7 @@ function anosCompletosDesde(inicio, agora = new Date()) {
     /* O mesmo numero aparece no topo da pagina, em outro formato.
        Vinha fixo em "5 Anos" e contradizia a secao de numeros. */
     const heroEl = document.getElementById('exp-hero');
-    if (heroEl) heroEl.textContent = `${anos} ${anos === 1 ? 'Ano' : 'Anos'}`;
+    if (heroEl) heroEl.textContent = `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
 })();
 
 /* ════════════════════════════════════════════════════════════════════
@@ -203,7 +203,7 @@ function checkOpenStatus() {
     const isSaturday = day === 6 && time >= 540 && time < 1080;
     const isOpen = isWeekday || isSaturday;
 
-    badge.textContent = isOpen ? '🟢 Aberto agora' : '🔴 Fechado no momento';
+    badge.textContent = isOpen ? 'Aberto agora' : 'Fechado no momento';
     badge.className = `status-badge ${isOpen ? 'open' : 'closed'}`;
 }
 

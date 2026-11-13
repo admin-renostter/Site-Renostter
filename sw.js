@@ -3,13 +3,15 @@
    Cache estratégico para performance offline
    ================================================ */
 
-/* build 2026-10-27 — GA4, dados estruturados, sitemap, 404, sabado e endereco */
-const RELEASE_VERSION = '2026.10.27';
+/* build 2026-10-31 — nova home "etiqueta" (home.css, home.js) */
+const RELEASE_VERSION = '2026.10.31';
 const CACHE_NAME = `renostter-v${RELEASE_VERSION}`;
 const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/styles.css',
+    '/home.css',
+    '/home.js',
     '/chatbot.css',
     '/script.js',
     '/calendar.js',

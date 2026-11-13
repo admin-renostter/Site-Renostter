@@ -38,17 +38,18 @@
     <link rel="icon" type="image/png" href="assets/logo.png" />
     <link rel="apple-touch-icon" href="assets/logo.png" />
     <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#00AEEF" />
+    <meta name="theme-color" content="#0E1216" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
         crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Besley:wght@800&family=Libre+Franklin:ital,wght@0,400;0,600;1,400&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css?v=20261027-endereco" />
     <link rel="stylesheet" href="chatbot.css" />
     <link rel="stylesheet" href="pintura-3d.css?v=20260902-visualizador3d" />
+    <link rel="stylesheet" href="home.css?v=20261031-etiqueta" />
 
     <!-- Import map do three.js para o visualizador 3D de pintura.
          Um import map e inerte ate um modulo usar um destes especificadores:
@@ -79,24 +80,6 @@
             --primary-popup: #ff8c00;
             --bg-modal: #1e1e2f;
             --text-light: rgba(255, 255, 255, 0.85);
-        }
-
-        .btn-open {
-            background: var(--primary-popup);
-            border: none;
-            color: #fff;
-            font-weight: bold;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-open:hover {
-            background: #e07c00;
-            transform: scale(1.02);
         }
 
         .termos-modal-overlay {
@@ -307,778 +290,432 @@
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- ========== NAVBAR ========== -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-inner">
-            <a href="#home" class="nav-logo">
-                <video autoplay loop muted playsinline class="logo-img">
-                    <source src="assets/logo-dinamico.webm" type="video/webm">
-                </video>
-                <img src="assets/logo.png" alt="Renostter Climatização" class="logo-img-static" />
+    <nav class="navbar os-nav" id="navbar" aria-label="Principal">
+        <div class="os-wrap nav-inner">
+            <a href="#home" class="nav-logo os-nav__logo">
+                <span class="os-logo"><img src="assets/logo.png" alt="Renostter Climatização" width="669" height="373" /></span>
             </a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="https://carreiras.renostter.com/trabalhe-conosco/">Trabalhe Conosco</a></li>
+            <ul class="nav-links os-nav__links" id="navLinks">
                 <li><a href="#servicos">Serviços</a></li>
-                <li><a href="#portfolio">Portfólio</a></li>
+                <li><a href="#portfolio">Trabalhos</a></li>
                 <li><a href="#mapa">Cobertura</a></li>
                 <li><a href="#agendar">Agendar</a></li>
-                <li><a href="#contato" class="btn-nav">Orçamento Grátis</a></li>
+                <li><a href="https://carreiras.renostter.com/trabalhe-conosco/">Trabalhe conosco</a></li>
+                <li><a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20um%20orçamento." class="btn-nav os-btn" target="_blank" rel="noopener">Orçamento no WhatsApp</a></li>
             </ul>
-            <button class="hamburger" id="hamburger" aria-label="Abrir Menu de Navegação">
+            <button class="hamburger" id="hamburger" aria-label="Abrir menu de navegação">
                 <span></span><span></span><span></span>
             </button>
-
         </div>
     </nav>
 
-    <!-- ========== HERO ========== -->
-    <section class="hero" id="home">
-        <!-- Vídeo de fundo -->
-        <video class="hero-video" autoplay muted loop playsinline
-            poster="assets/residencial/residencia-alto-da-lapa.jpg">
-            <source src="assets/hero-background.mp4?v=20260903-hero-leve" type="video/mp4">
-            <img src="assets/residencial/residencia-alto-da-lapa.jpg" alt="Fundo da seção hero">
-        </video>
-
-        <!-- Overlay escuro para contraste -->
-        <div class="hero-overlay"></div>
-
-        <div class="container hero-content">
-            <div class="hero-badge">⭐ Garantia de 6 Meses | Atendimento Rápido</div>
-            <h1 class="hero-title">
-                Especialistas em Instalação e Manutenção de
-                <span class="gradient-text">Ar Condicionado em SP</span>
-            </h1>
-            <p class="hero-subtitle">
-                Instalação, conserto, higienização e Contrato de Manutenção (PMOC).<br />
-                Atendimento técnico certificado com peças originais e diagnóstico preciso.
-            </p>
-            <div class="hero-ctas">
-                <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20um%20orçamento." class="btn-primary"
-                    target="_blank" rel="noopener">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                    </svg>
-                    Fale com um Especialista - Orçamento em 15 min
-                </a>
-                <a href="#servicos" class="btn-secondary">Nossos Serviços</a>
-            </div>
-            <div class="hero-trust">
-                <div class="trust-item"><span class="trust-num">4.500+</span><span
-                        class="trust-label">Instalações</span></div>
-                <div class="trust-divider"></div>
-                <div class="trust-item"><span class="trust-num" id="exp-hero">7 Anos</span><span
-                        class="trust-label">Experiência</span></div>
-                <div class="trust-divider"></div>
-                <div class="trust-item"><span class="trust-num">100%</span><span class="trust-label">Com Laudo
-                        Técnico</span></div>
-            </div>
-        </div>
-        <div class="hero-scroll-indicator">
-            <div class="scroll-dot"></div>
+    <main>
+    <!-- ========== HERO: a etiqueta ========== -->
+    <section class="os-hero" id="home">
+        <img class="os-hero__media" src="assets/empresarial/climatizacao-izi-academia.jpeg"
+            alt="Sala de treino da academia Izi com split instalado pela Renostter" width="1600" height="900" fetchpriority="high" />
+        <div class="os-wrap os-hero__stage">
+            <article class="os-label" aria-labelledby="hero-title">
+                <h1 class="os-label__title" id="hero-title">Ar-condicionado com laudo</h1>
+                <p class="os-label__lead">Instalamos, limpamos e consertamos o seu aparelho em São Paulo, e colamos a nossa etiqueta nele: se der problema, você sabe para quem ligar.</p>
+                <table class="os-label__plate">
+                    <caption class="sr-only">Dados do serviço</caption>
+                    <tbody>
+                        <tr><th scope="row">Empresa</th><td>Renostter Climatização, desde 2018</td></tr>
+                        <tr><th scope="row">Serviços</th><td>Instalação, manutenção, higienização, PMOC</td></tr>
+                        <tr><th scope="row">Área</th><td>São Paulo, Guarulhos, ABC, Osasco e Barueri</td></tr>
+                        <tr><th scope="row">Horário</th><td>Segunda a sábado, 9h às 18h</td></tr>
+                        <tr><th scope="row">Experiência</th><td><span id="exp-hero">8 anos</span> e 9.000+ aparelhos instalados</td></tr>
+                        <tr><th scope="row">WhatsApp</th><td>(11) 95273-0593</td></tr>
+                    </tbody>
+                </table>
+                <footer class="os-label__foot">
+                    <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20um%20orçamento." class="os-btn os-btn--accent" target="_blank" rel="noopener">Pedir orçamento no WhatsApp</a>
+                    <a href="#agendar" class="os-link">Agendar uma visita</a>
+                </footer>
+            </article>
         </div>
     </section>
 
-    <!-- ========== MARCAS PARCEIRAS ========== -->
-    <section class="marcas-parceiras section-pad" id="marcas"
-        style="padding: 60px 0; background: var(--bg-color); border-bottom: 1px solid var(--border);">
-        <div class="container">
-            <h2 class="section-title"
-                style="text-align: center; margin-bottom: 40px; font-size: 1.4rem; color: var(--light-gray); font-weight: 500; text-transform: uppercase; letter-spacing: 2px;">
-                Marcas que trabalhamos</h2>
-            <div class="marcas-carrossel">
-                <div class="marcas-track">
-                    <!-- Conjunto 1 -->
-                    <div class="marca-item"><img src="assets/marcas/lg.png" alt="LG" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/samsung.png" alt="Samsung" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/midea.png" alt="Midea" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/daikin.png" alt="Daikin" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/gree.png" alt="Gree" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/elgin.png" alt="Elgin" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/springer.png" alt="Springer" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy">
-                    </div>
-                    <div class="marca-item"><img src="assets/marcas/consul.png" alt="Consul" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/tcl.png" alt="TCL" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/philco.png" alt="Philco" loading="lazy"></div>
-                    <!-- Conjunto 2 (Infinito) -->
-                    <div class="marca-item"><img src="assets/marcas/lg.png" alt="LG" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/samsung.png" alt="Samsung" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/midea.png" alt="Midea" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/daikin.png" alt="Daikin" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/gree.png" alt="Gree" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/elgin.png" alt="Elgin" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/springer.png" alt="Springer" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/electrolux.png" alt="Electrolux" loading="lazy">
-                    </div>
-                    <div class="marca-item"><img src="assets/marcas/consul.png" alt="Consul" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/tcl.png" alt="TCL" loading="lazy"></div>
-                    <div class="marca-item"><img src="assets/marcas/philco.png" alt="Philco" loading="lazy"></div>
-                </div>
+    <!-- ========== NÚMEROS: total e a ficha ========== -->
+    <section class="numeros os-section os-stats" id="numeros" aria-labelledby="numeros-title">
+        <div class="os-wrap os-stats__grid">
+            <div class="os-stats__left" data-reveal>
+                <h2 class="os-h2" id="numeros-title">Desde 2018, em números</h2>
+                <p class="os-note">Contados a partir das ordens de serviço da casa, da primeira visita em 18 de setembro de 2018 até hoje.</p>
+                <p class="os-total"><span class="counter" data-target="9000">9000</span>+</p>
+                <p class="os-total__cap">aparelhos instalados em São Paulo e região</p>
             </div>
-
+            <div class="os-slip" data-reveal>
+                <table class="os-slip__table">
+                    <caption class="sr-only">Ficha da Renostter em números</caption>
+                    <tbody>
+                        <tr class="os-slip__group"><th colspan="2" scope="colgroup">Aparelhos</th></tr>
+                        <tr><th scope="row">Máquinas instaladas</th><td>9.000+</td></tr>
+                        <tr><th scope="row">Instalações concluídas</th><td>4.500+</td></tr>
+                        <tr><th scope="row">Vendas em 3 meses (<span id="vendas-year">2026</span>)</th><td>500+</td></tr>
+                        <tr><th scope="row">Higienizações em março</th><td>300+</td></tr>
+                        <tr class="os-slip__group"><th colspan="2" scope="colgroup">Garantia</th></tr>
+                        <tr><th scope="row">Serviços, pelo CDC</th><td>90 dias</td></tr>
+                        <tr><th scope="row">Peças e equipamentos</th><td>até 12 meses</td></tr>
+                        <tr><th scope="row">Visitas com laudo técnico</th><td>100%</td></tr>
+                        <tr class="os-slip__group"><th colspan="2" scope="colgroup">Casa</th></tr>
+                        <tr><th scope="row">Anos completos</th><td><span class="counter" id="exp-counter" data-target="0">8</span></td></tr>
+                        <tr><th scope="row">Marcas atendidas</th><td>11</td></tr>
+                        <tr class="os-slip__total"><th scope="row">Aparelhos instalados</th><td>9.000+</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <span id="exp-card" hidden></span>
+        <script>
+            document.getElementById('vendas-year').textContent = new Date().getFullYear();
+        </script>
     </section>
 
-    <!-- ========== NÚMEROS ========== -->
-    <section class="numeros section-pad" id="numeros">
-        <div class="container">
-            <div class="section-header">
-                <p class="section-tag">Nossos Resultados</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Números que
-                            comprovam<br />nossa excelência</span></span></h2>
+    <!-- ========== SERVIÇOS: a tabela de preços ========== -->
+    <section class="os-section os-menu" id="servicos" aria-labelledby="servicos-title">
+        <div class="os-wrap os-menu__grid">
+            <div class="os-sheet" data-reveal>
+                <h2 class="os-h2 os-sheet__title" id="servicos-title">Serviços e preços</h2>
+                <div class="os-sheet__group">
+                    <h3 class="os-sheet__name">Instalar</h3>
+                    <dl class="os-items">
+                        <div class="os-item"><dt>Instalação de split</dt><dd>a partir de R$ 280</dd><p>Tubulação de cobre, ponto elétrico e teste. Cerca de 3 horas.</p></div>
+                        <div class="os-item"><dt>Multi-split, cassete, piso-teto e VRF</dt><dd>sob orçamento</dd><p>Sistemas para lojas, clínicas e prédios, com projeto antes.</p></div>
+                        <div class="os-item"><dt>Projeto e consultoria</dt><dd>sob orçamento</dd><p>BTU certo para o tamanho, o uso e as pessoas do ambiente.</p></div>
+                        <div class="os-item"><dt>Remoção e reinstalação</dt><dd>sob orçamento</dd><p>Para mudança ou reforma, sem perder o gás nem a garantia.</p></div>
+                    </dl>
+                </div>
+                <div class="os-sheet__group">
+                    <h3 class="os-sheet__name">Manter</h3>
+                    <dl class="os-items">
+                        <div class="os-item os-item--mark"><dt>Higienização, o mais pedido</dt><dd>R$ 120 por aparelho</dd><p>Fungos e bactérias fora do filtro, da serpentina e do dreno.</p></div>
+                        <div class="os-item"><dt>Manutenção preventiva</dt><dd>a partir de R$ 150</dd><p>Visita periódica que evita quebra e baixa a conta de luz.</p></div>
+                        <div class="os-item"><dt>Recarga de gás</dt><dd>a partir de R$ 160</dd><p>Só depois de achar e corrigir o vazamento.</p></div>
+                        <div class="os-item"><dt>Manutenção corretiva</dt><dd>após diagnóstico</dd><p>Vazamento, falha elétrica ou mecânica, com peça na garantia.</p></div>
+                    </dl>
+                </div>
+                <div class="os-sheet__group">
+                    <h3 class="os-sheet__name">Para empresas</h3>
+                    <dl class="os-items">
+                        <div class="os-item"><dt>PMOC</dt><dd>sob orçamento</dd><p>Plano obrigatório pela Portaria 3.523/MS para ambientes coletivos.</p></div>
+                        <div class="os-item"><dt>Contrato de manutenção</dt><dd>mensal ou anual</dd><p>Visitas na agenda, prioridade no chamado e preço fechado.</p></div>
+                        <div class="os-item"><dt>Limpeza de dutos</dt><dd>sob orçamento</dd><p>Umidade, pureza e distribuição do ar em sistemas centrais.</p></div>
+                    </dl>
+                </div>
+                <p class="os-sheet__brands">Trabalhamos com LG, Samsung, Midea, Daikin, Gree, Elgin, Springer, Electrolux, Consul, TCL e Philco.</p>
             </div>
-            <div class="numeros-grid">
-                <div class="numero-card" data-target="9000">
-                    <div class="numero-icon">🏢</div>
-                    <div class="numero-valor"><span class="counter" data-target="9000">0</span>+</div>
-                    <div class="numero-label">Máquinas Instaladas desde 2018</div>
-                </div>
-                <div class="numero-card" data-target="500">
-                    <div class="numero-icon">💼</div>
-                    <div class="numero-valor"><span class="counter" data-target="500">0</span>+</div>
-                    <div class="numero-label">Vendas em 3 meses (<span id="vendas-year"></span>)</div>
-                </div>
-                <div class="numero-card" data-target="300">
-                    <div class="numero-icon">🧹</div>
-                    <div class="numero-valor"><span class="counter" data-target="300">0</span>+</div>
-                    <div class="numero-label">Higienizações em março</div>
-                </div>
-                <div class="numero-card" id="exp-card" data-target="0">
-                    <div class="numero-icon">⭐</div>
-                    <div class="numero-valor"><span class="counter" id="exp-counter" data-target="0">0</span>+</div>
-                    <div class="numero-label">Anos de Experiência</div>
-                </div>
-            </div>
-            <script>
-                // Logic to dynamically compute the current year and years of experience since 2018
-                (function () {
-                    const currentYear = new Date().getFullYear();
-                    const expYears = currentYear - 2018;
-
-                    document.getElementById('vendas-year').textContent = currentYear;
-
-                    const expCard = document.getElementById('exp-card');
-                    const expCounter = document.getElementById('exp-counter');
-                    if (expCard) expCard.setAttribute('data-target', expYears);
-                    if (expCounter) expCounter.setAttribute('data-target', expYears);
-                })();
-            </script>
-        </div>
-    </section>
-
-    <!-- ========== SERVIÇOS ========== -->
-    <section class="servicos section-pad" id="servicos">
-        <div class="container">
-            <div class="section-header">
-                <p class="section-tag">O que fazemos</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Serviços
-                            Completos em<br />Climatização</span></span></h2>
-                <p class="section-desc">Atendemos residências, clínicas, escritórios e grandes empresas com a mesma
-                    excelência.</p>
-            </div>
-            <div class="servicos-grid">
-                <div class="servico-card">
-                    <div class="servico-icon">📐</div>
-                    <h3>Projeto e Consultoria</h3>
-                    <p>Dimensionamento personalizado considerando tamanho, uso, número de pessoas e eficiência
-                        energética do ambiente.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">🔧</div>
-                    <h3>Instalação de Equipamentos</h3>
-                    <p>Split, multi-split, cassete, piso-teto, VRF e sistemas centrais. Instalação completa com
-                        tubulação e elétrica.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">🔍</div>
-                    <h3>Manutenção Preventiva</h3>
-                    <p>Inspeções periódicas para evitar falhas, prolongar a vida útil e reduzir consumo de energia do
-                        equipamento.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">⚙️</div>
-                    <h3>Manutenção Corretiva</h3>
-                    <p>Diagnóstico preciso e reparo de vazamentos, falhas elétricas ou mecânicas. Reposição de peças com
-                        garantia.</p>
-                </div>
-                <div class="servico-card highlight-card">
-                    <div class="servico-badge">Mais Solicitado</div>
-                    <div class="servico-icon">✨</div>
-                    <h3>Limpeza e Higienização</h3>
-                    <p>Remoção de poeira, fungos e bactérias de filtros, evaporadoras e condensadoras. Essencial para a
-                        saúde do ambiente.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">💨</div>
-                    <h3>Recarga de Gás Refrigerante</h3>
-                    <p>Reposição precisa do fluido refrigerante em caso de vazamento ou perda de eficiência do sistema.
-                    </p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">📋</div>
-                    <h3>Laudo Tecnico</h3>
-                    <p>Plano de Manutenção, Operação e Controle. Obrigatório por lei (Portaria 3.523/MS) para ambientes
-                        coletivos.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">🌀</div>
-                    <h3>Limpeza de Dutos</h3>
-                    <p>Controle de umidade, pureza e distribuição do ar em sistemas centrais empresariais.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">🔄</div>
-                    <h3>Remoção e Reinstalação</h3>
-                    <p>Desmontagem e reinstalação de equipamentos para mudanças ou reformas com total segurança.</p>
-                </div>
-                <div class="servico-card">
-                    <div class="servico-icon">📅</div>
-                    <h3>Contratos de Manutenção</h3>
-                    <p>Planos mensais ou anuais com visitas regulares, prioridade no atendimento e condições especiais.
-                    </p>
-                </div>
-            </div>
+            <figure class="os-menu__photo" data-reveal>
+                <img src="assets/residencial/apartamento-vila-nova.jpg" alt="Dois técnicos da Renostter higienizando um split no teto de uma recepção" width="472" height="1024" loading="lazy" />
+                <figcaption>Higienização de um split em recepção de clínica.</figcaption>
+            </figure>
         </div>
 
-        <!-- Destaque: Pintura de Equipamento -->
-        <div class="banner-pintura" id="bannerPintura">
-            <div class="banner-pintura-content">
-                <span class="pintura-badge">Exclusivo</span>
-                <h3>Pintura de Equipamento</h3>
-                <p>Transforme seu ar‑condicionado em um item de decoração. Tinta automotiva de alta durabilidade,
-                    aplicação profissional e personalização total – combine com seu projeto!</p>
-                <ul class="pintura-features">
-                    <li>🎨 Cores exclusivas (mais de 50 opções)</li>
-                    <li>🛡️ Proteção UV e anticorrosão</li>
-                    <li>✨ Acabamento automotivo premium</li>
-                    <li>🧼 Fácil limpeza e resistência a fungos</li>
+        <!-- Pintura de equipamento: abre o simulador 3D -->
+        <div class="os-wrap">
+            <div class="os-paint" id="bannerPintura" data-reveal>
+                <div class="os-paint__text">
+                    <h3 class="os-h3">Pintura do aparelho, na cor da parede</h3>
+                    <p>Tinta automotiva com proteção UV e anticorrosão, em mais de 50 cores. Pintamos também dutos, grelhas e controles. Gire o aparelho no simulador e escolha o acabamento.</p>
+                    <button type="button" class="os-btn os-btn--accent" onclick="openPinturaModal()">Abrir o simulador de cores</button>
+                </div>
+                <ul class="os-paint__chips" aria-label="Algumas cores disponíveis">
+                    <li style="--c:#ECEFF2">Branco pérola</li>
+                    <li style="--c:#2D3748">Grafite</li>
+                    <li style="--c:#00AEEF">Azul Renostter</li>
+                    <li style="--c:#FF6B00">Laranja Renostter</li>
+                    <li style="--c:#48BB78">Verde palmeira</li>
+                    <li style="--c:#F6E05E">Amarelo</li>
                 </ul>
-                <button class="btn-pintura-cta" onclick="openPinturaModal()">Personalizar agora</button>
-            </div>
-            <!-- Banner Image Graphic - represented gracefully in CSS -->
-            <div class="banner-pintura-image">
-                <div class="pintura-mockup"></div>
-            </div>
-        </div>
-
-        <p class="section-desc pintura-extra-desc">
-            Na Renostter, não cuidamos apenas da temperatura – cuidamos da estética do seu ambiente. A pintura de
-            equipamentos é feita com tintas automotivas de altíssima resistência, garantindo que seu ar‑condicionado
-            combine com a decoração ou se destaque como um elemento criativo. Personalizamos também dutos, grelhas e até
-            controles remotos.
-        </p>
-        <div class="servicos-cta">
-            <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20informações%20sobre%20os%20serviços."
-                class="btn-primary" target="_blank" rel="noopener">
-                Quero um Orçamento Gratuito
-            </a>
-        </div>
-    </section>
-
-
-    <section class="portfolio section-pad" id="portfolio">
-        <div class="container">
-
-            <!-- 🎬 CARROSSEL DE VÍDEOS 3 COLUNAS -->
-            <div class="video-gallery-section" id="video-gallery" style="margin-top: 80px;">
-                <div class="section-header">
-                    <p class="section-tag">NOSSOS VÍDEOS</p>
-                    <h2 class="section-title">Canal Renostter</h2>
-                    <p class="section-desc">Os vídeos mais recentes do nosso canal. Conteúdo atualizado automaticamente
-                        a cada visita.</p>
-                </div>
-                <div id="yc3-spinner" class="yc3-spinner hidden"></div>
-                <div id="youtube-carousel-3cols" tabindex="0" aria-label="Carrossel de vídeos do canal Renostter">
-                    <!-- Carrossel 3 colunas gerado por js/portfolio.js -->
-                </div>
-            </div>
-
-
-            <div class="portfolio-footer" style="margin-top: 48px;">
-                <a href="#agendar" class="btn-primary">Solicite um Orçamento Personalizado</a>
             </div>
         </div>
     </section>
 
+    <!-- ========== LAUDO: o que sai de cada visita ========== -->
+    <section class="os-section os-output" id="laudo" aria-labelledby="laudo-title">
+        <img class="os-output__bg" src="assets/residencial/montagem-de-condensadora.jpeg" alt="" width="900" height="1600" loading="lazy" />
+        <div class="os-output__text" data-reveal>
+            <h2 class="os-h2" id="laudo-title">O laudo vai junto</h2>
+            <p>Toda visita termina com um laudo técnico do que foi feito no aparelho. É o papel que prova a garantia e que a empresa guarda para a fiscalização.</p>
+            <p>Para clínicas, escritórios e comércio, o PMOC é obrigatório pela Portaria 3.523/MS e pela ABNT NBR 16.401. Montamos o plano, fazemos as visitas e deixamos cada uma registrada.</p>
+        </div>
+        <ul class="os-output__slips" aria-label="O que o laudo registra, por serviço">
+            <li class="os-slip-out"><strong>Higienização</strong><span aria-hidden="true">- - - - - - - - -</span>Filtros lavados e secos<br>Serpentina com bactericida<br>Bandeja e dreno livres<br>Turbina limpa<br>Teste de funcionamento</li>
+            <li class="os-slip-out"><strong>Instalação</strong><span aria-hidden="true">- - - - - - - - -</span>BTU conferido no ambiente<br>Cobre isolado e fixado<br>Vácuo na linha<br>Ponto elétrico dedicado<br>Pressão e temperatura</li>
+            <li class="os-slip-out"><strong>Preventiva</strong><span aria-hidden="true">- - - - - - - - -</span>Limpeza dos filtros<br>Corrente medida<br>Conexões reapertadas<br>Dreno verificado<br>Temperatura de saída</li>
+            <li class="os-slip-out"><strong>Corretiva</strong><span aria-hidden="true">- - - - - - - - -</span>Falha diagnosticada<br>Peça trocada, com garantia<br>Teste de vazamento<br>Medição depois do reparo</li>
+            <li class="os-slip-out"><strong>Recarga de gás</strong><span aria-hidden="true">- - - - - - - - -</span>Vazamento localizado<br>Correção antes da carga<br>Fluido da etiqueta<br>Pressões registradas</li>
+            <li class="os-slip-out"><strong>PMOC</strong><span aria-hidden="true">- - - - - - - - -</span>Plano anual por ambiente<br>Responsável técnico<br>Registro de cada visita<br>Portaria 3.523/MS</li>
+        </ul>
+    </section>
 
-
-    <!-- ========== DIFERENCIAIS ========== -->
-    <section class="diferenciais section-pad" id="diferenciais">
-        <div class="container">
-            <div class="diferenciais-inner">
-                <div class="diferenciais-text">
-                    <p class="section-tag">Por que nos escolher</p>
-                    <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Mais do que
-                                um serviço —<br />uma parceria de confiança</span></span></h2>
-                    <p class="diferenciais-desc">Trabalhamos em grandes e pequenas empresas, escritórios, clínicas,
-                        casas e comércios. Cada projeto recebe atenção técnica personalizada.</p>
-                    <ul class="diferenciais-list">
-                        <li>
-                            <div class="dif-icon">✅</div>
-                            <div>
-                                <strong>Laudo Técnico Oficial</strong>
-                                <span>Emitimos laudo e comprovantes para todos os clientes.</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dif-icon">✅</div>
-                            <div>
-                                <strong>Garantia conforme a Lei</strong>
-                                <span>90 dias em serviços (CDC), até 12 meses em peças e equipamentos.</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dif-icon">✅</div>
-                            <div>
-                                <strong>CONTRATO DE MANUTENÇÃO - PMOC obrigatório para empresas</strong>
-                                <span>Portaria 3.523/MS e ABNT NBR 16.401. Evite multas e autuações.</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dif-icon">✅</div>
-                            <div>
-                                <strong>Equipe especializada em vendas</strong>
-                                <span>Melhor custo-benefício do mercado. Vendemos todas as marcas.</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dif-icon">✅</div>
-                            <div>
-                                <strong>Atendimento residencial e empresarial</strong>
-                                <span>Da instalação simples ao sistema VRF para grandes edifícios.</span>
-                            </div>
-                        </li>
-                    </ul>
-                    <a href="https://wa.me/5511952730593?text=Olá!%20Vi%20o%20site%20e%20gostaria%20de%20saber%20mais."
-                        class="btn-primary" target="_blank" rel="noopener">
-                        Falar com um Especialista
-                    </a>
+    <!-- ========== TRABALHOS: pastas empilhadas ========== -->
+    <section class="os-section os-work" id="portfolio" aria-labelledby="portfolio-title">
+        <div class="os-wrap">
+            <h2 class="os-h2 os-work__title" id="portfolio-title">Trabalhos feitos</h2>
+        </div>
+        <div class="os-folders">
+            <article class="os-folder" style="--band:#E9EDEF;--tab:#00AEEF">
+                <div class="os-wrap os-folder__strip"><h3 class="os-folder__tab">Academia Izi</h3><span class="os-folder__cat">Empresarial · splits hi-wall</span></div>
+                <div class="os-wrap os-folder__body">
+                    <img src="assets/empresarial/climatizacao-izi-academia.jpeg" alt="Sala de treino funcional da academia Izi com split hi-wall instalado na parede" width="1600" height="900" loading="lazy" />
+                    <div class="os-folder__text"><p>Sala de treino funcional com pé-direito baixo, luz de LED no forro e espelhos nas paredes. O split ficou alto, longe dos espelhos, para o ar circular sem bater direto em quem está treinando. A mesma obra recebeu aparelhos na área de musculação.</p><a class="os-link" href="#agendar">Agendar uma visita para a sua empresa</a></div>
                 </div>
-                <div class="diferenciais-visual">
-                    <div class="visual-card main-card">
-                        <div class="visual-icon">🏆</div>
-                        <strong>+4.500</strong>
-                        <span>instalações com sucesso</span>
-                    </div>
-                    <div class="visual-card accent-card">
-                        <div class="visual-icon">📋</div>
-                        <strong>CONTRATO DE MANUTENÇÃO - PMOC</strong>
-                        <span>Cumprimento legal garantido</span>
-                    </div>
-                    <div class="visual-card accent-card-2">
-                        <div class="visual-icon">🛡️</div>
-                        <strong>Garantia</strong>
-                        <span>Conforme CDC e normas ABNT</span>
-                    </div>
-                    <div class="visual-card accent-card-3">
-                        <div class="visual-icon">⚡</div>
-                        <strong>Resposta Rápida</strong>
-                        <span>Atendimento ágil via WhatsApp</span>
-                    </div>
+            </article>
+            <article class="os-folder" style="--band:#00AEEF;--tab:#F2F4F5">
+                <div class="os-wrap os-folder__strip"><h3 class="os-folder__tab">Clínica médica</h3><span class="os-folder__cat">Empresarial · split Midea</span></div>
+                <div class="os-wrap os-folder__body">
+                    <img src="assets/empresarial/clinica-medica-excellence.jpg" alt="Split Midea com a etiqueta da Renostter instalado no forro de madeira de uma recepção de clínica" width="576" height="1024" loading="lazy" />
+                    <div class="os-folder__text"><p>Split Midea instalado sob forro de madeira, na recepção. Repare na etiqueta ao lado da placa do fabricante: é a nossa, com WhatsApp e Instagram. Ela fica em todos os aparelhos que instalamos, para o próximo chamado não depender de procurar um número.</p><a class="os-link" href="#servicos">Ver o PMOC para clínicas</a></div>
+                </div>
+            </article>
+            <article class="os-folder" style="--band:#F2F4F5;--tab:#FF6B00">
+                <div class="os-wrap os-folder__strip"><h3 class="os-folder__tab">Condensadoras TCL</h3><span class="os-folder__cat">Comercial · instalação em série</span></div>
+                <div class="os-wrap os-folder__body">
+                    <img src="assets/residencial/montagem-de-condensadora.jpeg" alt="Fachada lateral com mais de quinze condensadoras TCL instaladas em suportes" width="900" height="1600" loading="lazy" />
+                    <div class="os-folder__text"><p>Mais de quinze condensadoras na lateral de um prédio comercial, em suportes de parede e de piso, com a tubulação isolada e presa à fachada. Instalação em série pede projeto: cada unidade precisa de espaço para soprar o ar quente sem devolvê-lo à vizinha.</p><a class="os-link" href="#agendar">Pedir um projeto</a></div>
+                </div>
+            </article>
+            <article class="os-folder" style="--band:#1C232B;--tab:#00AEEF">
+                <div class="os-wrap os-folder__strip"><h3 class="os-folder__tab">Sala de reunião</h3><span class="os-folder__cat">Comercial · split hi-wall</span></div>
+                <div class="os-wrap os-folder__body">
+                    <img src="assets/empresarial/sede-corporativa-tech.jpg" alt="Sala de reunião com mesa branca, cadeiras cinza e split instalado acima da porta" width="497" height="1024" loading="lazy" />
+                    <div class="os-folder__text"><p>Sala de reunião com mesa para oito pessoas. O aparelho foi posicionado acima da porta para o fluxo de ar correr ao longo da mesa, sem soprar na nuca de ninguém. Tubulação embutida na parede, sem canaleta aparente.</p><a class="os-link" href="#agendar">Agendar uma visita</a></div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Canal Renostter: vídeos do YouTube (js/portfolio.js) -->
+        <div class="os-wrap os-videos" id="video-gallery">
+            <h2 class="os-h2">Canal Renostter</h2>
+            <p class="os-note">Os vídeos mais recentes do nosso canal no YouTube.</p>
+            <div id="yc3-spinner" class="yc3-spinner hidden"></div>
+            <div id="youtube-carousel-3cols" tabindex="0" aria-label="Carrossel de vídeos do canal Renostter"></div>
+        </div>
+    </section>
+
+    <!-- ========== COMPROMISSO: a carta ========== -->
+    <section class="os-section os-letter-sec" id="diferenciais" aria-labelledby="carta-title">
+        <div class="os-wrap">
+            <div class="os-letter" data-reveal>
+                <span class="os-logo os-letter__mark"><img src="assets/logo.png" alt="" width="669" height="373" /></span>
+                <h2 class="os-h2" id="carta-title">Nosso compromisso</h2>
+                <p>Começamos em 18 de setembro de 2018, na zona leste de São Paulo. Desde então, todo aparelho que instalamos sai com a nossa etiqueta: o nome, o WhatsApp e o Instagram. Se der problema, você sabe para quem ligar.</p>
+                <p>Toda visita termina com <mark>laudo técnico</mark>. O serviço tem 90 dias de garantia, como manda o Código de Defesa do Consumidor; peças e equipamentos, até 12 meses.</p>
+                <p>Para empresas, fazemos o PMOC exigido pela Portaria 3.523/MS e pela ABNT NBR 16.401, para a fiscalização não virar multa.</p>
+                <p>Vendemos aparelhos de todas as marcas, com uma equipe que procura o melhor custo-benefício, e atendemos da casa com um split ao prédio com sistema VRF.</p>
+                <p class="os-letter__sign">Equipe Renostter<span>R. do Pombo Correio, 428 · Jardim dos Ipês</span></p>
+            </div>
+            <div class="os-letter__stub">
+                <p>Fale direto com a equipe</p>
+                <a href="https://wa.me/5511952730593?text=Olá!%20Vi%20o%20site%20e%20gostaria%20de%20saber%20mais." class="os-btn os-btn--ink" target="_blank" rel="noopener">WhatsApp (11) 95273-0593</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== COBERTURA: o cupom ========== -->
+    <section class="os-section os-cover" id="mapa" aria-labelledby="mapa-title">
+        <div class="os-wrap">
+            <div class="os-coupon" data-reveal>
+                <div class="os-coupon__left">
+                    <h2 class="os-h2" id="mapa-title">Atendemos o seu CEP?</h2>
+                    <p>São Paulo capital, Guarulhos, ABC Paulista, Osasco e Barueri. Os técnicos saem todos os dias da nossa base na zona leste.</p>
+                </div>
+                <div class="os-coupon__right">
+                    <label for="cep-input" class="sr-only">CEP</label>
+                    <input type="text" class="os-field" id="cep-input" placeholder="Seu CEP, ex.: 08160-142" maxlength="9" inputmode="numeric" autocomplete="postal-code" />
+                    <button class="cep-btn os-btn os-btn--ink os-btn--block" onclick="verificarCep()" type="button">Verificar o CEP</button>
+                    <button id="btn-geolocalizacao" class="os-btn os-btn--ghost os-btn--block" onclick="usarGeolocalizacao()" type="button">Usar minha localização</button>
+                    <div class="cep-result" id="cep-result" aria-live="polite"></div>
+                    <a id="mapa-cta-orcamento" href="#agendar" class="os-btn os-btn--accent os-btn--block" style="display:none;">Agendar a visita</a>
+                </div>
+            </div>
+            <div class="os-cover__map">
+                <div id="mapa-leaflet" role="region" aria-label="Mapa da área de atendimento"></div>
+                <div class="os-cover__base">
+                    <h3 class="os-h3">Nossa base</h3>
+                    <address>R. do Pombo Correio, 428<br />Jardim dos Ipês, São Paulo, SP<br />CEP 08160-142</address>
+                    <p>Segunda a sábado, das 9h às 18h.</p>
+                    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=R.%20do%20Pombo%20Correio%2C%20428%20-%20Jardim%20dos%20Ipes%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2008160-142&amp;destination_place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k" target="_blank" rel="noopener" class="os-link">Como chegar</a>
+                    <a href="tel:+5511952730593" class="os-link">Ligar (11) 95273-0593</a>
                 </div>
             </div>
         </div>
     </section>
 
-
-
-    <!-- ========== MAPA DE ATENDIMENTO ========== -->
-    <section class="mapa-atendimento section-pad" id="mapa">
-        <div class="container">
-            <div class="section-header">
-                <p class="section-tag">Área de Cobertura</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Atendemos
-                            toda<br /><span class="gradient-text">São Paulo e Região</span></span></span></h2>
-                <p class="section-desc">Técnicos em toda a Grande SP. Verifique se sua região está na nossa área de
-                    cobertura.</p>
+    <!-- ========== AGENDAMENTO: a ficha ========== -->
+    <section class="os-section os-book" id="agendar" aria-labelledby="agendar-title">
+        <div class="os-wrap os-book__grid">
+            <div class="os-book__intro" data-reveal>
+                <h2 class="os-h2" id="agendar-title">Agende uma visita técnica</h2>
+                <p>Escolha o serviço, o dia e o horário. O pedido vai para a nossa agenda e você confirma pelo Google Calendar ou pelo WhatsApp.</p>
+                <img src="assets/empresarial/projeto-izi-academia.jpeg" alt="Área de musculação da academia Izi com split instalado acima dos espelhos" width="1600" height="900" loading="lazy" />
             </div>
-            <div class="mapa-inner">
-                <div id="mapa-leaflet"></div>
-                <div class="mapa-info">
-                    <h3>Onde você está?<br />Provavelmente atendemos! 📍</h3>
-                    <button id="btn-geolocalizacao" class="btn-geolocalizacao" onclick="usarGeolocalizacao()"
-                        type="button">
-                        📍 Usar minha localização
-                    </button>
-                    <p style="color:rgba(255,255,255,0.55); font-size:0.95rem; line-height:1.7;">Cobrimos São Paulo
-                        capital e toda a Grande SP, com técnicos deslocados diariamente para garantir agilidade no
-                        atendimento.</p>
+            <div class="os-form">
+                <ol class="steps-bar">
+                    <li class="step active" id="step-dot-1"><span>1</span><p>Serviço</p></li>
+                    <li class="step" id="step-dot-2"><span>2</span><p>Data e hora</p></li>
+                    <li class="step" id="step-dot-3"><span>3</span><p>Seus dados</p></li>
+                    <li class="step" id="step-dot-4"><span>4</span><p>Confirmar</p></li>
+                </ol>
 
-                    <div class="mapa-endereco">
-                        <span class="mapa-endereco-label">Nossa base</span>
-                        <address class="mapa-endereco-texto">
-                            R. do Pombo Correio, 428 &mdash; Jardim dos Ip&ecirc;s<br />
-                            S&atilde;o Paulo &mdash; SP, 08160-142
-                        </address>
-                        <div class="mapa-endereco-acoes">
-                            <a href="https://www.google.com/maps/dir/?api=1&amp;destination=R.%20do%20Pombo%20Correio%2C%20428%20-%20Jardim%20dos%20Ipes%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2008160-142&amp;destination_place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k" target="_blank" rel="noopener"
-                                class="mapa-endereco-btn">&#128506; Como chegar</a>
-                            <a href="tel:+5511952730593" class="mapa-endereco-btn secundario">&#128222; (11) 95273-0593</a>
-                        </div>
-                        <p class="mapa-endereco-nota">Segunda a s&aacute;bado, das 09:00 &agrave;s 18:00.</p>
-                    </div>
-
-                    <div class="mapa-cep-check">
-                        <label for="cep-input">Verificar sua região por CEP</label>
-                        <div class="cep-input-row">
-                            <input type="text" class="cep-input" id="cep-input" placeholder="00000-000" maxlength="9"
-                                inputmode="numeric" aria-label="CEP para verificar cobertura" />
-                            <button class="cep-btn" onclick="verificarCep()" type="button">Verificar</button>
-                        </div>
-                        <div class="cep-result" id="cep-result" aria-live="polite"></div>
-                    </div>
-                    <a id="mapa-cta-orcamento" href="#agendar" class="btn-primary"
-                        style="display:none; margin-top:16px; width:100%; text-align:center; justify-content:center;">
-                        ✅ Solicitar Orçamento Agora
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== CONTATO ========== -->
-    <section class="contato section-pad" id="contato">
-        <div class="container">
-            <div class="section-header">
-                <p class="section-tag">Fale Conosco</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Pronto para um
-                            ambiente<br />mais confortável?</span></span></h2>
-                <p class="section-desc">Ficaríamos felizes em resolver seus problemas com climatização. Entre em contato
-                    agora!</p>
-            </div>
-            <div class="contato-grid">
-                <div class="contato-card whatsapp-card">
-                    <div class="contato-icon">📱</div>
-                    <h3>WhatsApp</h3>
-
-                    <p>Resposta rápida durante o horário de atendimento</p>
-                    <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20solicitar%20um%20orçamento."
-                        class="btn-whatsapp" target="_blank" rel="noopener">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                        </svg>
-                        Chamar no WhatsApp
-                    </a>
-                </div>
-                <div class="contato-card horario-card">
-                    <div class="contato-icon">🕐</div>
-                    <h3>Horário de Atendimento</h3>
-                    <div class="horario-list">
-                        <div class="horario-item">
-                            <span>Segunda a Sexta</span>
-                            <span class="horario-time">09:00 – 18:00</span>
-                        </div>
-                        <div class="horario-item">
-                            <span>Sábado</span>
-                            <span class="horario-time">09:00 – 18:00</span>
-                        </div>
-                        <div class="horario-item">
-                            <span>Domingo</span>
-                            <span class="horario-time closed">Fechado</span>
-                        </div>
-                    </div>
-                    <div class="status-badge open" id="statusBadge">🟢 Aberto agora</div>
-                </div>
-                <div class="contato-card redes-card">
-                    <div class="contato-icon">🌐</div>
-                    <h3>Nossas Redes</h3>
-                    <a href="https://instagram.com/renostter" class="rede-link" target="_blank" rel="noopener">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                        @renostter
-                    </a>
-                    <a href="https://www.facebook.com/Renostter" class="rede-link" target="_blank" rel="noopener">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.593 1.323-1.325V1.325C24 .593 23.407 0 22.675 0z" />
-                        </svg>
-                        Renostter Climatização
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ========== AGENDAMENTO ========== -->
-    <section class="agendar section-pad" id="agendar">
-        <div class="container">
-            <div class="section-header">
-                <p class="section-tag">📅 Agendar Visita</p>
-                <h2 class="section-title"><span class="reveal-text-container"><span class="reveal-text">Agende uma
-                            Visita Técnica<br /><span class="gradient-text">Direto no Nosso
-                                Calendário</span></span></span></h2>
-                <p class="section-desc">Escolha o serviço, selecione a data e horário desejados. O agendamento vai
-                    direto para o nosso Google Calendar e você recebe a confirmação.</p>
-            </div>
-            <div class="agendar-container">
-                <!-- Indicador de vagas -->
-                <div style="text-align:center; margin-bottom:8px;">
-                    <span id="slots-indicator" class="slots-indicator slots-normal">🟢 Verificando vagas...</span>
-                </div>
-                <!-- Steps -->
-                <div class="steps-bar">
-                    <div class="step active" id="step-dot-1"><span>1</span>
-                        <p>Serviço</p>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step" id="step-dot-2"><span>2</span>
-                        <p>Data & Hora</p>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step" id="step-dot-3"><span>3</span>
-                        <p>Seus Dados</p>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step" id="step-dot-4"><span>4</span>
-                        <p>Confirmar</p>
-                    </div>
-                </div>
-
-                <!-- Step 1: Serviço -->
                 <div class="form-step active" id="form-step-1">
                     <h3 class="step-title">Qual serviço você precisa?</h3>
                     <div class="servico-select-grid">
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Instalação de Ar-Condicionado"
-                                data-duration="3" />
-                            <div class="servico-opt-card"><span
-                                    class="soc-icon">🔧</span><span>Instalação</span><small>~3 horas</small></div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Manutenção Preventiva" data-duration="2" />
-                            <div class="servico-opt-card"><span class="soc-icon">🔍</span><span>Manutenção
-                                    Preventiva</span><small>~2 horas</small></div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Manutenção Corretiva" data-duration="2" />
-                            <div class="servico-opt-card"><span class="soc-icon">⚙️</span><span>Manutenção
-                                    Corretiva</span><small>~2 horas</small></div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Limpeza e Higienização" data-duration="2" />
-                            <div class="servico-opt-card"><span
-                                    class="soc-icon">✨</span><span>Higienização</span><small>~2 horas</small></div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Recarga de Gás Refrigerante" data-duration="1" />
-                            <div class="servico-opt-card"><span class="soc-icon">💨</span><span>Recarga de
-                                    Gás</span><small>~1 hora</small></div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Consultoria e Projeto de Climatização"
-                                data-duration="2" />
-                            <div class="servico-opt-card"><span
-                                    class="soc-icon">📐</span><span>Consultoria/Projeto</span><small>~2 horas</small>
-                            </div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="PMOC – Plano de Manutenção" data-duration="3" />
-                            <div class="servico-opt-card"><span class="soc-icon">📋</span><span>Contrato de Manutenção -
-                                    PMOC</span><small>~3
-                                    horas</small></div>
-                        </label>
-                        <label class="servico-option">
-                            <input type="radio" name="servico" value="Outro Serviço" data-duration="2" />
-                            <div class="servico-opt-card"><span class="soc-icon">💬</span><span>Outro</span><small>A
-                                    definir</small></div>
-                        </label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Instalação de Ar-Condicionado" data-duration="3" /><div class="servico-opt-card"><span>Instalação</span><small>cerca de 3 horas</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Manutenção Preventiva" data-duration="2" /><div class="servico-opt-card"><span>Manutenção preventiva</span><small>cerca de 2 horas</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Manutenção Corretiva" data-duration="2" /><div class="servico-opt-card"><span>Manutenção corretiva</span><small>cerca de 2 horas</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Limpeza e Higienização" data-duration="2" /><div class="servico-opt-card"><span>Higienização</span><small>cerca de 2 horas</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Recarga de Gás Refrigerante" data-duration="1" /><div class="servico-opt-card"><span>Recarga de gás</span><small>cerca de 1 hora</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Consultoria e Projeto de Climatização" data-duration="2" /><div class="servico-opt-card"><span>Consultoria e projeto</span><small>cerca de 2 horas</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="PMOC – Plano de Manutenção" data-duration="3" /><div class="servico-opt-card"><span>PMOC</span><small>cerca de 3 horas</small></div></label>
+                        <label class="servico-option"><input type="radio" name="servico" value="Outro Serviço" data-duration="2" /><div class="servico-opt-card"><span>Outro</span><small>a definir</small></div></label>
                     </div>
                     <div class="step-nav">
-                        <button class="btn-next" id="next1" onclick="goStep(2)" disabled>Próximo →</button>
+                        <button class="btn-next" id="next1" onclick="goStep(2)" disabled>Próximo</button>
                     </div>
                 </div>
 
-                <!-- Step 2: Data e Hora -->
                 <div class="form-step" id="form-step-2">
                     <h3 class="step-title">Quando prefere receber a visita?</h3>
                     <div class="datetime-grid">
                         <div class="field-group">
-                            <label for="data">📅 Data preferida</label>
+                            <label for="data">Data</label>
                             <input type="date" id="data" name="data" class="field-input" />
                         </div>
                         <div class="field-group">
-                            <label for="hora">🕐 Horário</label>
+                            <label for="hora">Horário</label>
                             <select id="hora" name="hora" class="field-input">
                                 <option value="">Selecione o horário</option>
-                                <option value="09:00">09:00 – Manhã cedo</option>
-                                <option value="10:00">10:00 – Manhã</option>
-                                <option value="11:00">11:00 – Manhã</option>
-                                <option value="13:00">13:00 – Tarde cedo</option>
-                                <option value="14:00">14:00 – Tarde</option>
-                                <option value="15:00">15:00 – Tarde</option>
-                                <option value="16:00">16:00 – Fim de tarde</option>
+                                <option value="09:00">09:00, manhã</option>
+                                <option value="10:00">10:00, manhã</option>
+                                <option value="11:00">11:00, manhã</option>
+                                <option value="13:00">13:00, tarde</option>
+                                <option value="14:00">14:00, tarde</option>
+                                <option value="15:00">15:00, tarde</option>
+                                <option value="16:00">16:00, fim de tarde</option>
                             </select>
                         </div>
                         <div class="field-group">
-                            <label for="endereco">📍 Endereço da visita</label>
-                            <input type="text" id="endereco" name="endereco" class="field-input"
-                                placeholder="Rua, número, bairro – São Paulo/SP" />
+                            <label for="endereco">Endereço da visita</label>
+                            <input type="text" id="endereco" name="endereco" class="field-input" autocomplete="street-address" placeholder="Rua, número e bairro" />
                         </div>
                         <div class="field-group">
-                            <label for="tipo_local">🏠 Tipo de ambiente</label>
+                            <label for="tipo_local">Tipo de ambiente</label>
                             <select id="tipo_local" name="tipo_local" class="field-input">
                                 <option value="">Selecione</option>
                                 <option value="Residencial">Residencial</option>
-                                <option value="Comercial / Escritório">Comercial / Escritório</option>
-                                <option value="Clínica / Consultório">Clínica / Consultório</option>
-                                <option value="Indústria / Galpão">Indústria / Galpão</option>
+                                <option value="Comercial / Escritório">Comercial ou escritório</option>
+                                <option value="Clínica / Consultório">Clínica ou consultório</option>
+                                <option value="Indústria / Galpão">Indústria ou galpão</option>
                                 <option value="Outro">Outro</option>
                             </select>
                         </div>
                     </div>
                     <div class="step-nav">
-                        <button class="btn-back" onclick="goStep(1)">← Voltar</button>
-                        <button class="btn-next" id="next2" onclick="goStep(3)" disabled>Próximo →</button>
+                        <button class="btn-back" onclick="goStep(1)">Voltar</button>
+                        <button class="btn-next" id="next2" onclick="goStep(3)" disabled>Próximo</button>
                     </div>
                 </div>
 
-                <!-- Step 3: Dados do Cliente -->
                 <div class="form-step" id="form-step-3">
                     <h3 class="step-title">Seus dados de contato</h3>
                     <div class="dados-grid">
                         <div class="field-group">
-                            <label for="nome">👤 Nome completo</label>
-                            <input type="text" id="nome" name="nome" class="field-input" placeholder="Seu nome" />
+                            <label for="nome">Nome completo</label>
+                            <input type="text" id="nome" name="nome" class="field-input" autocomplete="name" placeholder="Seu nome" />
                         </div>
                         <div class="field-group">
-                            <label for="telefone">📱 WhatsApp / Telefone</label>
-                            <input type="tel" id="telefone" name="telefone" class="field-input"
-                                placeholder="(11) 9 9999-9999" />
+                            <label for="telefone">WhatsApp ou telefone</label>
+                            <input type="tel" id="telefone" name="telefone" class="field-input" autocomplete="tel" placeholder="(11) 9 9999-9999" />
                         </div>
                         <div class="field-group full">
-                            <label for="observacoes">💬 Observações (opcional)</label>
-                            <textarea id="observacoes" name="observacoes" class="field-input" rows="3"
-                                placeholder="Descreva o problema, marca do equipamento, número de aparelhos, etc."></textarea>
+                            <label for="observacoes">Observações (opcional)</label>
+                            <textarea id="observacoes" name="observacoes" class="field-input" rows="3" placeholder="O problema, a marca e quantos aparelhos"></textarea>
                         </div>
                     </div>
                     <div class="step-nav">
-                        <button class="btn-back" onclick="goStep(2)">← Voltar</button>
-                        <button class="btn-next" id="next3" onclick="goStep(4)" disabled>Revisar →</button>
+                        <button class="btn-back" onclick="goStep(2)">Voltar</button>
+                        <button class="btn-next" id="next3" onclick="goStep(4)" disabled>Revisar</button>
                     </div>
                 </div>
 
-                <!-- Step 4: Confirmação -->
                 <div class="form-step" id="form-step-4">
                     <h3 class="step-title">Confirme seu agendamento</h3>
                     <div class="resumo-card" id="resumoCard"></div>
                     <div class="confirm-actions">
-                        <button class="btn-back" onclick="goStep(3)">← Editar</button>
-                        <button class="btn-calendar" id="btnCalendar" onclick="confirmarAgendamento()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                            Confirmar no Google Calendar
-                        </button>
-                        <button class="btn-whatsapp-confirm" onclick="confirmarWhatsApp()">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                            </svg>
-                            Confirmar via WhatsApp
-                        </button>
+                        <button class="btn-back" onclick="goStep(3)">Editar</button>
+                        <button class="btn-calendar" id="btnCalendar" onclick="confirmarAgendamento()">Confirmar no Google Calendar</button>
+                        <button class="btn-whatsapp-confirm" onclick="confirmarWhatsApp()">Confirmar pelo WhatsApp</button>
                     </div>
-                    <p class="confirm-note">🔒 Seus dados são usados apenas para o agendamento. Não compartilhamos com
-                        terceiros.</p>
+                    <p class="confirm-note">Seus dados servem só para o agendamento. Não compartilhamos com terceiros.</p>
                 </div>
 
-                <!-- Sucesso -->
                 <div class="form-step" id="form-step-success">
                     <div class="success-content">
-                        <div class="success-icon">✅</div>
-                        <h3>Agendamento enviado!</h3>
-                        <p>Uma janela do Google Calendar foi aberta para você confirmar o evento. Nossa equipe também
-                            receberá a solicitação e entrará em contato para confirmar.</p>
-                        <a href="https://wa.me/5511952730593" class="btn-whatsapp" target="_blank">💬 Tirar dúvidas pelo
-                            WhatsApp</a>
-                        
+                        <h3>Agendamento enviado</h3>
+                        <p>Abrimos o Google Calendar para você confirmar o evento. Nossa equipe recebe o pedido e entra em contato para confirmar.</p>
+                        <a href="https://wa.me/5511952730593" class="os-btn os-btn--ink" target="_blank" rel="noopener">Tirar dúvidas pelo WhatsApp</a>
                         <div class="google-review-success-wrapper">
-                            <p class="review-success-p">Sua opinião é muito importante para nós! ⭐</p>
-                            <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" 
-                               class="btn-google-review-success" target="_blank" rel="noopener noreferrer" 
-                               aria-label="Avalie nosso atendimento no Google">
-                                <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 8px;">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                                </svg>
-                                Compartilhe sua experiência – 5 estrelas nos ajudam muito! ⭐
-                            </a>
+                            <p class="review-success-p">Sua opinião ajuda muito a gente.</p>
+                            <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" class="os-link" target="_blank" rel="noopener noreferrer">Avaliar a Renostter no Google</a>
                         </div>
-
-                        <button class="btn-back" onclick="resetForm()"
-                            aria-label="Voltar para o início do agendamento">↩️ Novo Agendamento</button>
-
+                        <button class="btn-back" onclick="resetForm()">Novo agendamento</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ========== FOOTER ========== -->
-    <footer class="footer">
-        <div class="container footer-inner">
-            <div class="footer-brand">
-                <img src="assets/logo.png" alt="Renostter" class="footer-logo-img" />
-                <p>Tecnologia em Climatização.<br />Conforto com responsabilidade técnica.</p>
+    <!-- ========== CONTATO: o cartão de resposta ========== -->
+    <section class="os-section os-reply" id="contato" aria-labelledby="contato-title">
+        <div class="os-wrap os-reply__grid">
+            <div class="os-reply__aside" data-reveal>
+                <p>Atendemos de segunda a sábado, das 9h às 18h. Domingo fechado.</p>
+                <p class="status-badge open" id="statusBadge">Aberto agora</p>
+                <p class="os-reply__social"><a href="https://instagram.com/renostter" target="_blank" rel="noopener" class="os-link">Instagram @renostter</a><a href="https://www.facebook.com/Renostter" target="_blank" rel="noopener" class="os-link">Facebook Renostter Climatização</a></p>
             </div>
-            <div class="footer-links">
-                <h4>Serviços</h4>
-                <ul>
-                    <li><a href="#servicos">Instalação</a></li>
-                    <li><a href="#servicos">Manutenção Preventiva</a></li>
-                    <li><a href="#servicos">Higienização</a></li>
-                    <li><a href="#servicos">Contrato de Manutenção - PMOC</a></li>
-                    <li><a href="#servicos">Contratos</a></li>
-                </ul>
-            </div>
-            <div class="footer-links">
-                <h4>Contato</h4>
-                <ul>
-                    <li><a href="https://wa.me/5511952730593" target="_blank">WhatsApp</a></li>
-                    <li><a href="https://instagram.com/renostter" target="_blank">Instagram</a></li>
-                    <li><a href="https://www.facebook.com/Renostter" target="_blank">Facebook</a></li>
-                    <li><a href="tel:+5511952730593">(11) 95273-0593</a></li>
-                </ul>
-                <address class="footer-endereco">
-                    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=R.%20do%20Pombo%20Correio%2C%20428%20-%20Jardim%20dos%20Ipes%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2008160-142&amp;destination_place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k" target="_blank" rel="noopener">
-                        R. do Pombo Correio, 428<br />
-                        Jardim dos Ip&ecirc;s &mdash; S&atilde;o Paulo/SP<br />
-                        CEP 08160-142
-                    </a>
-                </address>
+            <div class="os-reply__card" data-reveal>
+                <h2 class="os-h2" id="contato-title">Peça seu orçamento</h2>
+                <p>Mande uma foto do aparelho e o bairro.<br>Respondemos em até 15 minutos no horário de atendimento.</p>
+                <a href="https://wa.me/5511952730593?text=Olá!%20Gostaria%20de%20solicitar%20um%20orçamento." class="os-btn os-btn--ink os-btn--block" target="_blank" rel="noopener">Chamar no WhatsApp</a>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© <span id="ano-atual">2026</span> Renostter Climatização. Todos os direitos reservados. CNPJ: 31.535.191/0001-10</p>
-            <div class="footer-bottom-buttons" style="margin-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; align-items: center;">
-                <button id="openTermosModal" class="btn-open" aria-label="Abrir Termos de Uso">📜 Termos de Uso</button>
-                <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" 
-                   target="_blank" rel="noopener noreferrer" class="btn-google-footer" aria-label="Avaliar no Google">
-                    <svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05" />
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                    </svg>
-                    Avalie nosso atendimento no Google ⭐
-                </a>
-            </div>
+    </section>
+    </main>
 
+    <!-- ========== FOOTER: o verso ========== -->
+    <footer class="os-footer">
+        <div class="os-wrap">
+            <div class="os-back">
+                <div class="os-back__msg">
+                    <h2 class="os-back__sign">Até a próxima</h2>
+                    <p>Renostter Climatização: instalação, manutenção, higienização e PMOC de ar-condicionado em São Paulo e região.</p>
+                    <p class="os-back__actions">
+                        <button id="openTermosModal" class="os-link os-linkbtn" type="button">Termos de uso</button>
+                        <a href="https://search.google.com/local/writereview?placeid=ChIJZX-bcVRjzpQRIvN6uq9QL-k" target="_blank" rel="noopener noreferrer" class="os-link">Avaliar no Google</a>
+                        <a href="https://carreiras.renostter.com/trabalhe-conosco/" class="os-link">Trabalhe conosco</a>
+                    </p>
+                </div>
+                <div class="os-back__addr">
+                    <img class="os-back__stamp" src="assets/empresarial/clinica-medica-excellence.jpg" alt="Etiqueta da Renostter colada num split" width="88" height="117" loading="lazy" />
+                    <ul>
+                        <li><a href="https://wa.me/5511952730593" target="_blank" rel="noopener">WhatsApp (11) 95273-0593</a></li>
+                        <li><a href="tel:+5511952730593">Telefone (11) 95273-0593</a></li>
+                        <li><a href="https://www.google.com/maps/dir/?api=1&amp;destination=R.%20do%20Pombo%20Correio%2C%20428%20-%20Jardim%20dos%20Ipes%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2008160-142&amp;destination_place_id=ChIJZX-bcVRjzpQRIvN6uq9QL-k" target="_blank" rel="noopener">R. do Pombo Correio, 428, Jardim dos Ipês</a></li>
+                        <li><a href="https://instagram.com/renostter" target="_blank" rel="noopener">Instagram @renostter</a></li>
+                    </ul>
+                </div>
+                <p class="os-back__imprint">© <span id="ano-atual">2026</span> Renostter Climatização · CNPJ 31.535.191/0001-10</p>
+            </div>
         </div>
     </footer>
 
     <!-- ========== PINTURA MODAL (SIMULADOR) ========== -->
     <div class="pintura-modal-overlay" id="pinturaModal" onclick="closePinturaModal()">
         <div class="pintura-modal-content" onclick="event.stopPropagation()">
-            <button class="pm-close" onclick="closePinturaModal()" aria-label="Fechar">✕</button>
+            <button class="pm-close" onclick="closePinturaModal()" aria-label="Fechar">&times;</button>
             <div class="pm-layout">
                 <!-- Área de Visualização 3D/SVG simulada -->
                 <div class="pm-visualizer">
@@ -1198,7 +835,8 @@
         </svg>
     </a>
 
-    <script src="script.js?v=20260903-anos-no-topo"></script>
+    <script src="script.js?v=20261031-etiqueta"></script>
+    <script src="home.js?v=20261031-etiqueta" defer></script>
     <!-- Swiper.js deve vir antes de portfolio.js -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11.2.10/swiper-bundle.min.js"
         integrity="sha384-2UI1PfnXFjVMQ7/ZDEF70CR943oH3v6uZrFQGGqJYlvhh4g6z6uVktxYbOlAczav"
@@ -1206,7 +844,7 @@
     <script src="js/portfolio.js?v=20260903-fallback-sem-chave"></script>
     <script src="js/reviews.js"></script>
     <script src="js/carousel.js"></script>
-    <script src="calendar.js?v=20260610-calcom-thankyou"></script>
+    <script src="calendar.js?v=20261031-etiqueta"></script>
     <script>
         window.RENOSTTER_CONFIG = {
             calUrl: 'https://cal.com/renostter-hbubv8/comercial-renostter?duration=90',
@@ -1302,16 +940,16 @@
             const AREAS = [
                 { nome: 'São Paulo Capital', lat: -23.5505, lng: -46.6333, r: 22000, color: '#00AEEF' },
                 { nome: 'Guarulhos', lat: -23.4637, lng: -46.5333, r: 8000, color: '#00AEEF' },
-                { nome: 'ABC Paulista', lat: -23.6667, lng: -46.5333, r: 10000, color: '#FF6B00' },
+                { nome: 'ABC Paulista', lat: -23.6667, lng: -46.5333, r: 10000, color: '#00AEEF' },
                 { nome: 'Osasco / Barueri', lat: -23.5328, lng: -46.7919, r: 9000, color: '#00AEEF' },
-                { nome: 'Mauá / Ribeirão Pires', lat: -23.6678, lng: -46.4614, r: 6000, color: '#FF6B00' },
+                { nome: 'Mauá / Ribeirão Pires', lat: -23.6678, lng: -46.4614, r: 6000, color: '#00AEEF' },
             ];
 
             AREAS.forEach(a => {
                 L.circle([a.lat, a.lng], {
                     color: a.color, fillColor: a.color,
                     fillOpacity: 0.18, weight: 2, radius: a.r,
-                }).addTo(map).bindPopup(`<strong>${a.nome}</strong><br>✅ Área de Atendimento Renostter`);
+                }).addTo(map).bindPopup(`<strong>${a.nome}</strong><br>Área de atendimento Renostter`);
             });
 
             /* Rua do Pombo Correio, Vila Curuça (zona leste) — coordenada obtida
@@ -1320,8 +958,8 @@
             L.marker([-23.497176, -46.413761], {
                 icon: L.divIcon({
                     className: '',
-                    html: `<div style="background:#FF6B00;color:#fff;font-weight:700;font-size:11px;padding:6px 10px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.4);">📍 Renostter</div>`,
-                    iconAnchor: [40, 30],
+                    html: `<div class="os-pin">Renostter</div>`,
+                    iconAnchor: [44, 18],
                 })
             }).addTo(map);
 
@@ -1344,7 +982,6 @@
             function setCoverageResult(element, ok, label, actionText) {
                 if (!element) return;
                 element.replaceChildren();
-                element.append(document.createTextNode(ok ? '✅ ' : '📞 '));
 
                 const strong = document.createElement('strong');
                 strong.textContent = label;
@@ -1355,8 +992,7 @@
                 link.href = 'https://wa.me/5511952730593';
                 link.target = '_blank';
                 link.rel = 'noopener';
-                link.style.color = '#00AEEF';
-                link.textContent = actionText;
+                                link.textContent = actionText;
                 element.appendChild(link);
             }
 
@@ -1381,7 +1017,7 @@
                 checkedMarker = L.marker([lat, lng], {
                     icon: L.divIcon({
                         className: '',
-                        html: `<div style="background:${inside ? '#4ade80' : '#f87171'};color:#000;font-weight:700;font-size:11px;padding:5px 9px;border-radius:8px;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.4);">${inside ? '✅ Atendemos!' : '⚠️ Verificar'}</div>`,
+                        html: `<div class="os-pin ${inside ? 'os-pin--ok' : 'os-pin--no'}">${inside ? 'Atendemos' : 'Consulte'}</div>`,
                         iconAnchor: [44, 14],
                     })
                 }).addTo(map);
@@ -1402,20 +1038,20 @@
                     if (result) { result.textContent = 'Seu navegador não suporta geolocalização.'; result.className = 'cep-result fail'; }
                     return;
                 }
-                if (btn) { btn.textContent = '🔄 Localizando...'; btn.disabled = true; }
+                if (btn) { btn.textContent = 'Localizando...'; btn.disabled = true; }
                 navigator.geolocation.getCurrentPosition(
                     pos => {
                         const { latitude: lat, longitude: lng } = pos.coords;
                         if (userMarker) map.removeLayer(userMarker);
                         userMarker = L.circleMarker([lat, lng], {
                             radius: 9, color: '#fff', fillColor: '#00AEEF', fillOpacity: 1, weight: 2.5,
-                        }).addTo(map).bindPopup('📍 Você está aqui').openPopup();
+                        }).addTo(map).bindPopup('Você está aqui').openPopup();
                         showResult(lat, lng, 'Sua localização');
-                        if (btn) { btn.textContent = '📍 Usar minha localização'; btn.disabled = false; }
+                        if (btn) { btn.textContent = 'Usar minha localização'; btn.disabled = false; }
                     },
                     () => {
                         if (result) { result.textContent = 'Não foi possível obter sua localização. Digite um CEP.'; result.className = 'cep-result fail'; }
-                        if (btn) { btn.textContent = '📍 Usar minha localização'; btn.disabled = false; }
+                        if (btn) { btn.textContent = 'Usar minha localização'; btn.disabled = false; }
                     }
                 );
             };
@@ -1437,7 +1073,7 @@
                 return;
             }
 
-            result.textContent = '🔄 Buscando localização...';
+            result.textContent = 'Buscando o CEP...';
             result.className = 'cep-result';
             if (btn) btn.disabled = true;
 
@@ -1461,13 +1097,12 @@
                 const prefix = parseInt(cep.substring(0, 2));
                 const grandeSP = prefix >= 1 && prefix <= 9;
                 result.replaceChildren();
-                result.append(document.createTextNode(grandeSP ? '✅ CEP da Grande SP — atendemos! ' : '📞 Pode estar fora da Grande SP. '));
+                result.append(document.createTextNode(grandeSP ? 'CEP da Grande SP: atendemos. ' : 'Pode estar fora da Grande SP. '));
                 const link = document.createElement('a');
                 link.href = 'https://wa.me/5511952730593';
                 link.target = '_blank';
                 link.rel = 'noopener';
-                link.style.color = '#00AEEF';
-                link.textContent = grandeSP ? 'Agendar →' : 'Consulte-nos →';
+                                link.textContent = grandeSP ? 'Agendar →' : 'Consulte-nos →';
                 result.appendChild(link);
                 result.className = grandeSP ? 'cep-result ok' : 'cep-result fail';
                 const cta = document.getElementById('mapa-cta-orcamento');
@@ -1518,10 +1153,10 @@
 
         <div class="cwp-text">
             <strong>Ronni - Renostter IA</strong>
-            <p>Olá! Posso te ajudar a agendar uma visita técnica? 😊</p>
+            <p>Olá! Posso te ajudar a agendar uma visita técnica?</p>
         </div>
         <button class="cwp-close"
-            onclick="event.stopPropagation(); this.closest('.chat-welcome-popup').classList.remove('visible')">✕</button>
+            onclick="event.stopPropagation(); this.closest('.chat-welcome-popup').classList.remove('visible')">&times;</button>
     </div>
 
     <!-- Botão flutuante -->
@@ -1560,7 +1195,7 @@
                             d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                     </svg>
                 </a>
-                <button class="chat-close-btn" onclick="closeChat()" aria-label="Fechar chat">✕</button>
+                <button class="chat-close-btn" onclick="closeChat()" aria-label="Fechar chat">&times;</button>
             </div>
         </div>
 
@@ -1587,8 +1222,7 @@
             <strong>Renostter IA</strong>
             <span>·</span>
             <a href="https://cal.com/renostter-hbubv8/comercial-renostter?duration=90&overlayCalendar=true"
-                target="_blank" rel="noopener noreferrer">📅
-                Agendar</a>
+                target="_blank" rel="noopener noreferrer">Agendar</a>
         </div>
     </div>
 
@@ -1664,7 +1298,7 @@
     <!-- ========== MODAL AVALIAÇÃO DO GOOGLE (GATILHO CHATBOT) ========== -->
     <div class="google-review-modal-overlay" id="googleReviewModalOverlay">
         <div class="google-review-modal-box">
-            <button class="google-review-btn-close" id="closeGoogleReviewModal" aria-label="Fechar Modal">✕</button>
+            <button class="google-review-btn-close" id="closeGoogleReviewModal" aria-label="Fechar Modal">&times;</button>
             <div class="google-review-modal-header">
                 <svg width="32" height="32" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
