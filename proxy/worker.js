@@ -13,6 +13,9 @@
  *   GEMINI_API_KEY        Legado / fallback      Google Gemini
  *   YOUTUBE_API_KEY       Vídeos YouTube (playlistItems: 1 unidade/chamada)
  *   GOOGLE_PLACES_API_KEY Avaliações Google
+ *   CRM_WEBHOOK_URL       Endereço da fonte "Site — chatbot" no CRM (crm.renostter.com › Webhooks)
+ *   CRM_WEBHOOK_SECRET    Opcional: segredo da mesma fonte (assina o envio)
+ *   WEBHOOK_URL           Opcional: outro destino (n8n, Zapier...) com o lead completo
  * ─────────────────────────────────────────────────────────────────────────
  *
  * Deploy:
@@ -189,6 +192,42 @@ export function validateLeadPayload(payload) {
             origem: sanitizeString(payload.origem) || 'chatbot',
         },
     };
+}
+
+/* ── Lead do chatbot → CRM comercial ────────────────────────────────────────
+   O CRM (DeskcommCRM) cria um card no funil "Orçamentos" para cada envio:
+   `nome` vira o título; serviço, tipo, urgência, bairro e mensagem viram campos
+   do negócio. Só segue com nome (sem nome, telefone ou e-mail o CRM recusa). */
+const CAMPOS_DO_LEAD_PARA_CRM = ['nome', 'servico', 'tipo', 'urgencia', 'bairro', 'mensagem', 'pagina', 'origem'];
+
+export function leadParaCrm(lead) {
+    const corpo = {};
+    for (const campo of CAMPOS_DO_LEAD_PARA_CRM) {
+        if (lead && lead[campo]) corpo[campo] = lead[campo];
+    }
+    return corpo;
+}
+
+async function hmacSha256Hex(segredo, texto) {
+    const enc = new TextEncoder();
+    const chave = await crypto.subtle.importKey('raw', enc.encode(segredo), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const assinatura = await crypto.subtle.sign('HMAC', chave, enc.encode(texto));
+    return [...new Uint8Array(assinatura)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** Para onde o lead vai: o webhook genérico (lead completo) e o CRM (só os campos do negócio). */
+export async function destinosDoLead(lead, env = {}) {
+    const destinos = [];
+    if (env.WEBHOOK_URL) {
+        destinos.push({ nome: 'webhook', url: env.WEBHOOK_URL, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(lead) });
+    }
+    if (env.CRM_WEBHOOK_URL && lead && lead.nome) {
+        const body = JSON.stringify(leadParaCrm(lead));
+        const headers = { 'Content-Type': 'application/json' };
+        if (env.CRM_WEBHOOK_SECRET) headers['X-Deskcomm-Signature'] = await hmacSha256Hex(env.CRM_WEBHOOK_SECRET, body);
+        destinos.push({ nome: 'crm', url: env.CRM_WEBHOOK_URL, headers, body });
+    }
+    return destinos;
 }
 
 export function validateChatPayload(payload, env = {}) {
@@ -487,19 +526,16 @@ export default {
                 });
             }
 
-            /* Encaminha para webhook externo se configurado (n8n, Zapier, Make, etc.)
-               wrangler secret put WEBHOOK_URL */
-            if (env.WEBHOOK_URL) {
-                try {
-                    await fetch(env.WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(leadValidation.value),
-                    });
-                } catch (e) {
-                    console.error('[worker] Webhook lead error:', e.message);
-                }
-            }
+            /* Encaminha ao CRM (CRM_WEBHOOK_URL) e/ou a outro webhook (WEBHOOK_URL).
+               Em segundo plano: o visitante não espera o CRM responder. */
+            const destinos = await destinosDoLead(leadValidation.value, env);
+            const envios = Promise.allSettled(destinos.map((d) =>
+                fetch(d.url, { method: 'POST', headers: d.headers, body: d.body })
+                    .then((r) => { if (!r.ok) console.error(`[worker] lead → ${d.nome}: HTTP ${r.status}`); })
+                    .catch((e) => console.error(`[worker] lead → ${d.nome}:`, e.message)),
+            ));
+            if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(envios);
+            else await envios;
 
             return new Response(JSON.stringify({ ok: true }), {
                 status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
