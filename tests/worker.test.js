@@ -1,7 +1,10 @@
+import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import {
     buildFallbackAssistantResponse,
+    destinosDoLead,
     getRateLimitRpm,
+    leadParaCrm,
     validateChatPayload,
     validateLeadPayload,
 } from '../proxy/worker.js';
@@ -71,5 +74,40 @@ describe('worker guardrails', () => {
 
         expect(response.candidates[0].content.role).toBe('model');
         expect(response.candidates[0].content.parts[0].text).toContain('Meu ar-condicionado parou de gelar');
+    });
+
+    it('sends only the deal fields to the CRM', () => {
+        const corpo = leadParaCrm({
+            nome: 'Maria',
+            servico: 'Manutencao',
+            bairro: '',
+            user_agent: 'x',
+            timestamp: 't',
+            origem: 'chatbot',
+        });
+        expect(corpo).toEqual({ nome: 'Maria', servico: 'Manutencao', origem: 'chatbot' });
+    });
+
+    it('routes the lead to the CRM (signed) and to the generic webhook', async () => {
+        const lead = { nome: 'Maria', servico: 'Instalacao', user_agent: 'x', origem: 'chatbot' };
+        const destinos = await destinosDoLead(lead, {
+            CRM_WEBHOOK_URL: 'https://crm.example/api/v1/webhooks/in/abc',
+            CRM_WEBHOOK_SECRET: 'segredo-de-teste-123456',
+            WEBHOOK_URL: 'https://n8n.example/hook',
+        });
+        expect(destinos.map((d) => d.nome)).toEqual(['webhook', 'crm']);
+        const crm = destinos[1];
+        expect(JSON.parse(crm.body)).toEqual({ nome: 'Maria', servico: 'Instalacao', origem: 'chatbot' });
+        expect(crm.headers['X-Deskcomm-Signature']).toBe(
+            createHmac('sha256', 'segredo-de-teste-123456').update(crm.body).digest('hex'),
+        );
+        expect(JSON.parse(destinos[0].body)).toEqual(lead);
+    });
+
+    it('skips the CRM without a name or without the URL', async () => {
+        expect(await destinosDoLead({ servico: 'x' }, { CRM_WEBHOOK_URL: 'https://crm.example/in/abc' })).toEqual([]);
+        const semAssinatura = await destinosDoLead({ nome: 'Ana' }, { CRM_WEBHOOK_URL: 'https://crm.example/in/abc' });
+        expect(semAssinatura[0].headers['X-Deskcomm-Signature']).toBeUndefined();
+        expect(await destinosDoLead({ nome: 'Ana' }, {})).toEqual([]);
     });
 });
