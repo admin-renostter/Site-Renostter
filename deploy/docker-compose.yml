@@ -102,6 +102,7 @@ services:
         condition: service_healthy
     networks:
       - renostter-net
+      - icontainer-network
     # Não expor porta - o nginx interno é quem fala com o gunicorn via socket
     expose:
       - "8000"
@@ -152,6 +153,7 @@ services:
         condition: service_healthy
     networks:
       - renostter-net
+      - icontainer-network
     deploy:
       resources:
         limits:
@@ -160,7 +162,7 @@ services:
   # -------------------------------------------------------------
   # Nginx (reverse proxy + arquivos estáticos)
   # -------------------------------------------------------------
-  nginx:
+  careers-nginx:
     image: nginx:1.27-alpine
     container_name: renostter-nginx
     restart: unless-stopped
@@ -251,7 +253,7 @@ services:
       - renostter-net
     depends_on:
       - web
-      - nginx
+      - careers-nginx
       - portainer
       - uptime-kuma
 
@@ -276,3 +278,5 @@ volumes:
 networks:
   renostter-net:
     driver: bridge
+  icontainer-network:
+    external: true

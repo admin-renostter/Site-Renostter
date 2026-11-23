@@ -7,10 +7,11 @@
     <div>
       <p class="careers-kicker">Painel do recrutador</p>
       <h1>Vagas cadastradas</h1>
+      <p class="careers-login-note">As vagas ficam no ERP: o que voce muda aqui aparece no ERP e no site na hora, e vice-versa.</p>
     </div>
     <div class="careers-actions">
       <a class="careers-button careers-button-ghost" href="{% url 'careers:applications' %}">Candidaturas</a>
-      {% if is_master %}<a class="careers-button careers-button-ghost" href="{% url 'careers:approvals' %}">Aprovar vagas</a>{% endif %}
+      <a class="careers-button careers-button-ghost" href="{% url 'careers:approvals' %}">Aprovar vagas</a>
       <a class="careers-button" href="{% url 'careers:admin_job_create' %}">Nova vaga</a>
     </div>
   </section>
@@ -22,47 +23,55 @@
           <th>Vaga</th>
           <th>Area</th>
           <th>Status</th>
-          <th>Aprovacao</th>
           <th>Candidaturas</th>
-          <th>Atualizacao</th>
+          <th>Expira</th>
           <th>Acoes</th>
         </tr>
       </thead>
       <tbody>
         {% for job in jobs %}
           <tr>
-            <td><strong>{{ job.title }}</strong><span>{{ job.location }} - {{ job.contract_type }} - {{ job.compensation_label }}</span></td>
-            <td>{{ job.area_owner|default:job.area|default:"-" }}</td>
-            <td><span class="careers-status careers-status-{{ job.status }}">{{ job.get_status_display }}</span></td>
+            <td><strong>{{ job.title }}</strong><span>{{ job.location|default:"-" }} - {{ job.contract_type }} - {{ job.compensation_label }}</span></td>
+            <td>{{ job.area|default:"-" }}</td>
             <td>
-              <span class="careers-status">{{ job.get_approval_status_display }}</span>
+              <span class="careers-status careers-status-{{ job.status }}">{{ job.get_status_display }}</span>
               {% if job.rejection_reason %}<small>{{ job.rejection_reason|truncatewords:12 }}</small>{% endif %}
             </td>
-            <td><a href="{% url 'careers:applications' %}?vaga={{ job.pk }}">{{ job.total_applications }}</a></td>
-            <td>{{ job.updated_at|date:"d/m/Y H:i" }}</td>
+            <td><a href="{{ erp_public_url }}/crm/admin/rh-vaga.html?id={{ job.pk }}" target="_blank" rel="noopener">{{ job.total_applications }} no ERP</a></td>
+            <td>{{ job.expires_at|date:"d/m/Y"|default:"-" }}</td>
             <td class="careers-row-actions">
-              <a href="{% url 'careers:admin_job_update' job.pk %}">Editar</a>
-              {% if job.status == "rascunho" or job.status == "ajustes_solicitados" or job.status == "rejeitada" %}
-                <form method="post" action="{% url 'careers:admin_job_submit' job.pk %}">
+              {% if job.permissoes.editar %}
+                <a href="{% url 'careers:admin_job_update' job.pk %}">Editar</a>
+                <form method="post" action="{% url 'careers:admin_job_action' job.pk 'enviar' %}">
                   {% csrf_token %}
                   <button type="submit">Enviar para aprovacao</button>
                 </form>
               {% endif %}
-              {% if is_master and job.approval_status == "pendente" %}
-                <form method="post" action="{% url 'careers:admin_job_approve' job.pk %}">
+              {% if job.permissoes.aprovar %}
+                <form method="post" action="{% url 'careers:admin_job_action' job.pk 'aprovar' %}">
                   {% csrf_token %}
                   <button type="submit">Aprovar</button>
                 </form>
               {% endif %}
-              <form method="post" action="{% url 'careers:admin_job_duplicate' job.pk %}">
-                {% csrf_token %}
-                <button type="submit">Duplicar</button>
-              </form>
-              <a href="{% url 'careers:admin_job_delete' job.pk %}">Excluir</a>
+              {% if job.permissoes.gerir %}
+                {% if job.status == "aberta" %}
+                  <form method="post" action="{% url 'careers:admin_job_action' job.pk 'pausar' %}">{% csrf_token %}<button type="submit">Pausar</button></form>
+                {% elif job.status == "pausada" %}
+                  <form method="post" action="{% url 'careers:admin_job_action' job.pk 'reabrir' %}">{% csrf_token %}<button type="submit">Reabrir</button></form>
+                {% endif %}
+                {% if job.status == "aberta" or job.status == "pausada" %}
+                  <form method="post" action="{% url 'careers:admin_job_action' job.pk 'marcar_preenchida' %}">{% csrf_token %}<button type="submit">Preenchida</button></form>
+                  <form method="post" action="{% url 'careers:admin_job_action' job.pk 'encerrar' %}">{% csrf_token %}<button type="submit">Encerrar</button></form>
+                {% endif %}
+                <form method="post" action="{% url 'careers:admin_job_duplicate' job.pk %}">
+                  {% csrf_token %}
+                  <button type="submit">Duplicar</button>
+                </form>
+              {% endif %}
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="7">Nenhuma vaga cadastrada.</td></tr>
+          <tr><td colspan="6">Nenhuma vaga para mostrar.</td></tr>
         {% endfor %}
       </tbody>
     </table>
