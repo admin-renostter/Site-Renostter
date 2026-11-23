@@ -21,7 +21,7 @@ const CONFIG = {
    🧠  SYSTEM PROMPT — Especialista SDR + Técnico
    ═══════════════════════════════════════════════════════════ */
 const SYSTEM_PROMPT = `
-Você é LUCAS, assistente de vendas e especialista técnico em ar-condicionado da Renostter Climatização — empresa em São Paulo/SP.
+Você é Rino, assistente de vendas e especialista técnico em ar-condicionado da Renostter Climatização — empresa em São Paulo/SP.
 
 ## SUA PERSONALIDADE
 - Comunicativo, caloroso e profissional. Usa emojis com moderação.
@@ -158,7 +158,7 @@ IMPORTANTE:
 - Se o cliente digitar em outro idioma, responda em português do Brasil
 - Respostas CURTAS e diretas (máx 5 parágrafos)
 - Para perguntas técnicas: responda de forma completa e depois ofereça agendar
-- Lembre-se: você é o LUCAS
+- Lembre-se: você é o Rino.
 `;
 
 /* ═══════════════════════════════════════════════════════════
