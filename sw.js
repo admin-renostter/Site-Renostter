@@ -3,8 +3,8 @@
    Cache estratégico para performance offline
    ================================================ */
 
-/* build 2026-10-31 — nova home "etiqueta" (home.css, home.js) */
-const RELEASE_VERSION = '2026.10.31';
+/* build 2026-11-24 — serviços sem preço, vídeo em Trabalhos, mapa OSM */
+const RELEASE_VERSION = '2026.11.24';
 const CACHE_NAME = `renostter-v${RELEASE_VERSION}`;
 const STATIC_ASSETS = [
     '/',
@@ -73,6 +73,8 @@ self.addEventListener('fetch', event => {
     /* Ignorar requests que não são GET ou são de outras origens */
     if (request.method !== 'GET' || url.origin !== location.origin) return;
     if (url.pathname.startsWith('/proxy/') || url.pathname.startsWith('/api/')) return;
+    /* Vídeo vem em pedaços (Range/206), que o Cache Storage não guarda: vai direto à rede. */
+    if (request.destination === 'video' || request.headers.has('range')) return;
 
     /* HTML: Network-First (sempre busca versão nova, fallback no cache) */
     if (request.headers.get('accept')?.includes('text/html')) {

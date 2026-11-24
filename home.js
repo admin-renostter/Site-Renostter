@@ -24,3 +24,24 @@
 
     alvos.forEach((el) => observer.observe(el));
 })();
+
+/* Vídeo de "Trabalhos feitos": só carrega e toca quando a seção aparece na tela
+   (economiza dados no celular). Com movimento reduzido fica só a imagem. */
+(function videoDosTrabalhos() {
+    const video = document.querySelector('.os-work__video');
+    if (!video) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                if (video.preload === 'none') { video.preload = 'auto'; video.load(); }
+                const tocar = video.play();
+                if (tocar && tocar.catch) tocar.catch(() => {});
+            } else {
+                video.pause();
+            }
+        });
+    }, { threshold: 0.25 });
+    observer.observe(video);
+})();

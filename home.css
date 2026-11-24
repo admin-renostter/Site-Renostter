@@ -320,24 +320,25 @@ body :where(button, input, select, textarea) { font: inherit; }
     font-size: var(--step-lead);
     margin-bottom: 12px;
 }
-.os-items { display: grid; gap: 18px; }
+.os-items { display: grid; gap: 18px; list-style: none; padding: 0; margin: 0; }
 .os-item {
     display: grid;
-    grid-template-columns: auto minmax(24px, 1fr) auto;
+    grid-template-columns: 10px minmax(0, 1fr);
+    column-gap: 14px;
     align-items: baseline;
-    column-gap: 10px;
 }
 .os-item::before {
     content: "";
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
-    border-bottom: 4px dotted rgba(14, 18, 22, 0.3);
-    transform: translateY(-4px);
+    width: 10px;
+    height: 10px;
+    background: var(--cold);
+    transform: translateY(-1px);
 }
-.os-item dt { grid-column: 1; grid-row: 1; font-weight: 600; }
-.os-item dd { grid-column: 3; grid-row: 1; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.os-item p { grid-column: 1 / -1; color: var(--ink-soft); font-size: var(--step-small); max-width: 46ch; margin-top: 2px; }
-.os-item--mark dt { background: var(--cold); padding: 0 6px; margin-left: -6px; }
+.os-item strong { grid-column: 2; font-weight: 600; }
+.os-item p { grid-column: 2; color: var(--ink-soft); font-size: var(--step-small); max-width: 52ch; margin-top: 2px; }
+.os-item--mark::before { background: var(--accent); }
 .os-sheet__brands { margin-top: 40px; font-size: var(--step-small); color: var(--ink-soft); text-align: center; }
 
 .os-menu__photo { position: sticky; top: calc(var(--nav-h) + 24px); }
@@ -424,7 +425,38 @@ body :where(button, input, select, textarea) { font: inherit; }
 .os-slip-out:nth-child(6) { min-height: 32svh; transform: rotate(-1deg); }
 
 /* ---------- 5. trabalhos: pastas empilhadas ---------- */
-.os-work__title { margin-bottom: 40px; }
+.os-work__title { margin-bottom: 16px; }
+/* vídeo das equipes em campo, atrás do título de "Trabalhos feitos" */
+.os-work__reel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: clamp(360px, 66svh, 640px);
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    background: var(--ground-2) url("assets/video/trabalhos-renostter-poster.jpg") center / cover no-repeat;
+}
+.os-work__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    z-index: -2;
+}
+.os-work__reel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgba(14, 18, 22, 0.92) 0%, rgba(14, 18, 22, 0.55) 45%, rgba(14, 18, 22, 0.15) 100%);
+}
+.os-work__head { padding-block: 40px; }
+.os-work__head .os-work__title { color: var(--light); }
+.os-work__lead { color: var(--light); max-width: 52ch; font-size: var(--step-lead); line-height: 1.35; }
+
 .os-folders { position: relative; }
 .os-folder {
     --fg: var(--ink);
@@ -785,6 +817,9 @@ body :where(button, input, select, textarea) { font: inherit; }
 .chat-widget *, .chat-welcome-popup * { font-family: var(--f-text) !important; }
 .pwa-install-banner { background: var(--ground-2); border: 0; border-radius: 0; }
 #mapa-leaflet { box-shadow: none; } /* taste-skill-ignore: neutraliza sombra legada */
+/* telas claras do OpenStreetMap escurecidas para o tema do site; marcadores e círculos ficam fora do filtro */
+.os-cover__map .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.35); }
+.os-cover__map .leaflet-container { background: #1C232B; }
 .os-cover .cep-btn { box-shadow: none; transform: none; }
 .leaflet-control-zoom a { font-family: var(--f-text) !important; border-radius: 0 !important; }
 .os-form .steps-bar { background: none; border: 0; border-radius: 0; } /* taste-skill-ignore: neutraliza sombra legada */
@@ -854,9 +889,6 @@ body :where(button, input, select, textarea) { font: inherit; }
     .os-label__foot .os-btn { width: 100%; }
     .os-total { font-size: clamp(4.5rem, 22vw, 6rem); }
     .os-sheet { padding-inline: 20px; }
-    .os-item { grid-template-columns: minmax(0, 1fr) auto; }
-    .os-item::before { display: none; }
-    .os-item dd { grid-column: 2; }
     .os-paint__chips { grid-template-columns: minmax(0, 1fr); }
     .os-output__text { margin: 24px var(--gutter) 0; width: auto; }
     .os-output__text p { font-size: var(--step-body); }
