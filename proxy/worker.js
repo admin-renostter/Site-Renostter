@@ -4,9 +4,7 @@
  *
  * ─── Secrets a configurar (wrangler secret put <NOME>) ───────────────────
  *   GROQ_API_KEY          Primário (velocidade)  groq.com
- *   CEREBRAS_API_KEY      Primário (contexto)    cerebras.ai
  *   MISTRAL_API_KEY       Secundário             mistral.ai
- *   DEEPSEEK_API_KEY      Secundário             deepseek.com
  *   OPENROUTER_API_KEY    Fallback universal     openrouter.ai
  *   ZAI_API_KEY           Backup                 z.ai (glm-4.5-flash, gratuito)
  *   GEMINI_API_KEY        Legado / fallback      Google Gemini
@@ -21,7 +19,7 @@
  *
  * Deploy:
  *   1. wrangler secret put GROQ_API_KEY
- *   2. wrangler secret put CEREBRAS_API_KEY
+ *   2. wrangler secret put GEMINI_API_KEY
  *   3. (repita para cada chave acima)
  *   4. wrangler deploy
  */
@@ -293,12 +291,10 @@ export function validateChatPayload(payload, env = {}) {
 /*
  * Ordem de prioridade conforme estratégia definida:
  *   [1] Groq        — primário (velocidade, 14.400 req/dia)
- *   [2] Cerebras    — primário (contexto, 60k tokens/min)
- *   [3] Gemini      — secundário legado (já configurado e testado)
- *   [4] Mistral     — secundário estável
- *   [5] DeepSeek    — secundário (bastião de tokens)
- *   [6] OpenRouter  — fallback universal (:free models)
- *   [7] Z.ai        — backup (créditos regulares)
+ *   [2] Gemini      — secundário legado (já configurado e testado)
+ *   [3] Mistral     — secundário estável
+ *   [4] OpenRouter  — fallback universal (:free models)
+ *   [5] Z.ai        — backup (créditos regulares)
  */
 function buildProviders(env) {
     const providers = [];
@@ -308,15 +304,6 @@ function buildProviders(env) {
         url: 'https://api.groq.com/openai/v1/chat/completions',
         key: env.GROQ_API_KEY,
         model: 'openai/gpt-oss-120b',
-        format: 'openai',
-        extraBody: { reasoning_effort: 'low' },
-    });
-
-    if (env.CEREBRAS_API_KEY) providers.push({
-        name: 'cerebras',
-        url: 'https://api.cerebras.ai/v1/chat/completions',
-        key: env.CEREBRAS_API_KEY,
-        model: 'gpt-oss-120b',
         format: 'openai',
         extraBody: { reasoning_effort: 'low' },
     });
@@ -332,14 +319,6 @@ function buildProviders(env) {
         url: 'https://api.mistral.ai/v1/chat/completions',
         key: env.MISTRAL_API_KEY,
         model: 'mistral-small-latest',
-        format: 'openai',
-    });
-
-    if (env.DEEPSEEK_API_KEY) providers.push({
-        name: 'deepseek',
-        url: 'https://api.deepseek.com/v1/chat/completions',
-        key: env.DEEPSEEK_API_KEY,
-        model: 'deepseek-chat',
         format: 'openai',
     });
 
