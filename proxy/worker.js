@@ -31,7 +31,7 @@ import { receberEmail } from './email.js';
 import { montarPromptRonni, motivoDeManipulacao, protegerResposta, respostaDeEncaminhamento } from './ronni.js';
 
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
-const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
 const YOUTUBE_SEARCH_ENDPOINT  = 'https://www.googleapis.com/youtube/v3/search';
 const YOUTUBE_PLAYLIST_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 const YOUTUBE_CACHE_TTL        = 1800; /* 30 min de cache na borda da Cloudflare */
@@ -309,16 +309,18 @@ function buildProviders(env) {
         name: 'groq',
         url: 'https://api.groq.com/openai/v1/chat/completions',
         key: env.GROQ_API_KEY,
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         format: 'openai',
+        extraBody: { reasoning_effort: 'low' },
     });
 
     if (env.CEREBRAS_API_KEY) providers.push({
         name: 'cerebras',
         url: 'https://api.cerebras.ai/v1/chat/completions',
         key: env.CEREBRAS_API_KEY,
-        model: 'llama3.1-8b',
+        model: 'gpt-oss-120b',
         format: 'openai',
+        extraBody: { reasoning_effort: 'low' },
     });
 
     if (env.GEMINI_API_KEY) providers.push({
@@ -465,7 +467,7 @@ async function callAI(geminiBody, env) {
                 reqHeaders = { 'Content-Type': 'application/json' };
             } else {
                 reqUrl     = p.url;
-                reqBody    = toOpenAIPayload(geminiBody, p.model);
+                reqBody    = { ...toOpenAIPayload(geminiBody, p.model), ...(p.extraBody || {}) };
                 reqHeaders = {
                     'Content-Type':  'application/json',
                     'Authorization': `Bearer ${p.key}`,
