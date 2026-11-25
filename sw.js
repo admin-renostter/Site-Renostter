@@ -3,13 +3,15 @@
    Cache estratégico para performance offline
    ================================================ */
 
-/* build 2026-09-03d — anos de experiencia sincronizados no topo */
-const RELEASE_VERSION = '2026.09.03';
+/* build 2026-11-25 — contador de instalações e travas do Ronni */
+const RELEASE_VERSION = '2026.11.25';
 const CACHE_NAME = `renostter-v${RELEASE_VERSION}`;
 const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/styles.css',
+    '/home.css',
+    '/home.js',
     '/chatbot.css',
     '/script.js',
     '/calendar.js',
@@ -71,6 +73,8 @@ self.addEventListener('fetch', event => {
     /* Ignorar requests que não são GET ou são de outras origens */
     if (request.method !== 'GET' || url.origin !== location.origin) return;
     if (url.pathname.startsWith('/proxy/') || url.pathname.startsWith('/api/')) return;
+    /* Vídeo vem em pedaços (Range/206), que o Cache Storage não guarda: vai direto à rede. */
+    if (request.destination === 'video' || request.headers.has('range')) return;
 
     /* HTML: Network-First (sempre busca versão nova, fallback no cache) */
     if (request.headers.get('accept')?.includes('text/html')) {

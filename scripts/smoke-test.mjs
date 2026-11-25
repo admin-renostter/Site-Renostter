@@ -24,7 +24,7 @@ for (const file of requiredFiles) {
 const html = await readFile('index.html', 'utf8');
 const requiredSnippets = [
     '<link rel="manifest" href="manifest.json"',
-    'assets/hero-background',
+    'id="home"',
     'chatbot.js',
     'js/portfolio.js',
     'js/reviews.js',

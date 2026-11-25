@@ -1364,6 +1364,9 @@ a {
     .contato-grid {
         grid-template-columns: 1fr;
     }
+    .mapa-endereco-acoes { flex-direction: column; }
+    .mapa-endereco-btn { text-align: center; }
+
 
     .footer-inner {
         grid-template-columns: 1fr;
@@ -3241,6 +3244,73 @@ textarea.field-input {
     transition: border-color 0.2s, color 0.2s;
 }
 .btn-secondary-outline:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+
+/* ---------- Endereco visivel (item 18): bloco "como chegar" ---------- */
+.mapa-endereco {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.mapa-endereco-label {
+    display: block;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+}
+.mapa-endereco-texto {
+    font-style: normal;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+.mapa-endereco-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+.mapa-endereco-btn {
+    background: var(--blue);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transition: 0.3s;
+}
+.mapa-endereco-btn:hover { background: var(--blue-dark); }
+.mapa-endereco-btn.secundario {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.85);
+}
+.mapa-endereco-btn.secundario:hover {
+    border-color: var(--blue);
+    color: #fff;
+}
+.mapa-endereco-nota {
+    margin-top: 14px;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.85rem;
+}
+.footer-endereco {
+    font-style: normal;
+    margin-top: 18px;
+}
+.footer-endereco a {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.875rem;
+    line-height: 1.7;
+    transition: var(--transition);
+}
+.footer-endereco a:hover { color: var(--blue); }
 
 .mapa-cep-check {
     background: rgba(255,255,255,0.05);

@@ -236,8 +236,6 @@ if (dataInput) {
             dataInput.reportValidity();
             dataInput.value = '';
             showDateError('Não atendemos aos domingos. Escolha de segunda a sábado.');
-        } else if (dayOfWeek === 6 && selected.getHours() >= 13) {
-            showDateError('Sábados até 13h. Selecione um horário pela manhã.');
         } else {
             dataInput.setCustomValidity('');
             clearDateError();
@@ -270,16 +268,10 @@ function checkStep2() {
     const selected   = new Date(dateVal + 'T12:00:00');
     const dayOfWeek  = selected.getDay();
     const hora       = horaSelect?.value || '';
-    const horaNum    = hora ? parseInt(hora.split(':')[0], 10) : 0;
 
-    const isSunday            = dayOfWeek === 0;
-    const isSaturdayAfternoon = dayOfWeek === 6 && hora && horaNum >= 13;
+    const isSunday = dayOfWeek === 0;
 
-    if (isSaturdayAfternoon) {
-        showDateError('Sábados até 13h. Selecione um horário pela manhã.');
-    }
-
-    const validDate = !isSunday && !isSaturdayAfternoon;
+    const validDate = !isSunday;
     const ok = validDate && hora && enderecoInput?.value && tipoSelect?.value;
     const btn = document.getElementById('next2');
     if (btn) btn.disabled = !ok;
@@ -306,9 +298,9 @@ function checkStep2() {
     // Calcular dias restantes na semana (seg-sab)
     const daysLeft = dayOfWeek === 0 ? 6 : 6 - dayOfWeek;
 
-    // Cada dia útil tem ~4 slots (09, 10, 13, 14, 15, 16h) → seg-sex = 6 slots, sáb = 2 slots
+    // Seg–Sáb têm o mesmo horário (09:00–18:00), logo o mesmo número de slots
     const slotsPerWeekday = 6;
-    const slotsSaturday = 2;
+    const slotsSaturday = 6;
     const weekdaysLeft = Math.max(0, Math.min(daysLeft, 5));
     const saturdayLeft = daysLeft >= 6 ? 1 : 0;
     const totalSlots = weekdaysLeft * slotsPerWeekday + saturdayLeft * slotsSaturday;
@@ -395,14 +387,14 @@ function buildResumo() {
         : '–';
 
     card.innerHTML = `
-    <div class="resumo-row"><span class="resumo-key">🔧 Serviço</span><span class="resumo-val">${escapeHtml(state.servico || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">📅 Data</span><span class="resumo-val">${escapeHtml(dataFmt)}</span></div>
-    <div class="resumo-row"><span class="resumo-key">🕐 Horário</span><span class="resumo-val">${escapeHtml(state.hora || '–')}h</span></div>
-    <div class="resumo-row"><span class="resumo-key">📍 Endereço</span><span class="resumo-val">${escapeHtml(state.endereco || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">🏠 Ambiente</span><span class="resumo-val">${escapeHtml(state.tipoLocal || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">👤 Nome</span><span class="resumo-val">${escapeHtml(state.nome || '–')}</span></div>
-    <div class="resumo-row"><span class="resumo-key">📱 WhatsApp</span><span class="resumo-val">${escapeHtml(state.telefone || '–')}</span></div>
-    ${state.obs ? `<div class="resumo-row"><span class="resumo-key">💬 Obs.</span><span class="resumo-val">${escapeHtml(state.obs)}</span></div>` : ''}
+    <div class="resumo-row"><span class="resumo-key">Serviço</span><span class="resumo-val">${escapeHtml(state.servico || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Data</span><span class="resumo-val">${escapeHtml(dataFmt)}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Horário</span><span class="resumo-val">${escapeHtml(state.hora || '–')}h</span></div>
+    <div class="resumo-row"><span class="resumo-key">Endereço</span><span class="resumo-val">${escapeHtml(state.endereco || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Ambiente</span><span class="resumo-val">${escapeHtml(state.tipoLocal || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">Nome</span><span class="resumo-val">${escapeHtml(state.nome || '–')}</span></div>
+    <div class="resumo-row"><span class="resumo-key">WhatsApp</span><span class="resumo-val">${escapeHtml(state.telefone || '–')}</span></div>
+    ${state.obs ? `<div class="resumo-row"><span class="resumo-key">Obs.</span><span class="resumo-val">${escapeHtml(state.obs)}</span></div>` : ''}
   `;
 }
 

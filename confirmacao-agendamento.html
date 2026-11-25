@@ -2,6 +2,16 @@
 <html lang="pt-BR">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-205BZSF5SZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-205BZSF5SZ');
+    </script>
+    <!-- End Google tag (gtag.js) -->
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -321,6 +331,12 @@
     </div>
 
     <script src="confirmacao-agendamento.js?v=20260609-calcom-confirmation"></script>
+    <!-- Conversao GA4: dispara quando a pagina de obrigado carrega -->
+    <script>
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', { method: 'agendamento_site' });
+      }
+    </script>
 </body>
 
 </html>

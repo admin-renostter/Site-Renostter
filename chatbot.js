@@ -64,7 +64,7 @@ Você é RONNI, assistente de vendas e especialista técnico em ar-condicionado 
 - 📞 (11) 95273-0593 | comercial.renostter@gmail.com
 - 📸 @renostter | 🌐 renostter.com
 - 🕐 Seg–Sex 08h–18h | Sáb 08h–14h (emergências 24h no WhatsApp)
-- ⭐ +5 anos de experiência | +4.500 instalações realizadas | 4,9★ Google
+- ⭐ Desde 2018 | +4.500 instalações realizadas | 4,9★ Google
 
 ## FORMAS DE PAGAMENTO
 - PIX (5% desconto), cartão de crédito (em até 12x), débito, dinheiro, transferência bancária
@@ -203,8 +203,10 @@ async function callGemini(userMessage) {
     /* Mantém exatamente as últimas 10 trocas (20 entradas) */
     if (conversationHistory.length > 20) conversationHistory.splice(0, conversationHistory.length - 20);
 
+    /* Com o proxy, as regras e os preços do Ronni ficam no servidor (proxy/ronni.js):
+       o navegador não manda prompt nenhum. O SYSTEM_PROMPT daqui só vale no modo direto. */
     const body = {
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        ...(useProxy ? {} : { system_instruction: { parts: [{ text: SYSTEM_PROMPT }] } }),
         contents: conversationHistory,
         generationConfig: { temperature: 0.75, topP: 0.95, maxOutputTokens: 1024 },
         safetySettings: [
@@ -331,10 +333,10 @@ function executeActions(actions) {
                 break;
 
             case 'whatsapp':
-                const msg = act.msg || buildWhatsAppMsg();
-                setTimeout(() => {
-                    window.open(`https://wa.me/${CONFIG.WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`, '_blank');
-                }, 800);
+            case 'humano':
+                /* O texto do WhatsApp é montado aqui (dados do cliente + trecho da conversa),
+                   nunca o que a IA escreveu: assim ninguém faz o Ronni mandar recado falso à equipe. */
+                appendHandoffButton(act.action === 'humano' ? (act.motivo || 'atendimento humano') : 'cliente pediu o WhatsApp');
                 break;
 
             case 'quickreplies':
@@ -462,7 +464,7 @@ function fallbackResponse(texto) {
 - Inclinacao incorreta da evaporadora
 - Gas baixo formando gelo e depois gotejamento
 
-E importante resolver rapido para evitar danos na parede e no equipamento. Manutencao preventiva simples: **R$ 280**. Quer agendar uma avaliacao?`,
+E importante resolver rapido para evitar danos na parede e no equipamento. Manutencao preventiva simples: a partir de **R$ 280**. Quer agendar uma avaliacao?`,
             qr: ['📅 Agendar manutenção', '📱 Chamar agora no WhatsApp']
         },
         // ─── CHEIRO / MOFO ────────────────────────────────────────
@@ -482,10 +484,10 @@ A **higienizacao completa** parte de **R$ 350 por aparelho** e ajuda a eliminar 
             resp: `Otimo! A **instalacao** na Renostter inclui suporte, tubulacao de cobre, teste completo e garantia de servico.
 
 Referencia inicial:
-- Split 9k/12k: **R$ 1200**
-- Split 18k: **R$ 1400**
-- Split 24k: **R$ 1600**
-- Split 30k: **R$ 2000**
+- Split 9k/12k: a partir de **R$ 1200**
+- Split 18k: a partir de **R$ 1400**
+- Split 24k: a partir de **R$ 1600**
+- Split 30k: a partir de **R$ 2000**
 - Piso-Teto/Cassete: a partir de **R$ 1500** conforme BTU
 
 O valor final depende do local, eletrica, distancia e infraestrutura. Quer agendar uma avaliacao?`,
@@ -503,9 +505,9 @@ O valor final depende do local, eletrica, distancia e infraestrutura. Quer agend
             resp: `A **manutencao preventiva** e essencial para reduzir consumo, evitar falhas e prolongar a vida util do aparelho.
 
 Referencia inicial:
-- Preventiva simples: **R$ 280**
-- Preventiva Piso-Teto: **R$ 600**
-- Preventiva Cassete: **R$ 700**
+- Preventiva simples: a partir de **R$ 280**
+- Preventiva Piso-Teto: a partir de **R$ 600**
+- Preventiva Cassete: a partir de **R$ 700**
 
 Residencias geralmente fazem a cada 6 meses; empresas podem precisar de rotina trimestral ou PMOC. Quer agendar?`,
             qr: ['🏠 Manutenção residencial', '🏢 Manutenção empresarial', '📅 Ver datas disponíveis']
@@ -523,7 +525,7 @@ Esse servico e **sob consulta**, porque o valor depende do diagnostico, pecas, a
             kw: ['higienizacao', 'higienizar', 'limpeza', 'limpar filtro', 'limpar ar', 'bactericida', 'desinfecao'],
             resp: `A **higienizacao completa** remove sujeira, fungos, bacterias e odores dos filtros e evaporadora.
 
-Referencia: **R$ 350 por aparelho**. Duracao media: **8h**, conforme estado do equipamento e acesso.
+Referencia: a partir de **R$ 350 por aparelho**. Duracao media: **8h**, conforme estado do equipamento e acesso.
 
 Ideal fazer a cada 6 a 12 meses, ou sempre que notar cheiro, alergia ou queda de desempenho. Agendar agora?`,
             qr: ['📅 Agendar higienização', '📱 Falar no WhatsApp']
@@ -561,11 +563,11 @@ Ideal fazer a cada 6 a 12 meses, ou sempre que notar cheiro, alergia ou queda de
 - Instalacao Split 18k: a partir de **R$ 1400**
 - Instalacao Split 24k: a partir de **R$ 1600**
 - Instalacao Split 30k: a partir de **R$ 2000**
-- Preventiva simples: **R$ 280**
-- Preventiva Piso-Teto: **R$ 600**
-- Preventiva Cassete: **R$ 700**
-- Higienizacao completa: **R$ 350 por aparelho**
-- Recarga R-410A/R-32/R-22: **R$ 600 por 1KG**
+- Preventiva simples: a partir de **R$ 280**
+- Preventiva Piso-Teto: a partir de **R$ 600**
+- Preventiva Cassete: a partir de **R$ 700**
+- Higienizacao completa: a partir de **R$ 350 por aparelho**
+- Recarga R-410A/R-32/R-22: a partir de **R$ 600 por 1KG**
 - Corretiva, PMOC, remocao/reinstalacao, contratos, laudo, instalacao personalizada e pintura: **sob consulta**
 
 Valores iniciais. O preco exato depende do modelo, local, infraestrutura e avaliacao tecnica. Quer agendar uma avaliacao?`,
@@ -665,7 +667,7 @@ Valores iniciais. O preco exato depende do modelo, local, infraestrutura e avali
         // ─── SOBRE A EMPRESA ──────────────────────────────────────
         {
             kw: ['sobre a empresa', 'quem sao voces', 'a renostter', 'ha quanto tempo', 'anos de experiencia', 'cnpj', 'empresa confiavel', 'quantas instalacoes'],
-            resp: `**Renostter Climatização** — sua especialista em ar-condicionado em SP! 🏢\n\n⭐ +5 anos de experiência\n🔧 +4.500 instalações realizadas\n⭐ 4,9 estrelas no Google\n📋 Laudo técnico e PMOC em todos os serviços\n📍 Atendemos SP e Grande SP\n\nSomos uma empresa registrada, com técnicos certificados e todo equipamento homologado. Sua satisfação e segurança são nossa prioridade!`,
+            resp: `**Renostter Climatização** — sua especialista em ar-condicionado em SP! 🏢\n\n⭐ Desde 2018, ${window.RENOSTTER_NUMEROS?.anos ?? 8} anos de experiência\n🔧 +${(window.RENOSTTER_NUMEROS?.instalacoes ?? 4500).toLocaleString('pt-BR')} instalações realizadas\n⭐ 4,9 estrelas no Google\n📋 Laudo técnico e PMOC em todos os serviços\n📍 Atendemos SP e Grande SP\n\nSomos uma empresa registrada, com técnicos certificados e todo equipamento homologado. Sua satisfação e segurança são nossa prioridade!`,
             qr: ['📅 Agendar serviço', '💰 Ver preços', '📱 Falar com a equipe']
         },
     ];
@@ -701,6 +703,71 @@ function buildWhatsAppMsg() {
     ].filter(Boolean);
 
     return partes.join(' ');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   🧑‍💼  ENCAMINHAMENTO PARA A EQUIPE (WhatsApp)
+   Mensagem com os dados do cliente e o contexto da conversa com o Ronni,
+   para quem atender não precisar perguntar tudo de novo.
+   ═══════════════════════════════════════════════════════════ */
+function textoSemAcoes(texto) {
+    return String(texto || '').replace(/\{(?:[^{}]|\{[^{}]*\})*\}/g, '').replace(/\s+/g, ' ').trim();
+}
+
+function buildHandoffMsg(motivo) {
+    const { nome, servico, tipo, urgencia, bairro } = leadData;
+    const dados = [
+        nome ? `Nome: ${nome}` : 'Nome: não informado',
+        servico ? `Serviço: ${servico}` : '',
+        tipo ? `Tipo: ${tipo}` : '',
+        urgencia ? `Urgência: ${urgencia}` : '',
+        bairro ? `Bairro/cidade: ${bairro}` : '',
+    ].filter(Boolean);
+
+    const trechos = conversationHistory
+        .filter((t) => !textoSemAcoes(t.parts?.[0]?.text).startsWith('__init__'))
+        .slice(-6)
+        .map((t) => {
+            const quem = t.role === 'model' ? 'Ronni' : 'Cliente';
+            const txt = textoSemAcoes(t.parts?.[0]?.text).slice(0, 180);
+            return txt ? `- ${quem}: ${txt}` : '';
+        })
+        .filter(Boolean);
+
+    const msg = [
+        'Olá! Vim do chat do site da Renostter (Ronni) e preciso falar com a equipe.',
+        '',
+        `*Motivo:* ${motivo}`,
+        `*Dados do cliente:* ${dados.join(' | ')}`,
+        trechos.length ? `*Conversa com o Ronni:*\n${trechos.join('\n')}` : '',
+        '',
+        `Página: ${window.location.href.split('#')[0]}`,
+    ].filter((linha, i, arr) => linha !== '' || (arr[i - 1] !== '' && i > 0)).join('\n');
+
+    return msg.length > 1800 ? `${msg.slice(0, 1797)}...` : msg;
+}
+
+function linkDoWhatsApp(motivo) {
+    return `https://wa.me/${CONFIG.WHATSAPP_NUM}?text=${encodeURIComponent(buildHandoffMsg(motivo))}`;
+}
+
+/** Botão que abre o WhatsApp (clique da pessoa: navegador não bloqueia como bloqueia pop-up). */
+function appendHandoffButton(motivo) {
+    const body = getEl('chatBody');
+    if (!body) return;
+    clearQuickReplies();
+    const wrap = document.createElement('div');
+    wrap.className = 'quick-replies';
+    const link = document.createElement('a');
+    link.className = 'qr-btn';
+    link.href = linkDoWhatsApp(motivo);
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = '📱 Falar com a equipe no WhatsApp';
+    link.addEventListener('click', () => sendLead({ ...leadData, mensagem: `Encaminhado ao WhatsApp: ${motivo}` }));
+    wrap.appendChild(link);
+    body.appendChild(wrap);
+    scrollBottom();
 }
 
 function updateLeadFromText(texto) {
@@ -894,7 +961,7 @@ function appendQuickReplies(options) {
             if (/WhatsApp/i.test(opt)) {
                 appendUserMsg(opt);
                 appendBotMsg('Encaminhando para o WhatsApp... 📱');
-                setTimeout(() => window.open(`https://wa.me/${CONFIG.WHATSAPP_NUM}?text=${encodeURIComponent(buildWhatsAppMsg())}`, '_blank'), 600);
+                setTimeout(() => window.open(linkDoWhatsApp('cliente pediu o WhatsApp'), '_blank'), 600);
                 return;
             }
 
@@ -903,8 +970,8 @@ function appendQuickReplies(options) {
                 appendUserMsg(opt);
                 appendBotMsg(`🚨 **Entendido! Caso de emergência.**\n\nEstou te direcionando para o WhatsApp com **prioridade máxima**. Nossa equipe responde em minutos!`);
                 setTimeout(() => {
-                    const emergMsg = encodeURIComponent('🚨 URGENTE — Meu aparelho de ar-condicionado parou de funcionar e preciso de atendimento imediato! Vim pelo site renostter.com');
-                    window.open(`https://wa.me/${CONFIG.WHATSAPP_NUM}?text=${emergMsg}`, '_blank');
+                    leadData.urgencia = leadData.urgencia || 'Urgente';
+                    window.open(linkDoWhatsApp('🚨 URGENTE: aparelho parou e o cliente precisa de atendimento imediato'), '_blank');
                 }, 1000);
                 return;
             }

@@ -35,3 +35,7 @@ deploy/logs/
 
 # Copia antiga do repositorio dentro do proprio repositorio (17 MB, tem .git proprio)
 GITHUB-SITE/
+
+# pastas de trabalho locais (Claude Code / taste-skill)
+.claude/
+.taste-skill/
