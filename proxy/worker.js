@@ -28,6 +28,7 @@
  */
 
 import { receberEmail } from './email.js';
+import { montarPromptRonni, motivoDeManipulacao, protegerResposta, respostaDeEncaminhamento } from './ronni.js';
 
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
 const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
@@ -265,8 +266,12 @@ export function validateChatPayload(payload, env = {}) {
     }
 
     const generationConfig = payload.generationConfig || {};
-    const promptFromEnv = sanitizeString(env.LUCAS_SYSTEM_PROMPT, 4000);
-    const promptFromPayload = sanitizeString(payload.system_instruction?.parts?.[0]?.text, 4000);
+    /* O prompt é sempre o do servidor: o que o navegador manda em system_instruction
+       é ignorado (antes dava para trocar as regras e os preços do Ronni).
+       LUCAS_SYSTEM_PROMPT, se existir, só acrescenta informações no fim. */
+    const extraFromEnv = sanitizeString(env.LUCAS_SYSTEM_PROMPT, 4000);
+    const promptRonni = montarPromptRonni();
+    const systemText = extraFromEnv ? `${promptRonni}\n\n## INFORMAÇÕES ADICIONAIS\n${extraFromEnv}` : promptRonni;
 
     return {
         ok: true,
@@ -274,7 +279,7 @@ export function validateChatPayload(payload, env = {}) {
             ...payload,
             contents,
             system_instruction: {
-                parts: [{ text: promptFromEnv || promptFromPayload }],
+                parts: [{ text: systemText }],
             },
             generationConfig: {
                 temperature: clampNumber(generationConfig.temperature, 0.75, 0, 1),
@@ -406,6 +411,13 @@ function getLastUserMessage(geminiBody) {
     const userTurns = (geminiBody?.contents || []).filter((turn) => turn.role !== 'model');
     const lastTurn = userTurns[userTurns.length - 1];
     return (lastTurn?.parts || []).map((part) => part.text || '').join(' ').trim();
+}
+
+/** Passa o texto da IA (formato Gemini) por protegerResposta. */
+export function protegerRespostaDaIA(result) {
+    const texto = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (typeof texto !== 'string') return result;
+    return wrapAsGemini(protegerResposta(texto).texto);
 }
 
 export function buildFallbackAssistantResponse(geminiBody = {}) {
@@ -704,7 +716,16 @@ export default {
                 );
             }
 
-            const result = await callAI(chatValidation.value, env);
+            /* Travas do Ronni: manipulação nem chega à IA; a resposta da IA é conferida. */
+            const motivo = motivoDeManipulacao(getLastUserMessage(chatValidation.value));
+            if (motivo) {
+                return new Response(JSON.stringify(wrapAsGemini(respostaDeEncaminhamento(motivo))), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
+                });
+            }
+
+            const result = protegerRespostaDaIA(await callAI(chatValidation.value, env));
 
             if (result) {
                 return new Response(JSON.stringify(result), {

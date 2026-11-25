@@ -3,8 +3,8 @@
    Cache estratégico para performance offline
    ================================================ */
 
-/* build 2026-11-24 — serviços sem preço, vídeo em Trabalhos, mapa OSM */
-const RELEASE_VERSION = '2026.11.24';
+/* build 2026-11-25 — contador de instalações e travas do Ronni */
+const RELEASE_VERSION = '2026.11.25';
 const CACHE_NAME = `renostter-v${RELEASE_VERSION}`;
 const STATIC_ASSETS = [
     '/',

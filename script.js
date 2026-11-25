@@ -129,6 +129,35 @@ function anosCompletosDesde(inicio, agora = new Date()) {
     return Math.max(0, anos);
 }
 
+/* ─── Aparelhos instalados: se atualiza sozinho ───────────────────────
+   Base conferida em 25/11/2026: 4.500 instalações (9.000 aparelhos, porque
+   cada split tem evaporadora e condensadora). Desde então somam 3 instalações
+   por dia de trabalho (segunda a sábado): a equipe faz de 3 a 4 por dia, sem
+   contar chamados e manutenções, e o site usa o número menor para não exagerar.
+   Para corrigir com o número real das ordens de serviço, troque a BASE. */
+const BASE_INSTALACOES = { data: new Date(2026, 10, 25), instalacoes: 4500 };
+const INSTALACOES_POR_DIA = 3;
+const APARELHOS_POR_INSTALACAO = 2;
+
+function diasDeTrabalhoDesde(inicio, agora = new Date()) {
+    const dia = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate() + 1);
+    const fim = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+    let dias = 0;
+    while (dia <= fim) {
+        if (dia.getDay() !== 0) dias += 1; // domingo não conta
+        dia.setDate(dia.getDate() + 1);
+    }
+    return dias;
+}
+
+function numerosDeInstalacao(agora = new Date()) {
+    const instalacoes = BASE_INSTALACOES.instalacoes + INSTALACOES_POR_DIA * diasDeTrabalhoDesde(BASE_INSTALACOES.data, agora);
+    return { instalacoes, aparelhos: instalacoes * APARELHOS_POR_INSTALACAO };
+}
+
+/* Mostra arredondado para baixo na centena, com "+": 4.537 vira "4.500+". */
+const centenaAbaixo = (n) => Math.floor(n / 100) * 100;
+
 (function datarConteudo() {
     const anoAtual = new Date().getFullYear();
 
@@ -146,6 +175,16 @@ function anosCompletosDesde(inicio, agora = new Date()) {
        Vinha fixo em "5 Anos" e contradizia a secao de numeros. */
     const heroEl = document.getElementById('exp-hero');
     if (heroEl) heroEl.textContent = `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
+
+    const { instalacoes, aparelhos } = numerosDeInstalacao();
+    const valores = { aparelhos: centenaAbaixo(aparelhos), instalacoes: centenaAbaixo(instalacoes) };
+    document.querySelectorAll('[data-numero]').forEach((el) => {
+        const v = valores[el.getAttribute('data-numero')];
+        if (v === undefined) return;
+        if (el.classList.contains('counter')) el.setAttribute('data-target', String(v));
+        el.textContent = v.toLocaleString('pt-BR');
+    });
+    window.RENOSTTER_NUMEROS = { anos, ...valores };
 })();
 
 /* ════════════════════════════════════════════════════════════════════

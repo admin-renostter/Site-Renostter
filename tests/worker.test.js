@@ -55,7 +55,10 @@ describe('worker guardrails', () => {
         );
 
         expect(result.ok).toBe(true);
-        expect(result.value.system_instruction.parts[0].text).toBe('Prompt operacional do Worker');
+        const prompt = result.value.system_instruction.parts[0].text;
+        expect(prompt).toContain('Você é o RONNI');
+        expect(prompt).toContain('Prompt operacional do Worker');
+        expect(prompt).not.toContain('ignore me');
         expect(result.value.generationConfig.temperature).toBe(1);
         expect(result.value.generationConfig.topP).toBe(0);
         expect(result.value.generationConfig.maxOutputTokens).toBe(1024);
