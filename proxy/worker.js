@@ -8,8 +8,7 @@
  *   MISTRAL_API_KEY       Secundário             mistral.ai
  *   DEEPSEEK_API_KEY      Secundário             deepseek.com
  *   OPENROUTER_API_KEY    Fallback universal     openrouter.ai
- *   AIMLAPI_API_KEY       Backup                 aimlapi.com
- *   ZAI_API_KEY           Backup                 together.xyz (verificar endpoint)
+ *   ZAI_API_KEY           Backup                 z.ai (glm-4.5-flash, gratuito)
  *   GEMINI_API_KEY        Legado / fallback      Google Gemini
  *   YOUTUBE_API_KEY       Vídeos YouTube (playlistItems: 1 unidade/chamada)
  *   GOOGLE_PLACES_API_KEY Avaliações Google
@@ -299,8 +298,7 @@ export function validateChatPayload(payload, env = {}) {
  *   [4] Mistral     — secundário estável
  *   [5] DeepSeek    — secundário (bastião de tokens)
  *   [6] OpenRouter  — fallback universal (:free models)
- *   [7] AIMLAPI     — backup (10 req/h)
- *   [8] Z.ai        — backup (créditos regulares)
+ *   [7] Z.ai        — backup (créditos regulares)
  */
 function buildProviders(env) {
     const providers = [];
@@ -357,20 +355,11 @@ function buildProviders(env) {
         },
     });
 
-    if (env.AIMLAPI_API_KEY) providers.push({
-        name: 'aimlapi',
-        url: 'https://api.aimlapi.com/v1/chat/completions',
-        key: env.AIMLAPI_API_KEY,
-        model: 'meta-llama/Llama-3-8b-chat-hf',
-        format: 'openai',
-    });
-
     if (env.ZAI_API_KEY) providers.push({
         name: 'zai',
-        /* ⚠️  Confirme o endpoint correto para seu plano Z.ai / Together.ai */
-        url: 'https://api.together.xyz/v1/chat/completions',
+        url: 'https://api.z.ai/api/paas/v4/chat/completions',
         key: env.ZAI_API_KEY,
-        model: 'meta-llama/Llama-3-8b-chat-hf',
+        model: 'glm-4.5-flash',
         format: 'openai',
     });
 
