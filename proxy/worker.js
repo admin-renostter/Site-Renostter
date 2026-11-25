@@ -30,7 +30,7 @@ import { receberEmail } from './email.js';
 import { montarPromptRonni, motivoDeManipulacao, protegerResposta, respostaDeEncaminhamento } from './ronni.js';
 
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
-const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 const YOUTUBE_SEARCH_ENDPOINT  = 'https://www.googleapis.com/youtube/v3/search';
 const YOUTUBE_PLAYLIST_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 const YOUTUBE_CACHE_TTL        = 1800; /* 30 min de cache na borda da Cloudflare */
@@ -347,7 +347,7 @@ function buildProviders(env) {
         name: 'openrouter',
         url: 'https://openrouter.ai/api/v1/chat/completions',
         key: env.OPENROUTER_API_KEY,
-        model: 'meta-llama/llama-3.2-3b-instruct:free',
+        model: 'google/gemma-4-31b-it:free',
         format: 'openai',
         extraHeaders: {
             'HTTP-Referer': 'https://renostter.com',
