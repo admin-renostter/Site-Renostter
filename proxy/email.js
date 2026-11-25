@@ -11,6 +11,7 @@
  *   CRM_EMAIL_WEBHOOK_SECRET  opcional: segredo da mesma fonte (assina o envio)
  */
 import PostalMime from 'postal-mime';
+import { enviarOuEnfileirar } from './fila-crm.js';
 
 const LIMITE_DA_MENSAGEM = 1800;
 const REMETENTES_DE_SISTEMA = /^(mailer-daemon|postmaster)@/i;
@@ -74,15 +75,6 @@ export function emailParaLeadCrm(email, { autoSubmitted = '' } = {}) {
     return corpo;
 }
 
-async function hmacSha256Hex(segredo, texto) {
-    const enc = new TextEncoder();
-    const chave = await crypto.subtle.importKey('raw', enc.encode(segredo), { name: 'HMAC', hash: 'SHA-256' }, false, [
-        'sign',
-    ]);
-    const assinatura = await crypto.subtle.sign('HMAC', chave, enc.encode(texto));
-    return [...new Uint8Array(assinatura)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
 /**
  * Handler `email` do worker. Nunca recusa a mensagem: o original já está no
  * Zoho, e recusar devolveria um aviso de erro para quem escreveu. Falha no CRM
@@ -106,20 +98,9 @@ export async function receberEmail(message, env = {}, deps = {}) {
     const lead = emailParaLeadCrm(lido, { autoSubmitted });
     if (!lead) return { resultado: 'ignorado' };
 
-    const body = JSON.stringify(lead);
-    const headers = { 'Content-Type': 'application/json' };
-    if (env.CRM_EMAIL_WEBHOOK_SECRET) {
-        headers['X-Deskcomm-Signature'] = await hmacSha256Hex(env.CRM_EMAIL_WEBHOOK_SECRET, body);
-    }
-    try {
-        const r = await enviar(env.CRM_EMAIL_WEBHOOK_URL, { method: 'POST', headers, body });
-        if (!r.ok) {
-            console.error(`[email] CRM respondeu HTTP ${r.status}`);
-            return { resultado: 'falhou', status: r.status };
-        }
-        return { resultado: 'enviado' };
-    } catch (e) {
-        console.error('[email] erro ao enviar ao CRM:', e.message);
-        return { resultado: 'falhou' };
-    }
+    /* CRM fora (atualização)? O pedido vai para a fila FILA_CRM e é reenviado depois. */
+    const r = await enviarOuEnfileirar('crm-email', JSON.stringify(lead), env, enviar);
+    if (r.resultado === 'enviado') return { resultado: 'enviado' };
+    if (r.resultado === 'na_fila') return { resultado: 'na_fila', status: r.status };
+    return r.status ? { resultado: 'falhou', status: r.status } : { resultado: 'falhou' };
 }
