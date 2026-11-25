@@ -8,8 +8,7 @@
  *   MISTRAL_API_KEY       Secundário             mistral.ai
  *   DEEPSEEK_API_KEY      Secundário             deepseek.com
  *   OPENROUTER_API_KEY    Fallback universal     openrouter.ai
- *   AIMLAPI_API_KEY       Backup                 aimlapi.com
- *   ZAI_API_KEY           Backup                 together.xyz (verificar endpoint)
+ *   ZAI_API_KEY           Backup                 z.ai (glm-4.5-flash, gratuito)
  *   GEMINI_API_KEY        Legado / fallback      Google Gemini
  *   YOUTUBE_API_KEY       Vídeos YouTube (playlistItems: 1 unidade/chamada)
  *   GOOGLE_PLACES_API_KEY Avaliações Google
@@ -31,7 +30,7 @@ import { receberEmail } from './email.js';
 import { montarPromptRonni, motivoDeManipulacao, protegerResposta, respostaDeEncaminhamento } from './ronni.js';
 
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
-const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 const YOUTUBE_SEARCH_ENDPOINT  = 'https://www.googleapis.com/youtube/v3/search';
 const YOUTUBE_PLAYLIST_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 const YOUTUBE_CACHE_TTL        = 1800; /* 30 min de cache na borda da Cloudflare */
@@ -299,8 +298,7 @@ export function validateChatPayload(payload, env = {}) {
  *   [4] Mistral     — secundário estável
  *   [5] DeepSeek    — secundário (bastião de tokens)
  *   [6] OpenRouter  — fallback universal (:free models)
- *   [7] AIMLAPI     — backup (10 req/h)
- *   [8] Z.ai        — backup (créditos regulares)
+ *   [7] Z.ai        — backup (créditos regulares)
  */
 function buildProviders(env) {
     const providers = [];
@@ -349,7 +347,7 @@ function buildProviders(env) {
         name: 'openrouter',
         url: 'https://openrouter.ai/api/v1/chat/completions',
         key: env.OPENROUTER_API_KEY,
-        model: 'meta-llama/llama-3.2-3b-instruct:free',
+        model: 'google/gemma-4-31b-it:free',
         format: 'openai',
         extraHeaders: {
             'HTTP-Referer': 'https://renostter.com',
@@ -357,20 +355,11 @@ function buildProviders(env) {
         },
     });
 
-    if (env.AIMLAPI_API_KEY) providers.push({
-        name: 'aimlapi',
-        url: 'https://api.aimlapi.com/v1/chat/completions',
-        key: env.AIMLAPI_API_KEY,
-        model: 'meta-llama/Llama-3-8b-chat-hf',
-        format: 'openai',
-    });
-
     if (env.ZAI_API_KEY) providers.push({
         name: 'zai',
-        /* ⚠️  Confirme o endpoint correto para seu plano Z.ai / Together.ai */
-        url: 'https://api.together.xyz/v1/chat/completions',
+        url: 'https://api.z.ai/api/paas/v4/chat/completions',
         key: env.ZAI_API_KEY,
-        model: 'meta-llama/Llama-3-8b-chat-hf',
+        model: 'glm-4.5-flash',
         format: 'openai',
     });
 
