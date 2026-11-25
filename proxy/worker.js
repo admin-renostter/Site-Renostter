@@ -16,6 +16,8 @@
  *   CRM_WEBHOOK_URL       Endereço da fonte "Site — chatbot" no CRM (crm.renostter.com › Webhooks)
  *   CRM_WEBHOOK_SECRET    Opcional: segredo da mesma fonte (assina o envio)
  *   WEBHOOK_URL           Opcional: outro destino (n8n, Zapier...) com o lead completo
+ *   CRM_EMAIL_WEBHOOK_URL Endereço da fonte "E-mail — orçamentos" no CRM (handler `email`)
+ *   CRM_EMAIL_WEBHOOK_SECRET Opcional: segredo da mesma fonte
  * ─────────────────────────────────────────────────────────────────────────
  *
  * Deploy:
@@ -24,6 +26,8 @@
  *   3. (repita para cada chave acima)
  *   4. wrangler deploy
  */
+
+import { receberEmail } from './email.js';
 
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
 const GEMINI_ENDPOINT          = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
@@ -717,5 +721,10 @@ export default {
         }
 
         return new Response('Method Not Allowed', { status: 405 });
+    },
+
+    /* ══ E-mail (Cloudflare Email Routing) → CRM ══════════════════════════ */
+    async email(message, env) {
+        await receberEmail(message, env);
     },
 };
