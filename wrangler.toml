@@ -7,3 +7,14 @@ enabled = true
 
 [vars]
 RATE_LIMIT_RPM = "20"
+
+# Fila de reenvio ao CRM: pedidos do site e do e-mail esperam aqui se o CRM estiver fora (atualizacao).
+[[queues.producers]]
+queue = "renostter-fila-crm"
+binding = "FILA_CRM"
+
+[[queues.consumers]]
+queue = "renostter-fila-crm"
+max_batch_size = 10
+max_batch_timeout = 30
+max_retries = 50

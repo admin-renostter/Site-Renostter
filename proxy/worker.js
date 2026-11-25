@@ -25,6 +25,7 @@
  */
 
 import { receberEmail } from './email.js';
+import { enviarOuEnfileirar, processarFilaCrm } from './fila-crm.js';
 import { montarPromptRonni, motivoDeManipulacao, protegerResposta, respostaDeEncaminhamento } from './ronni.js';
 
 /* ── Endpoints legados ───────────────────────────────────────────────────── */
@@ -513,12 +514,14 @@ export default {
             }
 
             /* Encaminha ao CRM (CRM_WEBHOOK_URL) e/ou a outro webhook (WEBHOOK_URL).
-               Em segundo plano: o visitante não espera o CRM responder. */
+               Em segundo plano: o visitante não espera o CRM responder.
+               Se o CRM estiver fora (atualização), o pedido vai para a fila FILA_CRM. */
             const destinos = await destinosDoLead(leadValidation.value, env);
-            const envios = Promise.allSettled(destinos.map((d) =>
-                fetch(d.url, { method: 'POST', headers: d.headers, body: d.body })
+            const envios = Promise.allSettled(destinos.map((d) => (d.nome === 'crm'
+                ? enviarOuEnfileirar('crm', d.body, env)
+                : fetch(d.url, { method: 'POST', headers: d.headers, body: d.body })
                     .then((r) => { if (!r.ok) console.error(`[worker] lead → ${d.nome}: HTTP ${r.status}`); })
-                    .catch((e) => console.error(`[worker] lead → ${d.nome}:`, e.message)),
+                    .catch((e) => console.error(`[worker] lead → ${d.nome}:`, e.message))),
             ));
             if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(envios);
             else await envios;
@@ -717,5 +720,10 @@ export default {
     /* ══ E-mail (Cloudflare Email Routing) → CRM ══════════════════════════ */
     async email(message, env) {
         await receberEmail(message, env);
+    },
+
+    /* ── Fila de reenvio ao CRM (Cloudflare Queues) ─────────────────────── */
+    async queue(batch, env) {
+        await processarFilaCrm(batch, env);
     },
 };
